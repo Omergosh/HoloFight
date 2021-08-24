@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+using static HFConstants;
+
 public static class HFConstants
 {
     public const float FRAME_RATE_SPEED_SCALE_MULTIPLIER = 1f / 60f;
@@ -19,6 +21,8 @@ public static class HFConstants
     public const int INPUT_DEFEND_D = (1 << 7);
 
     public const int FLOOR_Y = 600;
+    public const float GRAVITY = 1.2f;
+    public const float FRICTION_MULTIPLIER = 0.9f;
 }
 
 public enum PlayerState
@@ -32,29 +36,66 @@ public class Player
     public Vector2 position;
     public Vector2 velocity;
     public Vector2 collisionBoxSize;
-    public int health;
-    public int hitstun;
+    public int health = 100;
+    public int hitstun = 0;
+    public bool bouncy = false;
     public string characterName;
+    public float jumpPower = 25f;
 
     public void Serialize(BinaryWriter bw)
     {
-
+        bw.Write(position.x);
+        bw.Write(position.y);
+        bw.Write(velocity.x);
+        bw.Write(velocity.y);
+        bw.Write(collisionBoxSize.x);
+        bw.Write(collisionBoxSize.y);
+        bw.Write(health);
+        bw.Write(hitstun);
+        bw.Write(bouncy);
+        bw.Write(characterName);
+        bw.Write(jumpPower);
     }
 
     public void Deserialize(BinaryReader br)
     {
+        position.x = br.ReadSingle();
+        position.y = br.ReadSingle();
+        velocity.x = br.ReadSingle();
+        velocity.y = br.ReadSingle();
+        collisionBoxSize.x = br.ReadSingle();
+        collisionBoxSize.y = br.ReadSingle();
+        health = br.ReadInt32();
+        hitstun = br.ReadInt32();
+        bouncy = br.ReadBoolean();
+        characterName = br.ReadString();
+        jumpPower = br.ReadSingle();
+    }
 
+    public override int GetHashCode()
+    {
+        int hashCode = 1858597544;
+        hashCode = hashCode * -1521134295 + position.GetHashCode();
+        hashCode = hashCode * -1521134295 + velocity.GetHashCode();
+        hashCode = hashCode * -1521134295 + collisionBoxSize.GetHashCode();
+        hashCode = hashCode * -1521134295 + health.GetHashCode();
+        hashCode = hashCode * -1521134295 + hitstun.GetHashCode();
+        hashCode = hashCode * -1521134295 + bouncy.GetHashCode();
+        hashCode = hashCode * -1521134295 + characterName.GetHashCode();
+        hashCode = hashCode * -1521134295 + jumpPower.GetHashCode();
+        return hashCode;
     }
 }
 
-public class HfGame
+[Serializable]
+public struct HfGame
 {
     public int frameNumber;
+    public int checksum => GetHashCode();
+
     public Player[] players;
 
     public static Rect bounds = new Rect(0, 0, 1280, 720);
-    public float gravity = 1.2f;
-    public float frictionMultiplier = 0.9f;
 
     public HfGame(int numberOfPlayers)
     {
@@ -70,14 +111,22 @@ public class HfGame
         {
             players[p] = new Player();
         }
-        players[0].velocity = new Vector2(200f, 750f) * HFConstants.FRAME_RATE_SPEED_SCALE_MULTIPLIER;
-        players[1].velocity = new Vector2(500f, 1500f) * HFConstants.FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        players[0].position = new Vector2(bounds.width * 0.5f / players.Length, 0f);
+        players[1].position = new Vector2(bounds.width * (1 - (0.5f / players.Length)), 0f);
+        players[0].velocity = new Vector2(200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        players[1].velocity = new Vector2(-500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        players[0].characterName = "Ina";
+        players[1].characterName = "Amelia";
     }
 
-    public void AdvanceFrame()
+    public void AdvanceFrame(long[] inputs)
     {
+        frameNumber++;
         for (int p = 0; p < players.Length; p++)
         {
+            // Parse inputs
+            ParsePlayerInputs(inputs[p], p);
+
             Vector2 newPosition = new Vector2(players[p].position.x, players[p].position.y);
 
             // Apply change in position from velocity
@@ -98,7 +147,7 @@ public class HfGame
             }
             else
             {
-                players[p].velocity.y -= gravity;
+                players[p].velocity.y -= GRAVITY;
             }
             if (newPosition.y <= HfGame.bounds.yMin && players[p].velocity.y == 0f)
             {
@@ -109,7 +158,37 @@ public class HfGame
                 }
                 else
                 {
-                    players[p].velocity.x *= frictionMultiplier;
+                    players[p].velocity.x *= FRICTION_MULTIPLIER;
+                }
+                // Player can jump!
+                if (ParseOnePlayerInput(inputs[p], p, INPUT_UP))
+                {
+                    players[p].velocity.y = players[p].jumpPower;
+                }
+            }
+            // Bump into / bounce off of horizontal walls
+            if (newPosition.x <= HfGame.bounds.xMin && players[p].velocity.x <= 0f)
+            {
+                if (players[p].velocity.x > -5f)
+                {
+                    players[p].velocity.x = 0f;
+                }
+                else
+                {
+                    // Bounce off wall instead of stopping if velocity is high enough.
+                    players[p].velocity.x = Mathf.Abs(players[p].velocity.x) * 0.8f;
+                }
+            }
+            if (newPosition.x >= HfGame.bounds.xMax && players[p].velocity.x >= 0f)
+            {
+                if (players[p].velocity.x < 5f)
+                {
+                    players[p].velocity.x = 0f;
+                }
+                else
+                {
+                    // Bounce off wall instead of stopping if velocity is high enough.
+                    players[p].velocity.x = Mathf.Abs(players[p].velocity.x) * -0.8f;
                 }
             }
 
@@ -121,11 +200,103 @@ public class HfGame
             // Debug info
             Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
         }
+
+        // Debug info
+        Debug.Log($"Checksum: {checksum}");
     }
 
-    public void ParsePlayerInputs()
+    public void ParsePlayerInputs(long inputs, int playerID)
     {
+        if ((inputs & INPUT_LEFT) != 0)
+        {
+            players[playerID].velocity.x--;
+        }
+        if ((inputs & INPUT_RIGHT) != 0)
+        {
+            players[playerID].velocity.x++;
+        }
+    }
 
+    public bool ParseOnePlayerInput(long inputs, int playerID, int inputConstant)
+    {
+        return ((inputs & inputConstant) != 0);
+    }
+
+    public long ReadInputs(int playerID)
+    {
+        long input = 0;
+
+        if (playerID == 0)
+        {
+            if (Input.GetKey(KeyCode.A))
+            {
+                input |= INPUT_LEFT;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                input |= INPUT_RIGHT;
+            }
+            if (Input.GetKey(KeyCode.W))
+            {
+                input |= INPUT_UP;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                input |= INPUT_DOWN;
+            }
+            if (Input.GetKey(KeyCode.Z))
+            {
+                input |= INPUT_ATTACK_A;
+            }
+            if (Input.GetKey(KeyCode.X))
+            {
+                input |= INPUT_ATTACK_B;
+            }
+            if (Input.GetKey(KeyCode.C))
+            {
+                input |= INPUT_ATTACK_C;
+            }
+            if (Input.GetKey(KeyCode.V))
+            {
+                input |= INPUT_DEFEND_D;
+            }
+        } else if(playerID == 1)
+        {
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                input |= INPUT_LEFT;
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                input |= INPUT_RIGHT;
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                input |= INPUT_UP;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                input |= INPUT_DOWN;
+            }
+            if (Input.GetKey(KeyCode.U))
+            {
+                input |= INPUT_ATTACK_A;
+            }
+            if (Input.GetKey(KeyCode.I))
+            {
+                input |= INPUT_ATTACK_B;
+            }
+            if (Input.GetKey(KeyCode.O))
+            {
+                input |= INPUT_ATTACK_C;
+            }
+            if (Input.GetKey(KeyCode.P))
+            {
+                input |= INPUT_DEFEND_D;
+            }
+        }
+
+        return input;
     }
 
     public void Serialize()
@@ -136,5 +307,16 @@ public class HfGame
     public void Deserialize()
     {
 
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = -1214587014;
+        hashCode = hashCode * -1521134295 + frameNumber.GetHashCode();
+        foreach (var player in players)
+        {
+            hashCode = hashCode * -1521134295 + player.GetHashCode();
+        }
+        return hashCode;
     }
 }

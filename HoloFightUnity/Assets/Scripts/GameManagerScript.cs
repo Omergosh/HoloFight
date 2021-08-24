@@ -29,7 +29,12 @@ public class GameManagerScript : MonoBehaviour
     {
         if (!isGamePaused)
         {
-            game.AdvanceFrame();
+            long[] inputs = new long[game.players.Length];
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                inputs[i] = game.ReadInputs(i);
+            }
+            game.AdvanceFrame(inputs);
         }
     }
 
