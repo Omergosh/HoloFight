@@ -39,8 +39,12 @@ public class Player
     public int health = 100;
     public int hitstun = 0;
     public bool bouncy = false;
+
+    // Data unlikely to change mid-match
     public string characterName;
     public float jumpPower = 25f;
+    public float maxSpeed = 26.0f;
+    public float acceleration = 2.0f;
 
     public void Serialize(BinaryWriter bw)
     {
@@ -151,14 +155,19 @@ public struct HfGame
             }
             if (newPosition.y <= HfGame.bounds.yMin && players[p].velocity.y == 0f)
             {
-                // Player is on ground. Apply friction!
-                if (Mathf.Abs(players[p].velocity.x) < 1f)
+                // Player is on ground. If player is not moving along the ground
+                if (!(ParseOnePlayerInput(inputs[p], p, INPUT_LEFT)
+                    ^ ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT)))
                 {
-                    players[p].velocity.x = 0;
-                }
-                else
-                {
-                    players[p].velocity.x *= FRICTION_MULTIPLIER;
+                    // Apply friction!
+                    if (Mathf.Abs(players[p].velocity.x) < 1f)
+                    {
+                        players[p].velocity.x = 0;
+                    }
+                    else
+                    {
+                        players[p].velocity.x *= FRICTION_MULTIPLIER;
+                    }
                 }
                 // Player can jump!
                 if (ParseOnePlayerInput(inputs[p], p, INPUT_UP))
@@ -169,26 +178,26 @@ public struct HfGame
             // Bump into / bounce off of horizontal walls
             if (newPosition.x <= HfGame.bounds.xMin && players[p].velocity.x <= 0f)
             {
-                if (players[p].velocity.x > -5f)
-                {
-                    players[p].velocity.x = 0f;
-                }
-                else
+                if (players[p].velocity.x < -5f && !ParseOnePlayerInput(inputs[p], p, INPUT_LEFT))
                 {
                     // Bounce off wall instead of stopping if velocity is high enough.
                     players[p].velocity.x = Mathf.Abs(players[p].velocity.x) * 0.8f;
                 }
-            }
-            if (newPosition.x >= HfGame.bounds.xMax && players[p].velocity.x >= 0f)
-            {
-                if (players[p].velocity.x < 5f)
+                else
                 {
                     players[p].velocity.x = 0f;
                 }
-                else
+            }
+            if (newPosition.x >= HfGame.bounds.xMax && players[p].velocity.x >= 0f)
+            {
+                if (players[p].velocity.x > 5f && !ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT))
                 {
                     // Bounce off wall instead of stopping if velocity is high enough.
                     players[p].velocity.x = Mathf.Abs(players[p].velocity.x) * -0.8f;
+                }
+                else
+                {
+                    players[p].velocity.x = 0f;
                 }
             }
 
@@ -209,11 +218,19 @@ public struct HfGame
     {
         if ((inputs & INPUT_LEFT) != 0)
         {
-            players[playerID].velocity.x--;
+            //players[playerID].velocity.x--;
+            players[playerID].velocity.x = Mathf.Max(
+                players[playerID].velocity.x - players[playerID].acceleration,
+                players[playerID].maxSpeed * -1
+                );
         }
         if ((inputs & INPUT_RIGHT) != 0)
         {
-            players[playerID].velocity.x++;
+            //players[playerID].velocity.x++;
+            players[playerID].velocity.x = Mathf.Min(
+                players[playerID].velocity.x + players[playerID].acceleration,
+                players[playerID].maxSpeed
+                );
         }
     }
 
