@@ -297,6 +297,7 @@ GameObject:
   m_Component:
   - component: {fileID: 388537989}
   - component: {fileID: 388537988}
+  - component: {fileID: 388537990}
   m_Layer: 0
   m_Name: PlayerTwo
   m_TagString: Player
@@ -369,6 +370,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &388537990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388537987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5a73c494ac91040826fe4d8c246ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player:
+    position: {x: 0, y: 0}
+    velocity: {x: 0, y: 0}
+    health: 100
+    hitstun: 0
+    isOnGround: 1
+    currentAttackId: 0
+    bouncy: 0
+    playerId: 0
+    teamId: 0
+    collisionBoxSize: {x: 0, y: 0}
+    characterName: 
+    jumpPower: 25
+    maxSpeed: 26
+    acceleration: 2
 --- !u!1 &586792189
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,6 +407,7 @@ GameObject:
   m_Component:
   - component: {fileID: 586792191}
   - component: {fileID: 586792190}
+  - component: {fileID: 586792192}
   m_Layer: 0
   m_Name: PlayerOne
   m_TagString: Player
@@ -451,6 +480,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &586792192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586792189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5a73c494ac91040826fe4d8c246ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player:
+    position: {x: 0, y: 0}
+    velocity: {x: 0, y: 0}
+    health: 100
+    hitstun: 0
+    isOnGround: 1
+    currentAttackId: 0
+    bouncy: 0
+    playerId: 0
+    teamId: 0
+    collisionBoxSize: {x: 0, y: 0}
+    characterName: 
+    jumpPower: 25
+    maxSpeed: 26
+    acceleration: 2
 --- !u!1 &606847138
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,8 +715,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89dd15c2701dc0a4585c7cb8acc29ba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  game:
+    frameNumber: 0
+    players: []
   p1GameObject: {fileID: 586792189}
   p2GameObject: {fileID: 388537987}
+  p1AnimationController: {fileID: 586792192}
+  p2AnimationController: {fileID: 388537990}
   boundsGameObject: {fileID: 272424364}
 --- !u!1 &1848039509
 GameObject:

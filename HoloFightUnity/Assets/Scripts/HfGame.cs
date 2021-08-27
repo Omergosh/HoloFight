@@ -27,20 +27,41 @@ public static class HFConstants
 
 public enum PlayerState
 {
-
+    IDLE,
+    RUNNING,
+    JUMPSQUAT,
+    JUMPING,
+    FALLING,
+    ATTACKING,
+    BLOCKING,
+    GUARD_BROKEN,
+    HITSTUN_GROUNDED,
+    HITSTUN_AIRBORNE,
+    BOUNCING_OFF_GROUND,
+    BOUNCING_OFF_WALL,
+    CRUMPLED_ON_AIR,
+    GETTING_UP_FROM_FLOOR,
+    WALLSPLAT
 }
 
 [Serializable]
 public class Player
 {
+    // State variables - likely to change often
     public Vector2 position;
     public Vector2 velocity;
-    public Vector2 collisionBoxSize;
     public int health = 100;
     public int hitstun = 0;
+    public bool isOnGround = true;
+    public int currentAttackId = 0;
+
+    // Variables that change less often
     public bool bouncy = false;
 
     // Data unlikely to change mid-match
+    public int playerId;
+    public int teamId; // If one-on-one/FFA, equal to playerId
+    public Vector2 collisionBoxSize;
     public string characterName;
     public float jumpPower = 25f;
     public float maxSpeed = 26.0f;
@@ -114,6 +135,8 @@ public struct HfGame
         for (int p = 0; p < players.Length; p++)
         {
             players[p] = new Player();
+            players[p].playerId = p;
+            players[p].teamId = p;
         }
         players[0].position = new Vector2(bounds.width * 0.5f / players.Length, 0f);
         players[1].position = new Vector2(bounds.width * (1 - (0.5f / players.Length)), 0f);
@@ -125,7 +148,19 @@ public struct HfGame
 
     public void AdvanceFrame(long[] inputs)
     {
+        // 1. Increment frame number
         frameNumber++;
+
+        // 2. Execute any relevant input processing that extends beyond the current frame's inputs
+        //    (e.g. double taps, holding buttons, buffering inputs...)
+
+        // 3. Progress character animations/states.
+        //    Increment/decrement state variables such as hitstun, blockstun, shield health, etc.
+
+        // 4. Process character movement
+        // 5. Process projectile/object movement and creation
+        // 6. Check for hits/blocks
+        // 7. Finally, trigger a call to update visuals
         for (int p = 0; p < players.Length; p++)
         {
             // Parse inputs

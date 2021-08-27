@@ -7,8 +7,10 @@ public class GameManagerScript : MonoBehaviour
     public HfGame game;// = new HfGame(2);
     bool isGamePaused = false;
 
-    public GameObject p1GameObject;
-    public GameObject p2GameObject;
+    //public GameObject p1GameObject;
+    //public GameObject p2GameObject;
+    public PlayerAnimationController p1AnimationController;
+    public PlayerAnimationController p2AnimationController;
 
     // Testing-relevant GameObjects, Components, Scripts, constants, etc.
     public GameObject boundsGameObject;
@@ -23,6 +25,14 @@ public class GameManagerScript : MonoBehaviour
         boundsGameObject.transform.localScale = new Vector3(
             HfGame.bounds.width / pixelsInWorldUnit,
             HfGame.bounds.height / pixelsInWorldUnit);
+        if(p1AnimationController != null)
+        {
+            p1AnimationController.SetPlayer(ref game.players[0]);
+        }
+        if(p2AnimationController != null)
+        {
+            p2AnimationController.SetPlayer(ref game.players[1]);
+        }
     }
 
     void FixedUpdate()
@@ -40,22 +50,22 @@ public class GameManagerScript : MonoBehaviour
 
     void Update()
     {
-        // update visuals to match current game state
-        if (p1GameObject != null && p2GameObject != null)
-        {
-            //p1GameObject.transform.position = game.players[0].position;
-            p1GameObject.transform.position = new Vector3(
-                game.players[0].position.x - (HfGame.bounds.width / 2),
-                game.players[0].position.y - (HfGame.bounds.height / 2)
-                ) / pixelsInWorldUnit;
-        }
-        if (p1GameObject != null && p2GameObject != null)
-        {
-            //p2GameObject.transform.position = game.players[1].position;
-            p2GameObject.transform.position = new Vector3(
-                game.players[1].position.x - (HfGame.bounds.width / 2),
-                game.players[1].position.y - (HfGame.bounds.height / 2)
-                ) / pixelsInWorldUnit;
-        }
+        //// Update visuals to match current game state
+        //if (p1GameObject != null)
+        //{
+        //    //p1GameObject.transform.position = game.players[0].position;
+        //    p1GameObject.transform.position = new Vector3(
+        //        game.players[0].position.x - (HfGame.bounds.width / 2),
+        //        game.players[0].position.y - (HfGame.bounds.height / 2)
+        //        ) / pixelsInWorldUnit;
+        //}
+        //if (p2GameObject != null)
+        //{
+        //    //p2GameObject.transform.position = game.players[1].position;
+        //    p2GameObject.transform.position = new Vector3(
+        //        game.players[1].position.x - (HfGame.bounds.width / 2),
+        //        game.players[1].position.y - (HfGame.bounds.height / 2)
+        //        ) / pixelsInWorldUnit;
+        //}
     }
 }
