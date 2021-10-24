@@ -23,6 +23,11 @@ public static class HFConstants
     public const int FLOOR_Y = 600;
     public const float GRAVITY = 1.2f;
     public const float FRICTION_MULTIPLIER = 0.9f;
+    public const float BOUNCE_OFF_THRESHOLD = 5f;
+    public const float BOUNCE_OFF_MULTIPLIER = 0.7f;
+    public const float BOUNCE_OFF_POPUP_MULTIPLIER = 0.8f;
+    public const float BOUNCE_MOMENTUM_DECAY_RATE = 0.99f;
+    public const float MINIMUM_NONZERO_FLOAT_THRESHOLD = 0.4f;
 }
 
 public enum PlayerState
@@ -50,10 +55,12 @@ public class Player
     // State variables - likely to change often
     public Vector2 position;
     public Vector2 velocity;
+    public bool isOnGround = true;
+    public float bounceOffEnergy = 0;
     public int health = 100;
     public int hitstun = 0;
-    public bool isOnGround = true;
     public int currentAttackId = 0;
+    public bool facingRight = true;
 
     // Variables that change less often
     public bool bouncy = false;
@@ -67,6 +74,124 @@ public class Player
     public float maxSpeed = 26.0f;
     public float acceleration = 2.0f;
 
+    // Game loop + logic methods
+    public void ProcessHorizontalMovement(bool leftButtonDown, bool rightButtonDown)
+    {
+        if (leftButtonDown)
+        {
+            //this.velocity.x--;
+            this.velocity.x = Mathf.Max(
+                this.velocity.x - this.acceleration,
+                this.maxSpeed * -1
+                );
+        }
+        if (rightButtonDown)
+        {
+            //this.velocity.x++;
+            this.velocity.x = Mathf.Min(
+                this.velocity.x + this.acceleration,
+                this.maxSpeed
+                );
+        }
+    }
+
+    public void ProcessWallHugOrBounce(bool movingIntoWallButtonDown, bool wallIsOnRight)
+    {
+        if (wallIsOnRight)
+        {
+            // Player is colliding with a wall to their right
+            if (!movingIntoWallButtonDown)
+            {
+                // If stored momentum is present, use that instead of bouncing off normally
+                if (this.bounceOffEnergy > HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
+                {
+                    this.velocity.x = -1f * Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_MULTIPLIER;
+                    if (!this.isOnGround)
+                    {
+                        this.velocity.y = Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_POPUP_MULTIPLIER;
+                    }
+                    this.bounceOffEnergy = 0f;
+                }
+                else if (this.velocity.x > HFConstants.BOUNCE_OFF_THRESHOLD)
+                {
+                    // Bounce off wall instead of stopping if velocity is high enough.
+                    this.velocity.x = Mathf.Abs(this.velocity.x) * -HFConstants.BOUNCE_OFF_MULTIPLIER;
+                }
+                else
+                {
+                    this.velocity.x = 0f;
+                }
+            }
+            else
+            {
+                // Holding button to move into + against collided wall
+                if (this.bounceOffEnergy > HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
+                {
+                    this.bounceOffEnergy *= HFConstants.BOUNCE_MOMENTUM_DECAY_RATE;
+                }
+                else
+                {
+                    if (this.velocity.x > HFConstants.BOUNCE_OFF_THRESHOLD)
+                    {
+                        this.bounceOffEnergy = Math.Abs(this.velocity.x);
+                    }
+                    else
+                    {
+                        this.bounceOffEnergy = 0f;
+                    }
+                }
+                this.velocity.x = 0f;
+            }
+        }
+        else
+        {
+            // Player is colliding with a wall to their left
+            if (!movingIntoWallButtonDown)
+            {
+                // If stored momentum is present, use that instead of bouncing off normally
+                if (this.bounceOffEnergy > HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
+                {
+                    this.velocity.x = Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_MULTIPLIER;
+                    if (!this.isOnGround)
+                    {
+                        this.velocity.y = Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_POPUP_MULTIPLIER;
+                    }
+                    this.bounceOffEnergy = 0f;
+                }
+                else if (this.velocity.x < -HFConstants.BOUNCE_OFF_THRESHOLD)
+                {
+                    // Bounce off wall instead of stopping if velocity is high enough.
+                    this.velocity.x = Mathf.Abs(this.velocity.x) * HFConstants.BOUNCE_OFF_MULTIPLIER;
+                }
+                else
+                {
+                    this.velocity.x = 0f;
+                }
+            }
+            else
+            {
+                // Holding button to move into + against collided wall
+                if (this.bounceOffEnergy > HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
+                {
+                    this.bounceOffEnergy *= HFConstants.BOUNCE_MOMENTUM_DECAY_RATE;
+                }
+                else
+                {
+                    if (this.velocity.x < -HFConstants.BOUNCE_OFF_THRESHOLD)
+                    {
+                        this.bounceOffEnergy = Math.Abs(this.velocity.x);
+                    }
+                    else
+                    {
+                        this.bounceOffEnergy = 0f;
+                    }
+                }
+                this.velocity.x = 0f;
+            }
+        }
+    }
+
+    // Serialization methods
     public void Serialize(BinaryWriter bw)
     {
         bw.Write(position.x);
@@ -144,6 +269,8 @@ public struct HfGame
         players[1].velocity = new Vector2(-500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
         players[0].characterName = "Ina";
         players[1].characterName = "Amelia";
+
+        players[1].bouncy = true;
     }
 
     public void AdvanceFrame(long[] inputs)
@@ -161,10 +288,21 @@ public struct HfGame
         // 5. Process projectile/object movement and creation
         // 6. Check for hits/blocks
         // 7. Finally, trigger a call to update visuals
+
+        // Process character animation states
+        for (int p = 0; p < players.Length; p++)
+        {
+
+        }
+
+        // Process character movement
         for (int p = 0; p < players.Length; p++)
         {
             // Parse inputs
-            ParsePlayerInputs(inputs[p], p);
+            players[p].ProcessHorizontalMovement(
+                ParseOnePlayerInput(inputs[p], p, INPUT_LEFT),
+                ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT)
+                );
 
             Vector2 newPosition = new Vector2(players[p].position.x, players[p].position.y);
 
@@ -174,20 +312,24 @@ public struct HfGame
             // Apply forces such as gravity and friction
             if (newPosition.y <= HfGame.bounds.yMin && players[p].velocity.y <= 0f)
             {
-                if (players[p].velocity.y > -5f)
-                {
-                    players[p].velocity.y = 0f;
-                }
-                else
+                players[p].isOnGround = true;
+                if (players[p].bouncy && players[p].velocity.y <= -5f)
                 {
                     // Bounce off ground instead of landing if landing velocity is too high.
                     players[p].velocity.y = Mathf.Abs(players[p].velocity.y) * 0.6f;
                 }
+                else
+                {
+                    players[p].velocity.y = 0f;
+                }
             }
             else
             {
+                players[p].isOnGround = false;
                 players[p].velocity.y -= GRAVITY;
             }
+
+            // If player is on ground. (apply friction, check if player wants to jump)
             if (newPosition.y <= HfGame.bounds.yMin && players[p].velocity.y == 0f)
             {
                 // Player is on ground. If player is not moving along the ground
@@ -195,7 +337,7 @@ public struct HfGame
                     ^ ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT)))
                 {
                     // Apply friction!
-                    if (Mathf.Abs(players[p].velocity.x) < 1f)
+                    if (Mathf.Abs(players[p].velocity.x) < HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
                     {
                         players[p].velocity.x = 0;
                     }
@@ -213,27 +355,17 @@ public struct HfGame
             // Bump into / bounce off of horizontal walls
             if (newPosition.x <= HfGame.bounds.xMin && players[p].velocity.x <= 0f)
             {
-                if (players[p].velocity.x < -5f && !ParseOnePlayerInput(inputs[p], p, INPUT_LEFT))
-                {
-                    // Bounce off wall instead of stopping if velocity is high enough.
-                    players[p].velocity.x = Mathf.Abs(players[p].velocity.x) * 0.8f;
-                }
-                else
-                {
-                    players[p].velocity.x = 0f;
-                }
+                players[p].ProcessWallHugOrBounce(
+                    ParseOnePlayerInput(inputs[p], p, INPUT_LEFT),
+                    false
+                    );
             }
             if (newPosition.x >= HfGame.bounds.xMax && players[p].velocity.x >= 0f)
             {
-                if (players[p].velocity.x > 5f && !ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT))
-                {
-                    // Bounce off wall instead of stopping if velocity is high enough.
-                    players[p].velocity.x = Mathf.Abs(players[p].velocity.x) * -0.8f;
-                }
-                else
-                {
-                    players[p].velocity.x = 0f;
-                }
+                players[p].ProcessWallHugOrBounce(
+                    ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT),
+                    true
+                    );
             }
 
             // Enforce screen boundaries
@@ -249,27 +381,7 @@ public struct HfGame
         Debug.Log($"Checksum: {checksum}");
     }
 
-    public void ParsePlayerInputs(long inputs, int playerID)
-    {
-        if ((inputs & INPUT_LEFT) != 0)
-        {
-            //players[playerID].velocity.x--;
-            players[playerID].velocity.x = Mathf.Max(
-                players[playerID].velocity.x - players[playerID].acceleration,
-                players[playerID].maxSpeed * -1
-                );
-        }
-        if ((inputs & INPUT_RIGHT) != 0)
-        {
-            //players[playerID].velocity.x++;
-            players[playerID].velocity.x = Mathf.Min(
-                players[playerID].velocity.x + players[playerID].acceleration,
-                players[playerID].maxSpeed
-                );
-        }
-    }
-
-    public bool ParseOnePlayerInput(long inputs, int playerID, int inputConstant)
+    public static bool ParseOnePlayerInput(long inputs, int playerID, int inputConstant)
     {
         return ((inputs & inputConstant) != 0);
     }
