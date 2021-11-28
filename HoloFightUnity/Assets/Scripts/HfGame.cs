@@ -11,6 +11,10 @@ public static class HFConstants
     public const float FRAME_RATE_SPEED_SCALE_MULTIPLIER = 1f / 60f;
     public const int MAX_PLAYERS = 2;
 
+
+    public const int INPUT_BUFFER_WINDOW = 5;
+    public const int INPUT_PREVIOUS_STORED_MAX = 30;
+
     public const int INPUT_LEFT = (1 << 0);
     public const int INPUT_RIGHT = (1 << 1);
     public const int INPUT_UP = (1 << 2);
@@ -50,6 +54,81 @@ public enum PlayerState
 }
 
 [Serializable]
+public struct InputData
+{
+    private LinkedList<long> inputsCurrentAndPrevious;
+
+    public void Init()
+    {
+        inputsCurrentAndPrevious = new LinkedList<long>();
+    }
+
+    // Handling of entire sets of inputs
+    public void AddCurrentInputs(long newInputs)
+    {
+        inputsCurrentAndPrevious.AddLast(newInputs);
+        if (inputsCurrentAndPrevious.Count > HFConstants.INPUT_PREVIOUS_STORED_MAX)
+        {
+            inputsCurrentAndPrevious.RemoveFirst();
+        }
+    }
+
+    public long CurrentInputs => inputsCurrentAndPrevious.Last.Value;
+
+    // Public (not static) methods for individual input queries
+    public bool GetInputDown(int inputConstant)
+    {
+        if((CurrentInputs & inputConstant) != 0)
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool GetInputJustPressed(int inputConstant)
+    {
+        if((CurrentInputs & inputConstant) != 0)
+        {
+            if ((inputsCurrentAndPrevious.Last.Previous.Value & inputConstant) == 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool GetInputHeldDown(int inputConstant, int durationInFrames)
+    {
+        // Validate duration parameter
+        if(durationInFrames < 1)
+        {
+            return false;
+        }
+
+        LinkedListNode<long> currentInputsNode = inputsCurrentAndPrevious.Last;
+        for(int i = 0; i < durationInFrames; i++)
+        {
+            if((currentInputsNode.Value & inputConstant) == 0)
+            {
+                return false;
+            }
+            currentInputsNode = currentInputsNode.Previous;
+        }
+        return true;
+    }
+
+    public bool GetInputJustReleased(int inputConstant)
+    {
+        if ((CurrentInputs & inputConstant) == 0)
+        {
+            if ((inputsCurrentAndPrevious.Last.Previous.Value & inputConstant) != 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+[Serializable]
 public class Player
 {
     // State variables - likely to change often
@@ -74,7 +153,123 @@ public class Player
     public float maxSpeed = 26.0f;
     public float acceleration = 2.0f;
 
-    // Game loop + logic methods
+    // Frame/animation data
+    public Dictionary<string, AnimationStateData> animationsAllData;
+    public AnimationStateData currentAnimationState;
+
+    private PlayerState playerState = PlayerState.IDLE;
+
+    #region Game loop + logic methods
+
+    // Overload this method to implement character-specific logic!
+    public void ProcessAnimationStateLogic(InputData inputData)
+    {
+        // If a hitstun/blockstun state, decrement the appropriate value, and exit to another state where applicable
+
+        // Based on current state and inputs, either:
+        // - stay on this frame,
+        // - advance current animation by one frame
+        // - transition into another animation
+    }
+
+    public void ProcessAllMovement(InputData inputData)
+    {
+        Vector2 newPosition = new Vector2(this.position.x, this.position.y);
+
+        // If current animation frame prescribes changes to position/velocity, apply them here
+
+        // If current animationstate allows for free horizontal movement, jumping, etc.
+        // then handle that here
+        newPosition = ProcessMovementBeforeCollisions(inputData);
+
+        // Apply forces such as gravity and friction
+        if (newPosition.y <= HfGame.bounds.yMin && this.velocity.y <= 0f)
+        {
+            this.isOnGround = true;
+            if (this.bouncy && this.velocity.y <= -5f)
+            {
+                // Bounce off ground instead of landing if landing velocity is too high.
+                this.velocity.y = Mathf.Abs(this.velocity.y) * 0.6f;
+            }
+            else
+            {
+                this.velocity.y = 0f;
+            }
+        }
+        else
+        {
+            this.isOnGround = false;
+            this.velocity.y -= GRAVITY;
+        }
+
+        // If player is on ground. (apply friction, check if player wants to jump)
+        if (newPosition.y <= HfGame.bounds.yMin && this.velocity.y == 0f)
+        {
+            // Player is on ground. If player is not moving along the ground
+            if (!(inputData.GetInputDown(INPUT_LEFT)
+                ^ inputData.GetInputDown(INPUT_RIGHT)))
+            {
+                // Apply friction!
+                if (Mathf.Abs(this.velocity.x) < HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
+                {
+                    this.velocity.x = 0;
+                }
+                else
+                {
+                    this.velocity.x *= FRICTION_MULTIPLIER;
+                }
+            }
+            // Player can jump!
+            if (inputData.GetInputDown(INPUT_UP))
+            {
+                this.velocity.y = this.jumpPower;
+            }
+        }
+        // Bump into / bounce off of horizontal walls
+        if (newPosition.x <= HfGame.bounds.xMin && this.velocity.x <= 0f)
+        {
+            this.ProcessWallHugOrBounce(
+               inputData.GetInputDown(INPUT_LEFT),
+                false
+                );
+        }
+        if (newPosition.x >= HfGame.bounds.xMax && this.velocity.x >= 0f)
+        {
+            this.ProcessWallHugOrBounce(
+                inputData.GetInputDown(INPUT_RIGHT),
+                true
+                );
+        }
+
+        // Enforce screen boundaries 
+        newPosition.x = Mathf.Clamp(newPosition.x, HfGame.bounds.xMin, HfGame.bounds.xMax);
+        newPosition.y = Mathf.Clamp(newPosition.y, HfGame.bounds.yMin, HfGame.bounds.yMax);
+        // (could be moved before the gravity/friction changes, which only affect velocity, not position)
+
+        // After processing movement logic, update final position of player
+        this.position = newPosition;
+    }
+
+    public Vector2 ProcessMovementBeforeCollisions(InputData inputData)
+    {
+        // If current animation frame prescribes changes to position/velocity, apply them here
+
+        // If current animationstate allows for free horizontal movement, jumping, etc.
+        // then handle that here// Parse inputs
+        this.ProcessHorizontalMovement(
+            inputData.GetInputDown(INPUT_LEFT),
+            inputData.GetInputDown(INPUT_RIGHT)
+            );
+
+        Vector2 newPosition = new Vector2(this.position.x, this.position.y);
+
+        // Apply change in position from velocity
+        newPosition += this.velocity;
+
+        // Return new position after initial movement processing
+        return newPosition;
+    }
+
     public void ProcessHorizontalMovement(bool leftButtonDown, bool rightButtonDown)
     {
         if (leftButtonDown)
@@ -190,8 +385,84 @@ public class Player
             }
         }
     }
+    
+    //public void ProcessThisPlayerLandedTheirAttack(AttackInteractionData attackInteractionData)
+    //{
+    //    // this function exists to allow for logic like
+    //    // "spawn entity/projectile on hit"
+    //    // or "change animation on hit"
+    //}
+    
+    #endregion
 
-    // Serialization methods
+    #region Game logic helper/state functions
+    public bool IsInHitstun
+    {
+        get
+        {
+            List<PlayerState> playerStatesToCheckAgainst = new List<PlayerState>{
+                PlayerState.HITSTUN_AIRBORNE,
+                PlayerState.HITSTUN_GROUNDED
+            };
+            if (playerStatesToCheckAgainst.Contains(this.playerState)) { return true; }
+            return false;
+        }
+    }
+
+    public bool IsRecoveringPostHitstun
+    {
+        get
+        {
+            List<PlayerState> playerStatesToCheckAgainst = new List<PlayerState>{
+                PlayerState.GETTING_UP_FROM_FLOOR
+            };
+            if (playerStatesToCheckAgainst.Contains(this.playerState)) { return true; }
+            return false;
+        }
+    }
+
+    public bool IsInBlockingState
+    {
+        get
+        {
+            List<PlayerState> playerStatesToCheckAgainst = new List<PlayerState>{
+                PlayerState.BLOCKING
+            };
+            if (playerStatesToCheckAgainst.Contains(this.playerState)) { return true; }
+            return false;
+        }
+    }
+
+    public bool IsInAttackingState
+    {
+        get
+        {
+            List<PlayerState> playerStatesToCheckAgainst = new List<PlayerState>{
+                PlayerState.ATTACKING
+            };
+            if (playerStatesToCheckAgainst.Contains(this.playerState)) { return true; }
+            return false;
+        }
+    }
+    
+    public bool IsInActionableState
+    {
+        get
+        {
+            List<PlayerState> playerStatesToCheckAgainst = new List<PlayerState>{
+                PlayerState.FALLING,
+                PlayerState.IDLE,
+                PlayerState.JUMPING,
+                PlayerState.JUMPSQUAT,
+                PlayerState.RUNNING
+            };
+            if (playerStatesToCheckAgainst.Contains(this.playerState)) { return true; }
+            return false;
+        }
+    }
+    #endregion
+
+    #region Serialization methods
     public void Serialize(BinaryWriter bw)
     {
         bw.Write(position.x);
@@ -235,6 +506,7 @@ public class Player
         hashCode = hashCode * -1521134295 + jumpPower.GetHashCode();
         return hashCode;
     }
+    #endregion
 }
 
 [Serializable]
@@ -243,6 +515,8 @@ public struct HfGame
     public int frameNumber;
     public int checksum => GetHashCode();
 
+    public InputData[] inputData;
+    
     public Player[] players;
 
     public static Rect bounds = new Rect(0, 0, 1280, 720);
@@ -251,6 +525,11 @@ public struct HfGame
     {
         frameNumber = 0;
         players = new Player[numberOfPlayers];
+        inputData = new InputData[numberOfPlayers];
+        for (int p = 0; p < players.Length; p++)
+        {
+            inputData[p].Init();
+        }
         Init();
         Debug.Log("Game initialized");
     }
@@ -275,107 +554,64 @@ public struct HfGame
 
     public void AdvanceFrame(long[] inputs)
     {
+        // *---------------------------------------------------------------------------------------*
         // 1. Increment frame number
-        frameNumber++;
-
-        // 2. Execute any relevant input processing that extends beyond the current frame's inputs
-        //    (e.g. double taps, holding buttons, buffering inputs...)
-
+        // 2. Input processing
+        //         Execute any relevant input processing that extends beyond the current frame's inputs
+        //         (e.g. double taps, holding buttons, buffering inputs...)
         // 3. Progress character animations/states.
-        //    Increment/decrement state variables such as hitstun, blockstun, shield health, etc.
-
+        //         Increment/decrement state variables such as hitstun, blockstun, shield health, etc.
         // 4. Process character movement
         // 5. Process projectile/object movement and creation
         // 6. Check for hits/blocks
         // 7. Finally, trigger a call to update visuals
+        // *---------------------------------------------------------------------------------------*
+        
+        // 1. Increment frame number
+        frameNumber++;
+        Debug.Log($"Frame: {frameNumber}");
 
-        // Process character animation states
+        // 2. Input processing
         for (int p = 0; p < players.Length; p++)
         {
-
+            inputData[p].AddCurrentInputs(inputs[p]);
         }
 
-        // Process character movement
+        // 3. Process character animation states
         for (int p = 0; p < players.Length; p++)
         {
-            // Parse inputs
-            players[p].ProcessHorizontalMovement(
-                ParseOnePlayerInput(inputs[p], p, INPUT_LEFT),
-                ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT)
-                );
+            //players[p].ProcessAnimationStateLogic(inputDatasets[p]);
+        }
 
-            Vector2 newPosition = new Vector2(players[p].position.x, players[p].position.y);
+        // 4. Process character movement
+        for (int p = 0; p < players.Length; p++)
+        {
+            players[p].ProcessAllMovement(inputData[p]);
+            //Vector2 newPosition = new Vector2(players[p].position.x, players[p].position.y);
 
-            // Apply change in position from velocity
-            newPosition += players[p].velocity;
+            // Apply each player's movement logic (dependent on their animationstate / player state)
+            //newPosition = players[p].ProcessMovementBeforeCollisions(inputData[p]);
 
-            // Apply forces such as gravity and friction
-            if (newPosition.y <= HfGame.bounds.yMin && players[p].velocity.y <= 0f)
-            {
-                players[p].isOnGround = true;
-                if (players[p].bouncy && players[p].velocity.y <= -5f)
-                {
-                    // Bounce off ground instead of landing if landing velocity is too high.
-                    players[p].velocity.y = Mathf.Abs(players[p].velocity.y) * 0.6f;
-                }
-                else
-                {
-                    players[p].velocity.y = 0f;
-                }
-            }
-            else
-            {
-                players[p].isOnGround = false;
-                players[p].velocity.y -= GRAVITY;
-            }
+            // Process collisions between all players (and between players and objects/obstacles/walls)
+            // Add check either in here or player function for valid wallhugging/walljumping state
 
-            // If player is on ground. (apply friction, check if player wants to jump)
-            if (newPosition.y <= HfGame.bounds.yMin && players[p].velocity.y == 0f)
-            {
-                // Player is on ground. If player is not moving along the ground
-                if (!(ParseOnePlayerInput(inputs[p], p, INPUT_LEFT)
-                    ^ ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT)))
-                {
-                    // Apply friction!
-                    if (Mathf.Abs(players[p].velocity.x) < HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
-                    {
-                        players[p].velocity.x = 0;
-                    }
-                    else
-                    {
-                        players[p].velocity.x *= FRICTION_MULTIPLIER;
-                    }
-                }
-                // Player can jump!
-                if (ParseOnePlayerInput(inputs[p], p, INPUT_UP))
-                {
-                    players[p].velocity.y = players[p].jumpPower;
-                }
-            }
-            // Bump into / bounce off of horizontal walls
-            if (newPosition.x <= HfGame.bounds.xMin && players[p].velocity.x <= 0f)
-            {
-                players[p].ProcessWallHugOrBounce(
-                    ParseOnePlayerInput(inputs[p], p, INPUT_LEFT),
-                    false
-                    );
-            }
-            if (newPosition.x >= HfGame.bounds.xMax && players[p].velocity.x >= 0f)
-            {
-                players[p].ProcessWallHugOrBounce(
-                    ParseOnePlayerInput(inputs[p], p, INPUT_RIGHT),
-                    true
-                    );
-            }
+            // Apply forces such as gravity/friction to velocities (but do not change positions here)
 
-            // Enforce screen boundaries
-            newPosition.x = Mathf.Clamp(newPosition.x, HfGame.bounds.xMin, HfGame.bounds.xMax);
-            newPosition.y = Mathf.Clamp(newPosition.y, HfGame.bounds.yMin, HfGame.bounds.yMax);
-            players[p].position = newPosition;
+            // Final positions/velocities determined and assigned
 
             // Debug info
             Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
         }
+
+        // 5. Projectile logic (DON'T IMPLEMENT YET)
+        //      a. projectile movement
+        //      b. projectile creation
+        // (processed after movement so that new ones stay in their initial positions on the frame they're created)
+
+        // Check for hits/blocks
+        // 1. check for hitbox/hurtbox overlaps all at once
+        // 2. THEN apply interaction logic all at once, to allow for things such as attacks trading (simultaneous hits), etc.
+        // on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
 
         // Debug info
         Debug.Log($"Checksum: {checksum}");
