@@ -21,6 +21,8 @@ public class FrameDataEditorScript : MonoBehaviour
     //public Transform hitboxRepresentation1;
     public Transform[] hitboxRepresentations = new Transform[10];
 
+    public VisualRepPlayer visualRep;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -171,6 +173,10 @@ public class FrameDataEditorScript : MonoBehaviour
         // Load using input values provided
         LoadCurrentActiveAnimationData(charName, animName);
 
+        // Update visual representation
+        visualRep.UpdateAnimationClip(charName, animName);
+        visualRep.totalFrames = animationFrameData.frames.Count;
+
         // Refresh/update UI values to reflect newly loaded data
         OnResetToFrameZero();
         frameEditorUIValues.UpdateUIForAnimationLoad();
@@ -186,16 +192,22 @@ public class FrameDataEditorScript : MonoBehaviour
     void AdvanceFrame()
     {
         animationFrameData.AdvanceFrame();
+        visualRep.currentFrame = animationFrameData.currentFrameNumber;
+        visualRep.UpdateAnimationFrame(animationFrameData.currentFrameNumber);
     }
 
     void RewindFrame()
     {
         animationFrameData.RewindFrame();
+        visualRep.currentFrame = animationFrameData.currentFrameNumber;
+        visualRep.UpdateAnimationFrame(animationFrameData.currentFrameNumber);
     }
 
     public void GoToFrame(int newFrame)
     {
         animationFrameData.GoToFrame(newFrame);
+        visualRep.currentFrame = animationFrameData.currentFrameNumber;
+        visualRep.UpdateAnimationFrame(animationFrameData.currentFrameNumber);
     }
 
     // Hitbox Manipulation

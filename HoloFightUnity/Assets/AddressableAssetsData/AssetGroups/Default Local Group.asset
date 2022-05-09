@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 55e6eb991ab687a45ae54a0ae7284625
+  m_SerializeEntries:
+  - m_GUID: c816584a0cbcef7439a87d3fb1422706
+    m_Address: Assets/Characters/Sprites/INA/ina_idle0000.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 43933bfa09117844992446ae6be60dd7
+    m_Address: Assets/Characters/Sprites/INA/ina_idle0001.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 37487f7da7ee0044c863f9bbf3d40699
+    m_Address: Assets/Characters/Sprites/INA/ina_run0000.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 27897f7e89ffe1b428854940d916c084
+    m_Address: Assets/Characters/Sprites/INA/ina_run0001.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 010582e9b0b185142800864befa907d2, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7e1627d4ab0f630438264fe8ba2dbebf, type: 2}
+    - {fileID: 11400000, guid: ab3393b63ea6aa040bc7d4cd0daa841a, type: 2}
