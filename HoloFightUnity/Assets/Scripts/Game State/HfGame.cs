@@ -70,7 +70,9 @@ public struct HfGame
     public HfGame(int numberOfPlayers)
     {
         frameNumber = 0;
+        
         players = new Player[numberOfPlayers];
+
         inputData = new InputData[numberOfPlayers];
         for (int p = 0; p < players.Length; p++)
         {
@@ -84,18 +86,26 @@ public struct HfGame
     {
         for (int p = 0; p < players.Length; p++)
         {
-            players[p] = new Player();
+            //players[p] = new Player();
+
+            // Assign selected characters to players (hardcoded for now)
+            //if (p == 0)
+            //{
+                players[p] = new PlayerIna();
+            //}
+
             players[p].playerId = p;
             players[p].teamId = p;
         }
+
         players[0].position = new Vector2(bounds.width * 0.5f / players.Length, 0f);
         players[1].position = new Vector2(bounds.width * (1 - (0.5f / players.Length)), 0f);
         players[0].velocity = new Vector2(200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
         players[1].velocity = new Vector2(-500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
         players[0].characterName = "Ina";
-        players[1].characterName = "Amelia";
+        players[1].characterName = "Ina";
 
-        players[1].bouncy = true;
+        //players[1].bouncy = true;
     }
 
     public void AdvanceFrame(long[] inputs)
@@ -110,7 +120,7 @@ public struct HfGame
         // 4. Process character movement
         // 5. Process projectile/object movement and creation
         // 6. Check for hits/blocks
-        // 7. Finally, trigger a call to update visuals
+        // 7. Finally, trigger a call to update visuals (if necessary)
         // *---------------------------------------------------------------------------------------*
         
         // 1. Increment frame number
@@ -126,7 +136,7 @@ public struct HfGame
         // 3. Process character animation states
         for (int p = 0; p < players.Length; p++)
         {
-            //players[p].ProcessAnimationStateLogic(inputDatasets[p]);
+            players[p].ProcessAnimationStateLogic(inputData[p]);
         }
 
         // 4. Process character movement
@@ -152,12 +162,12 @@ public struct HfGame
         // 5. Projectile logic (DON'T IMPLEMENT YET)
         //      a. projectile movement
         //      b. projectile creation
-        // (processed after movement so that new ones stay in their initial positions on the frame they're created)
+        //         (processed after movement so that new ones stay in their initial positions on the frame they're created)
 
-        // Check for hits/blocks
-        // 1. check for hitbox/hurtbox overlaps all at once
-        // 2. THEN apply interaction logic all at once, to allow for things such as attacks trading (simultaneous hits), etc.
-        // on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
+        // 6. Check for hits/blocks
+        //      a. check for hitbox/hurtbox overlaps all at once
+        //      b. THEN apply interaction logic all at once, to allow for things such as attacks trading (simultaneous hits), etc.
+        //         on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
 
         // Debug info
         Debug.Log($"Checksum: {checksum}");

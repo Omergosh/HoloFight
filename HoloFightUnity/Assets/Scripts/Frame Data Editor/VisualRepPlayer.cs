@@ -30,19 +30,19 @@ public class VisualRepPlayer : MonoBehaviour
         animator.speed = 0;
     }
 
-    void Update()
-    {
-        if(characterAnimations != null)
-        {
-            //Debug.Log(characterAnimations.idle);
-            //Debug.Log(characterAnimations.run);
-        }
-    }
+    //void Update()
+    //{
+    //    if(characterAnimations != null)
+    //    {
+    //        //Debug.Log(characterAnimations.idle);
+    //        //Debug.Log(characterAnimations.run);
+    //    }
+    //}
 
-    void UpdateVisuals()
-    {
-        //UpdateAnimationFrame();
-    }
+    //void UpdateVisuals()
+    //{
+    //    //UpdateAnimationFrame();
+    //}
 
     public void UpdateAnimationClip(string newCharacterName, string newAnimationName)
     {
@@ -96,24 +96,24 @@ public class VisualRepPlayer : MonoBehaviour
     //    spriteRenderer.sprite = newSprite;
     //}
 
-    public void LoadCurrentAnimationFrames(string character = "INA", string animation = "run", int frameCount = 2)
-    {
-        currentFrame = 0;
-        AsyncOperationHandle<Sprite> spriteHandle = Addressables.LoadAssetAsync<Sprite>("Assets/Characters/Sprites/INA/ina_run0000.png");
-        spriteHandle.Completed += LoadFrameSpriteWhenReady;
-        spriteHandle = Addressables.LoadAssetAsync<Sprite>("Assets/Characters/Sprites/INA/ina_run0001.png");
-        spriteHandle.Completed += LoadFrameSpriteWhenReady;
-    }
+    //public void LoadCurrentAnimationFrames(string character = "INA", string animation = "run", int frameCount = 2)
+    //{
+    //    currentFrame = 0;
+    //    AsyncOperationHandle<Sprite> spriteHandle = Addressables.LoadAssetAsync<Sprite>("Assets/Characters/Sprites/INA/ina_run0000.png");
+    //    spriteHandle.Completed += LoadFrameSpriteWhenReady;
+    //    spriteHandle = Addressables.LoadAssetAsync<Sprite>("Assets/Characters/Sprites/INA/ina_run0001.png");
+    //    spriteHandle.Completed += LoadFrameSpriteWhenReady;
+    //}
 
-    void LoadFrameSpriteWhenReady(AsyncOperationHandle<Sprite> handleToCheck)
-    {
-        if(handleToCheck.Status == AsyncOperationStatus.Succeeded)
-        {
-            sprites[currentFrame] = handleToCheck.Result;
-        }
-        //currentFrame++;
-        //if(currentFrame < sprites.Length) {}
-    }
+    //void LoadFrameSpriteWhenReady(AsyncOperationHandle<Sprite> handleToCheck)
+    //{
+    //    if(handleToCheck.Status == AsyncOperationStatus.Succeeded)
+    //    {
+    //        sprites[currentFrame] = handleToCheck.Result;
+    //    }
+    //    //currentFrame++;
+    //    //if(currentFrame < sprites.Length) {}
+    //}
 
     //void LoadAnimationFramesFromFile(string characterName, string animationName, int frameCount)
     //{

@@ -32,15 +32,15 @@ public class Player
     public float acceleration = 2.0f;
 
     // Frame/animation data
-    public Dictionary<string, AnimationStateData> animationsAllData;
+    public Dictionary<string, AnimationStateData> animationsAllData = new Dictionary<string, AnimationStateData>();
     public AnimationStateData currentAnimationState;
 
-    private PlayerState playerState = PlayerState.IDLE;
+    public PlayerState playerState = PlayerState.IDLE;
 
     #region Game loop + logic methods
 
     // Overload this method to implement character-specific logic!
-    public void ProcessAnimationStateLogic(InputData inputData)
+    public virtual void ProcessAnimationStateLogic(InputData inputData)
     {
         // If a hitstun/blockstun state, decrement the appropriate value, and exit to another state where applicable
 
@@ -48,6 +48,8 @@ public class Player
         // - stay on this frame,
         // - advance current animation by one frame
         // - transition into another animation
+
+        Debug.Log("animation state logic goes here");
     }
 
     public void ProcessAllMovement(InputData inputData)
@@ -71,6 +73,10 @@ public class Player
             }
             else
             {
+                if(this.velocity.y < 0f)
+                {
+                    TriggerLand();
+                }
                 this.velocity.y = 0f;
             }
         }
@@ -81,8 +87,20 @@ public class Player
         }
 
         // If player is on ground. (apply friction, check if player wants to jump)
-        if (newPosition.y <= HfGame.bounds.yMin && this.velocity.y == 0f)
+        if (this.isOnGround && this.velocity.y == 0f)
         {
+            //if (IsInActionableState)
+            //{
+            //    if (inputData.GetInputDown(INPUT_LEFT) && !inputData.GetInputDown(INPUT_RIGHT))
+            //    {
+            //        facingRight = false;
+            //    }
+            //    else if (!inputData.GetInputDown(INPUT_LEFT) && inputData.GetInputDown(INPUT_RIGHT))
+            //    {
+            //        facingRight = true;
+            //    }
+            //}
+
             // Player is on ground. If player is not moving along the ground
             if (!(inputData.GetInputDown(INPUT_LEFT)
                 ^ inputData.GetInputDown(INPUT_RIGHT)))
@@ -101,6 +119,7 @@ public class Player
             if (inputData.GetInputDown(INPUT_UP))
             {
                 this.velocity.y = this.jumpPower;
+                TriggerJump();
             }
         }
         // Bump into / bounce off of horizontal walls
@@ -128,6 +147,24 @@ public class Player
 
         // After processing movement logic, update final position of player
         this.position = newPosition;
+
+        if (IsInActionableState)
+        {
+            if (inputData.GetInputDown(INPUT_LEFT) && !inputData.GetInputDown(INPUT_RIGHT))
+            {
+                if ((playerState != PlayerState.JUMPING && playerState != PlayerState.FALLING) || inputData.GetInputJustPressed(INPUT_LEFT))
+                {
+                    facingRight = false;
+                }
+            }
+            else if (!inputData.GetInputDown(INPUT_LEFT) && inputData.GetInputDown(INPUT_RIGHT))
+            {
+                if ((playerState != PlayerState.JUMPING && playerState != PlayerState.FALLING) || inputData.GetInputJustPressed(INPUT_RIGHT))
+                {
+                    facingRight = true;
+                }
+            }
+        }
     }
 
     public Vector2 ProcessMovementBeforeCollisions(InputData inputData)
@@ -152,22 +189,25 @@ public class Player
 
     public void ProcessHorizontalMovement(bool leftButtonDown, bool rightButtonDown)
     {
-        if (leftButtonDown)
-        {
-            //this.velocity.x--;
-            this.velocity.x = Mathf.Max(
-                this.velocity.x - this.acceleration,
-                this.maxSpeed * -1
-                );
-        }
-        if (rightButtonDown)
-        {
-            //this.velocity.x++;
-            this.velocity.x = Mathf.Min(
-                this.velocity.x + this.acceleration,
-                this.maxSpeed
-                );
-        }
+        //if (IsInActionableState)
+        //{
+            if (leftButtonDown)
+            {
+                //this.velocity.x--;
+                this.velocity.x = Mathf.Max(
+                    this.velocity.x - this.acceleration,
+                    this.maxSpeed * -1
+                    );
+            }
+            if (rightButtonDown)
+            {
+                //this.velocity.x++;
+                this.velocity.x = Mathf.Min(
+                    this.velocity.x + this.acceleration,
+                    this.maxSpeed
+                    );
+            }
+        //}
     }
 
     public void ProcessWallHugOrBounce(bool movingIntoWallButtonDown, bool jumpButtonDown, bool wallIsOnRight)
@@ -177,17 +217,7 @@ public class Player
             // Player is colliding with a wall to their right
             if (!movingIntoWallButtonDown)
             {
-                // If stored momentum is present, use that instead of bouncing off normally
-                if (this.bounceOffEnergy > HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
-                {
-                    //this.velocity.x = -1f * Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_MULTIPLIER;
-                    //if (!this.isOnGround)
-                    //{
-                    //    this.velocity.y = Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_POPUP_MULTIPLIER;
-                    //}
-                    //this.bounceOffEnergy = 0f;
-                }
-                else if (this.velocity.x > HFConstants.BOUNCE_OFF_THRESHOLD)
+                if (this.velocity.x > HFConstants.BOUNCE_OFF_THRESHOLD)
                 {
                     // Bounce off wall instead of stopping if velocity is high enough.
                     this.velocity.x = Mathf.Abs(this.velocity.x) * -HFConstants.BOUNCE_OFF_MULTIPLIER;
@@ -195,11 +225,27 @@ public class Player
                 else
                 {
                     this.velocity.x = 0f;
+
+                    // If player was going to stick to wall, check for wall jump
+                    if (jumpButtonDown)
+                    {
+                        // Wall jump (jump off of wall)
+                        if (!this.isOnGround)
+                        {
+                            this.velocity.x = -WALL_JUMP_VELOCITY;
+                            this.velocity.y = WALL_JUMP_VELOCITY;
+                            facingRight = false;
+                            TriggerJump();
+                        }
+                        this.bounceOffEnergy = 0f;
+                    }
                 }
             }
             else
             {
                 // Holding button to move into + against collided wall
+                facingRight = true;
+                
                 if (jumpButtonDown)
                 {
                     // Wall jump (jump off of wall)
@@ -207,6 +253,8 @@ public class Player
                     {
                         this.velocity.x = -WALL_JUMP_VELOCITY;
                         this.velocity.y = WALL_JUMP_VELOCITY;
+                        facingRight = false;
+                        TriggerJump();
                     }
                     this.bounceOffEnergy = 0f;
                 }
@@ -236,17 +284,7 @@ public class Player
             // Player is colliding with a wall to their left
             if (!movingIntoWallButtonDown)
             {
-                // If stored momentum is present, use that instead of bouncing off normally
-                if (this.bounceOffEnergy > HFConstants.MINIMUM_NONZERO_FLOAT_THRESHOLD)
-                {
-                    //this.velocity.x = Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_MULTIPLIER;
-                    //if (!this.isOnGround)
-                    //{
-                    //    this.velocity.y = Mathf.Abs(this.bounceOffEnergy) * HFConstants.BOUNCE_OFF_POPUP_MULTIPLIER;
-                    //}
-                    //this.bounceOffEnergy = 0f;
-                }
-                else if (this.velocity.x < -HFConstants.BOUNCE_OFF_THRESHOLD)
+                if (this.velocity.x < -HFConstants.BOUNCE_OFF_THRESHOLD)
                 {
                     // Bounce off wall instead of stopping if velocity is high enough.
                     this.velocity.x = Mathf.Abs(this.velocity.x) * HFConstants.BOUNCE_OFF_MULTIPLIER;
@@ -254,11 +292,27 @@ public class Player
                 else
                 {
                     this.velocity.x = 0f;
+
+                    // If player was going to stick to wall, check for wall jump
+                    if (jumpButtonDown)
+                    {
+                        // Wall jump (jump off of wall)
+                        if (!this.isOnGround)
+                        {
+                            this.velocity.x = WALL_JUMP_VELOCITY;
+                            this.velocity.y = WALL_JUMP_VELOCITY;
+                            facingRight = true;
+                            TriggerJump();
+                        }
+                        this.bounceOffEnergy = 0f;
+                    }
                 }
             }
             else
             {
                 // Holding button to move into + against collided wall
+                facingRight = false;
+                
                 if (jumpButtonDown)
                 {
                     // Wall jump (jump off of wall)
@@ -266,6 +320,8 @@ public class Player
                     {
                         this.velocity.x = WALL_JUMP_VELOCITY;
                         this.velocity.y = WALL_JUMP_VELOCITY;
+                        facingRight = true;
+                        TriggerJump();
                     }
                     this.bounceOffEnergy = 0f;
                 }
@@ -301,7 +357,49 @@ public class Player
 
     #endregion
 
+    #region Game logic event calls for triggering animation changes, etc. Virtual to allow overrides.
+
+    protected virtual void TriggerJump()
+    {
+
+    }
+    protected virtual void TriggerLand()
+    {
+
+    }
+
+    #endregion
+
     #region Game logic helper/state functions
+    protected void ChangeAnimationState(string newAnimationState)
+    {
+        currentAnimationState = animationsAllData[newAnimationState];
+
+        switch (newAnimationState)
+        {
+            case "idle":
+                playerState = PlayerState.IDLE;
+                break;
+            case "run":
+                playerState = PlayerState.RUNNING;
+                break;
+            case "jump":
+                playerState = PlayerState.JUMPING;
+                break;
+            case "fall":
+                playerState = PlayerState.FALLING;
+                break;
+            case "attackA1":
+            case "attackB1":
+            case "attackC1":
+                playerState = PlayerState.ATTACKING;
+                break;
+            case "hitstun":
+                playerState = PlayerState.HITSTUN_GROUNDED;
+                break;
+        }
+    }
+    
     public bool IsInHitstun
     {
         get
