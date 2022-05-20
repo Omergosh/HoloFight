@@ -17,6 +17,19 @@ public class PlayerAnimationController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Animator animator;
 
+    // Collision box / hurtbox / hitbox visual representation references
+    //public Transform collisionBoxRepresentation;
+    public Transform hurtboxRepresentation;
+    public Transform[] hitboxRepresentations;
+
+    // Option / toggles
+    public bool displayCollisionBoxes = true;
+    public bool displayHurtboxes = true;
+    public bool displayHitboxes = true;
+
+    // Constants
+    public const float pixelsInWorldUnit = 100f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +76,8 @@ public class PlayerAnimationController : MonoBehaviour
             {
                 UpdateAnimations();
             }
+
+            UpdateBoxRepresentations();
         }
     }
 
@@ -76,5 +91,84 @@ public class PlayerAnimationController : MonoBehaviour
         int currentFrame = player.currentAnimationState.currentFrameNumber;
         int totalFrames = player.currentAnimationState.frames.Count;
         animator.Play(animatorStateName, -1, (float)currentFrame / (float)totalFrames);
+    }
+
+    public void UpdateBoxRepresentations()
+    {
+        // Collision box (currently unimplemented in game state - nothing to display yet)
+        // [DO LATER]
+
+        // Hurtbox (blue box)
+        if (hurtboxRepresentation != null)
+        {
+            if (displayHurtboxes)
+            {
+                hurtboxRepresentation.gameObject.SetActive(true);
+
+                Rect hurtboxRect = player.GetHurtboxRelative();
+                hurtboxRepresentation.localPosition = new Vector3(
+                    (hurtboxRect.x + (hurtboxRect.width / 2f)) / pixelsInWorldUnit,
+                    (hurtboxRect.y - (hurtboxRect.height / 2f)) / pixelsInWorldUnit,
+                    hurtboxRepresentation.localPosition.z
+                );
+                hurtboxRepresentation.localScale = new Vector3(
+                    hurtboxRect.width / pixelsInWorldUnit,
+                    hurtboxRect.height / pixelsInWorldUnit,
+                    hurtboxRepresentation.localScale.z
+                );
+            }
+            else
+            {
+                hurtboxRepresentation.gameObject.SetActive(false);
+            }
+        }
+
+        // Hitboxes (red boxes)
+        for (int i = 0; i < hitboxRepresentations.Length; i++)
+        {
+            if (hitboxRepresentations[i] != null)
+            {
+                if (displayHitboxes)
+                {
+                    if (i < player.currentAnimationState.CurrentFrame.hitboxes.Count)
+                    {
+                        hitboxRepresentations[i].gameObject.SetActive(true);
+
+                        Debug.Log("Display a hitbox");
+                        Rect hitboxRect = player.currentAnimationState.CurrentFrame.hitboxes[i].hitboxRect;
+                        Debug.Log(hitboxRect);
+                        player.GetHitboxes();
+
+                        //float facingRightMultiplier = (player.facingRight) ? 1f : -1f;
+                        //Debug.Log(facingRightMultiplier);
+                        //Debug.Log(player.facingRight);
+
+                        hitboxRepresentations[i].localPosition = new Vector3(
+                            ((hitboxRect.x + hitboxRect.width/2) / pixelsInWorldUnit)/* * facingRightMultiplier*/,
+                            ((hitboxRect.y + hitboxRect.height/2) / pixelsInWorldUnit),
+                            hitboxRepresentations[i].localPosition.z
+                        );
+                        hitboxRepresentations[i].localScale = new Vector3(
+                            hitboxRect.width / pixelsInWorldUnit,
+                            hitboxRect.height / pixelsInWorldUnit,
+                            hitboxRepresentations[i].localScale.z
+                        );
+                    }
+                    else
+                    {
+                        hitboxRepresentations[i].gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    hitboxRepresentations[i].gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    float ConvertFrameDataMeasureToUnityUnits(float frameDataSizeValue)
+    {
+        return frameDataSizeValue / pixelsInWorldUnit;
     }
 }

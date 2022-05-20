@@ -66,11 +66,13 @@ public class PlayerIna : Player
 
             case PlayerState.ATTACKING:
                 Debug.Log("she attacc");
+                //Debug.Log("Frame of attack animation before advance (starting at 0): " + currentAnimationState.currentFrameNumber.ToString());
                 if (currentAnimationState.currentFrameNumber >= currentAnimationState.frames.Count - 1)
                 {
                     ReturnToNeutralState(inputData);
                 }
                 currentAnimationState.AdvanceFrame();
+                //Debug.Log("Frame of attack animation after advance (starting at 0): " + currentAnimationState.currentFrameNumber.ToString());
                 break;
 
             default:

@@ -100,10 +100,12 @@ public struct HfGame
 
         players[0].position = new Vector2(bounds.width * 0.5f / players.Length, 0f);
         players[1].position = new Vector2(bounds.width * (1 - (0.5f / players.Length)), 0f);
-        players[0].velocity = new Vector2(200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
-        players[1].velocity = new Vector2(-500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        players[0].velocity = new Vector2(-200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        players[1].velocity = new Vector2(500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
         players[0].characterName = "Ina";
         players[1].characterName = "Ina";
+
+        players[1].facingRight = false;
 
         //players[1].bouncy = true;
     }
@@ -156,7 +158,7 @@ public struct HfGame
             // Final positions/velocities determined and assigned
 
             // Debug info
-            Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
+            //Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
         }
 
         // 5. Projectile logic (DON'T IMPLEMENT YET)
@@ -170,7 +172,7 @@ public struct HfGame
         //         on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
 
         // Debug info
-        Debug.Log($"Checksum: {checksum}");
+        //Debug.Log($"Checksum: {checksum}");
     }
 
     public static bool ParseOnePlayerInput(long inputs, int playerID, int inputConstant)

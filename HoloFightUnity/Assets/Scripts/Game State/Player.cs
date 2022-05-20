@@ -19,6 +19,9 @@ public class Player
     public int currentAttackId = 0;
     public bool facingRight = true;
 
+    // idk how often this'll change so it goes into its own category
+    public Vector2 hurtboxSize = new Vector2(70f, 140f);
+
     // Variables that change less often
     public bool bouncy = false;
 
@@ -357,7 +360,7 @@ public class Player
 
     #endregion
 
-    #region Game logic event calls for triggering animation changes, etc. Virtual to allow overrides.
+    #region Game logic event calls for triggering animation state changes, etc. Virtual to allow overrides.
 
     protected virtual void TriggerJump()
     {
@@ -371,9 +374,76 @@ public class Player
     #endregion
 
     #region Game logic helper/state functions
+    public Rect GetHurtbox()
+    {
+        Rect hurtboxToReturn = new Rect();
+
+        hurtboxToReturn.width = hurtboxSize.x;
+        hurtboxToReturn.height = hurtboxSize.y;
+        hurtboxToReturn.x = position.x - (hurtboxSize.x / 2f);
+        hurtboxToReturn.y = position.y + (hurtboxSize.y);
+
+        return hurtboxToReturn;
+    }
+
+    public Rect GetHurtboxRelative()
+    {
+        Rect hurtboxToReturn = new Rect();
+
+        hurtboxToReturn.width = hurtboxSize.x;
+        hurtboxToReturn.height = hurtboxSize.y;
+        hurtboxToReturn.x = 0f - (hurtboxSize.x / 2f);
+        hurtboxToReturn.y = hurtboxSize.y;
+        //hurtboxToReturn.x = 0f;
+        //hurtboxToReturn.y = (hurtboxSize.y / 2f);
+
+        return hurtboxToReturn;
+    }
+
+    public Rect[] GetHitboxes()
+    {
+        Rect[] hitboxesToReturn = new Rect[currentAnimationState.CurrentFrame.hitboxes.Count];
+
+        float facingRightMultiplier = facingRight ? 1f : -1f;
+        Vector2 playerPositionOffset = new Vector2(
+                position.x,
+                position.y
+            );
+
+        for (int i = 0; i < hitboxesToReturn.Length; i++)
+        {
+            hitboxesToReturn[i] = currentAnimationState.CurrentFrame.hitboxes[i].hitboxRect;
+
+            // If player is facing left, effective active hitbox data needs to be adjusted to account for this when retrieved.
+            if (!facingRight)
+            {
+                // Flip the hitbox's inherent x offset to the left
+                hitboxesToReturn[i].x -= 2 * (hitboxesToReturn[i].x);
+                // Account for the 'anchor' of Rects being in the top-left corner, while OUR frame data anchors on bottom-left.
+                // (and then flipping part of that around for facing left - because our flipped frame data anchors bottom-right.)
+                // X
+                hitboxesToReturn[i].x -= (hitboxesToReturn[i].width);
+            }
+
+            // Account for the 'anchor' of Rects being in the top-left corner, while OUR frame data anchors on bottom-left.
+            // Y
+            hitboxesToReturn[i].y += hitboxesToReturn[i].height;
+
+            hitboxesToReturn[i].position += playerPositionOffset;
+
+            //Debug.Log(facingRightMultiplier);
+            //Debug.Log(player.facingRight);
+            Debug.Log(hitboxesToReturn[i]);
+        }
+
+        Debug.Log(hitboxesToReturn);
+        return hitboxesToReturn;
+    }
+
     protected void ChangeAnimationState(string newAnimationState)
     {
         currentAnimationState = animationsAllData[newAnimationState];
+        currentAnimationState.currentFrameNumber = 0;
 
         switch (newAnimationState)
         {
