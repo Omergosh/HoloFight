@@ -8,7 +8,7 @@ For now though, I'm putting all thoughts of implementing netcode on hold! That's
 
 I drew the art myself and wrote the majority of the code as well (except for the packages I've used and credited), so I figured I might as well make the repo public so people can look at it! It's not like I'll ever make money off of this or anything. Let the world see my shamelessly inefficient C#/Unity prototyping process.
 
-If for whatever reason you want to fork this stuff or use any assets, feel free! Just let me know 
+If you have any questions, feel free to message me!
 
 Credits:
 - Newtonsoft's Json.NET (https://www.newtonsoft.com/json): I used this package to read/write frame data to and from JSON files! Super helpful for making the Frame Data Editor functional.
