@@ -134,9 +134,9 @@ public class PlayerAnimationController : MonoBehaviour
                     {
                         hitboxRepresentations[i].gameObject.SetActive(true);
 
-                        Debug.Log("Display a hitbox");
+                        //Debug.Log("Display a hitbox");
                         Rect hitboxRect = player.currentAnimationState.CurrentFrame.hitboxes[i].hitboxRect;
-                        Debug.Log(hitboxRect);
+                        //Debug.Log(hitboxRect);
                         player.GetHitboxes();
 
                         //float facingRightMultiplier = (player.facingRight) ? 1f : -1f;

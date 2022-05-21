@@ -12,4 +12,5 @@ public class CharacterGameDataSetScriptableObject : ScriptableObject
     public string jumpFrameData;
     public string fallFrameData;
     public string attackB1FrameData;
+    public string hitstunFrameData;
 }

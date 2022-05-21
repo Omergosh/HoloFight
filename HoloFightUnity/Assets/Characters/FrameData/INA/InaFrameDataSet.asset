@@ -17,3 +17,4 @@ MonoBehaviour:
   jumpFrameData: jump
   fallFrameData: fall
   attackB1FrameData: attackB1
+  hitstunFrameData: hitstun

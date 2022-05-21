@@ -124,10 +124,10 @@ public struct HfGame
         // 6. Check for hits/blocks
         // 7. Finally, trigger a call to update visuals (if necessary)
         // *---------------------------------------------------------------------------------------*
-        
+
         // 1. Increment frame number
         frameNumber++;
-        Debug.Log($"Frame: {frameNumber}");
+        //Debug.Log($"Frame: {frameNumber}");
 
         // 2. Input processing
         for (int p = 0; p < players.Length; p++)
@@ -170,6 +170,28 @@ public struct HfGame
         //      a. check for hitbox/hurtbox overlaps all at once
         //      b. THEN apply interaction logic all at once, to allow for things such as attacks trading (simultaneous hits), etc.
         //         on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
+        for (int p = 0; p < players.Length; p++)
+        {
+            HitboxData[] currentHitboxes = players[p].GetHitboxes();
+            if (currentHitboxes.Length > 0)
+            {
+                Debug.Log(currentHitboxes[0].hitboxRect);
+                for (int q = 0; q < players.Length; q++)
+                {
+                    if (players[p].teamId != players[q].teamId)
+                    {
+                        Rect hurtboxToCheck = players[q].GetHurtbox();
+                        Debug.Log(hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect));
+                        if (hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect))
+                        {
+                            players[q].InflictDamageAndHitstunAndKnockback(currentHitboxes[0], players[p].facingRight);
+                            players[q].facingRight = !players[p].facingRight;
+                        }
+                    }
+                }
+            }
+        }
+
 
         // Debug info
         //Debug.Log($"Checksum: {checksum}");

@@ -119,7 +119,7 @@ public class Player
                 }
             }
             // Player can jump!
-            if (inputData.GetInputDown(INPUT_UP))
+            if (inputData.GetInputDown(INPUT_UP) && (IsInActionableState || currentAnimationState.CurrentFrame.canCancelIntoJump))
             {
                 this.velocity.y = this.jumpPower;
                 TriggerJump();
@@ -176,10 +176,13 @@ public class Player
 
         // If current animationstate allows for free horizontal movement, jumping, etc.
         // then handle that here// Parse inputs
-        this.ProcessHorizontalMovement(
-            inputData.GetInputDown(INPUT_LEFT),
-            inputData.GetInputDown(INPUT_RIGHT)
-            );
+        if (!IsInHitstun)
+        {
+            this.ProcessHorizontalMovement(
+                inputData.GetInputDown(INPUT_LEFT),
+                inputData.GetInputDown(INPUT_RIGHT)
+                );
+        }
 
         Vector2 newPosition = new Vector2(this.position.x, this.position.y);
 
@@ -400,9 +403,9 @@ public class Player
         return hurtboxToReturn;
     }
 
-    public Rect[] GetHitboxes()
+    public HitboxData[] GetHitboxes()
     {
-        Rect[] hitboxesToReturn = new Rect[currentAnimationState.CurrentFrame.hitboxes.Count];
+        HitboxData[] hitboxesToReturn = new HitboxData[currentAnimationState.CurrentFrame.hitboxes.Count];
 
         float facingRightMultiplier = facingRight ? 1f : -1f;
         Vector2 playerPositionOffset = new Vector2(
@@ -412,31 +415,31 @@ public class Player
 
         for (int i = 0; i < hitboxesToReturn.Length; i++)
         {
-            hitboxesToReturn[i] = currentAnimationState.CurrentFrame.hitboxes[i].hitboxRect;
+            hitboxesToReturn[i] = currentAnimationState.CurrentFrame.hitboxes[i];
 
             // If player is facing left, effective active hitbox data needs to be adjusted to account for this when retrieved.
             if (!facingRight)
             {
                 // Flip the hitbox's inherent x offset to the left
-                hitboxesToReturn[i].x -= 2 * (hitboxesToReturn[i].x);
+                hitboxesToReturn[i].hitboxRect.x -= 2 * (hitboxesToReturn[i].hitboxRect.x);
                 // Account for the 'anchor' of Rects being in the top-left corner, while OUR frame data anchors on bottom-left.
                 // (and then flipping part of that around for facing left - because our flipped frame data anchors bottom-right.)
                 // X
-                hitboxesToReturn[i].x -= (hitboxesToReturn[i].width);
+                hitboxesToReturn[i].hitboxRect.x -= (hitboxesToReturn[i].hitboxRect.width);
             }
 
             // Account for the 'anchor' of Rects being in the top-left corner, while OUR frame data anchors on bottom-left.
             // Y
-            hitboxesToReturn[i].y += hitboxesToReturn[i].height;
+            hitboxesToReturn[i].hitboxRect.y += hitboxesToReturn[i].hitboxRect.height;
 
-            hitboxesToReturn[i].position += playerPositionOffset;
+            hitboxesToReturn[i].hitboxRect.position += playerPositionOffset;
 
             //Debug.Log(facingRightMultiplier);
             //Debug.Log(player.facingRight);
-            Debug.Log(hitboxesToReturn[i]);
+            //Debug.Log(hitboxesToReturn[i]);
         }
 
-        Debug.Log(hitboxesToReturn);
+        //Debug.Log(hitboxesToReturn);
         return hitboxesToReturn;
     }
 
@@ -465,10 +468,53 @@ public class Player
                 playerState = PlayerState.ATTACKING;
                 break;
             case "hitstun":
-                playerState = PlayerState.HITSTUN_GROUNDED;
+                playerState = (isOnGround) ? PlayerState.HITSTUN_GROUNDED : PlayerState.HITSTUN_AIRBORNE;
                 break;
         }
     }
+
+    public void InflictDamageAndHitstunAndKnockback(HitboxData hitboxData, bool isAttackerFacingRight)
+    {
+        ChangeAnimationState("hitstun");
+
+        // [ Damage, hitstun, knockback. ] //
+        
+        // Damage
+        health -= hitboxData.damage;
+
+        // Hitstun
+        if (hitstun < hitboxData.hitstunInflicted)
+        {
+            hitstun = hitboxData.hitstunInflicted;
+        }
+
+        //Knockback
+        if (hitboxData.knockbackReplacesInsteadOfAdds)
+        {
+            velocity = hitboxData.knockbackInflicted;
+            if (!isAttackerFacingRight)
+            {
+                velocity.x *= -1;
+            }
+        }
+        else
+        {
+            Vector2 addToVelocity = hitboxData.knockbackInflicted;
+            if (!isAttackerFacingRight)
+            {
+                addToVelocity *= -1;
+            }
+            velocity += addToVelocity;
+        }
+    }
+
+    //public bool InflictShieldDamage(HitboxData hitboxData)
+    //{
+    //    // If shield was broken, return true.
+
+    //    // Else, return false.
+    //    return false;
+    //}
     
     public bool IsInHitstun
     {

@@ -65,7 +65,7 @@ public class PlayerIna : Player
                 break;
 
             case PlayerState.ATTACKING:
-                Debug.Log("she attacc");
+                //Debug.Log("she attacc");
                 //Debug.Log("Frame of attack animation before advance (starting at 0): " + currentAnimationState.currentFrameNumber.ToString());
                 if (currentAnimationState.currentFrameNumber >= currentAnimationState.frames.Count - 1)
                 {
@@ -73,6 +73,15 @@ public class PlayerIna : Player
                 }
                 currentAnimationState.AdvanceFrame();
                 //Debug.Log("Frame of attack animation after advance (starting at 0): " + currentAnimationState.currentFrameNumber.ToString());
+                break;
+
+            case PlayerState.HITSTUN_AIRBORNE:
+            case PlayerState.HITSTUN_GROUNDED:
+                hitstun--;
+                if(hitstun <= 0)
+                {
+                    ReturnToNeutralState(inputData);
+                }
                 break;
 
             default:
@@ -110,6 +119,13 @@ public class PlayerIna : Player
     protected override void TriggerLand()
     {
         //base.TriggerLand();
-        ChangeAnimationState("idle");
+        if (!IsInHitstun)
+        {
+            ChangeAnimationState("idle");
+        }
+        //else
+        //{
+        //    ChangeAnimationState("hitstun");
+        //}
     }
 }
