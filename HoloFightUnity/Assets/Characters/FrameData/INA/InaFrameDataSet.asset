@@ -12,9 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadc92e081111da4c960985142e971c6, type: 3}
   m_Name: InaFrameDataSet
   m_EditorClassIdentifier: 
-  idleFrameData: idle
-  runFrameData: run
-  jumpFrameData: jump
-  fallFrameData: fall
-  attackB1FrameData: attackB1
-  hitstunFrameData: hitstun
+  idleFrameDataFilename: idle
+  runFrameDataFilename: run
+  jumpFrameDataFilename: jump
+  fallFrameDataFilename: fall
+  attackB1FrameDataFilename: attackB1
+  hitstunFrameDataFilename: hitstun
+  idleFrameDataJSON: {fileID: 4900000, guid: fd675cd8ad41ed149adefb23faed2ebf, type: 3}
+  runFrameDataJSOn: {fileID: 4900000, guid: 841b89a3298770a49a57be0c4118eb76, type: 3}
+  jumpFrameDataJSON: {fileID: 4900000, guid: 17af8a96c8caa2d4793677152c535230, type: 3}
+  fallFrameDataJSON: {fileID: 4900000, guid: 59730e3fd3f3e994889bc398ffc687d3, type: 3}
+  attackB1FrameDataJSON: {fileID: 4900000, guid: 8cfcd4373eea9604490619d73f15486d, type: 3}
+  hitstunFrameDataJSON: {fileID: 4900000, guid: 6ad6e9b92f4d1ca45b3230d9fda406a3, type: 3}

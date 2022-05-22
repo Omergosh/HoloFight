@@ -7,10 +7,17 @@ public class CharacterGameDataSetScriptableObject : ScriptableObject
 {
     // Filename for individual JSON files containing frame data for every animation
     // (may require separate ScriptableObjects to be made for individual characters, due to character-specific behavior/animations)
-    public string idleFrameData;
-    public string runFrameData;
-    public string jumpFrameData;
-    public string fallFrameData;
-    public string attackB1FrameData;
-    public string hitstunFrameData;
+    public string idleFrameDataFilename;
+    public string runFrameDataFilename;
+    public string jumpFrameDataFilename;
+    public string fallFrameDataFilename;
+    public string attackB1FrameDataFilename;
+    public string hitstunFrameDataFilename;
+
+    public TextAsset idleFrameDataJSON;
+    public TextAsset runFrameDataJSOn;
+    public TextAsset jumpFrameDataJSON;
+    public TextAsset fallFrameDataJSON;
+    public TextAsset attackB1FrameDataJSON;
+    public TextAsset hitstunFrameDataJSON;
 }

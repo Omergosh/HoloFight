@@ -687,8 +687,8 @@ MonoBehaviour:
   - {fileID: 1196764855}
   - {fileID: 1948987756}
   displayCollisionBoxes: 0
-  displayHurtboxes: 1
-  displayHitboxes: 1
+  displayHurtboxes: 0
+  displayHitboxes: 0
 --- !u!1 &429122384
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,9 +1000,9 @@ MonoBehaviour:
   - {fileID: 343814235}
   - {fileID: 2122554474}
   - {fileID: 1925657351}
-  displayCollisionBoxes: 1
-  displayHurtboxes: 1
-  displayHitboxes: 1
+  displayCollisionBoxes: 0
+  displayHurtboxes: 0
+  displayHitboxes: 0
 --- !u!1 &606847138
 GameObject:
   m_ObjectHideFlags: 0
