@@ -85,8 +85,17 @@ public class Player
         }
         else
         {
+            // Player is airborne.
             this.isOnGround = false;
+            // Apply gravity!
             this.velocity.y -= GRAVITY;
+            // If player does not have any upwards momentum (falling or at 0 vertical velocity),
+            // allow them to input 'DOWN' to fastfall.
+            if (this.velocity.y <= 0 && inputData.GetInputDown(INPUT_DOWN))
+            {
+                // For now, 'fastfalling' causes gravity to be applied twice as quickly.
+                this.velocity.y -= GRAVITY;
+            }
         }
 
         // If player is on ground. (apply friction, check if player wants to jump)
