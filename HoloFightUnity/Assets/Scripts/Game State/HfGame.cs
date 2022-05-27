@@ -202,82 +202,7 @@ public struct HfGame
         return ((inputs & inputConstant) != 0);
     }
 
-    public long ReadInputs(int playerID)
-    {
-        long input = 0;
-
-        if (playerID == 0)
-        {
-            if (Input.GetKey(KeyCode.A))
-            {
-                input |= INPUT_LEFT;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                input |= INPUT_RIGHT;
-            }
-            if (Input.GetKey(KeyCode.W))
-            {
-                input |= INPUT_UP;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                input |= INPUT_DOWN;
-            }
-            if (Input.GetKey(KeyCode.Z))
-            {
-                input |= INPUT_ATTACK_A;
-            }
-            if (Input.GetKey(KeyCode.X))
-            {
-                input |= INPUT_ATTACK_B;
-            }
-            if (Input.GetKey(KeyCode.C))
-            {
-                input |= INPUT_ATTACK_C;
-            }
-            if (Input.GetKey(KeyCode.V))
-            {
-                input |= INPUT_DEFEND_D;
-            }
-        } else if(playerID == 1)
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                input |= INPUT_LEFT;
-            }
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                input |= INPUT_RIGHT;
-            }
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
-                input |= INPUT_UP;
-            }
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                input |= INPUT_DOWN;
-            }
-            if (Input.GetKey(KeyCode.U))
-            {
-                input |= INPUT_ATTACK_A;
-            }
-            if (Input.GetKey(KeyCode.I))
-            {
-                input |= INPUT_ATTACK_B;
-            }
-            if (Input.GetKey(KeyCode.O))
-            {
-                input |= INPUT_ATTACK_C;
-            }
-            if (Input.GetKey(KeyCode.P))
-            {
-                input |= INPUT_DEFEND_D;
-            }
-        }
-
-        return input;
-    }
+    #region Serialization methods
 
     public void Serialize()
     {
@@ -299,4 +224,5 @@ public struct HfGame
         }
         return hashCode;
     }
+    #endregion
 }

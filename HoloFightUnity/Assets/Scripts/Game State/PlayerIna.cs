@@ -77,9 +77,11 @@ public class PlayerIna : Player
 
             case PlayerState.HITSTUN_AIRBORNE:
             case PlayerState.HITSTUN_GROUNDED:
+                //bouncy = true;
                 hitstun--;
                 if(hitstun <= 0)
                 {
+                    //bouncy = false;
                     ReturnToNeutralState(inputData);
                 }
                 break;

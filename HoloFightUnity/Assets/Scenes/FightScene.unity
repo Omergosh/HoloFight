@@ -1811,6 +1811,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1306969256}
   - component: {fileID: 1306969257}
+  - component: {fileID: 1306969258}
+  - component: {fileID: 1306969259}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1849,10 +1851,76 @@ MonoBehaviour:
     frameNumber: 0
     inputData: []
     players: []
+  inputManager: {fileID: 1306969258}
   p1AnimationController: {fileID: 586792192}
   p2AnimationController: {fileID: 388537990}
   CharacterGameDataIna: {fileID: 11400000, guid: 54a07d2aafcf8554cbed675916df44a3, type: 2}
   boundsGameObject: {fileID: 272424364}
+  pauseHeldActivationShowTimer: 0
+  pauseHeldActivationTimer: 0
+  pauseHeldActivationTimerMax: 0
+--- !u!114 &1306969258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306969255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5581fd34d08ff444084fd99a1e6dfb38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1UpValue: 0
+  p1LeftValue: 0
+  p1DownValue: 0
+  p1RightValue: 0
+  p1AttackAValue: 0
+  p1AttackBValue: 0
+  p1AttackCValue: 0
+  p1AssistDValue: 0
+  p1PauseAction:
+    m_Name: P1 Pause
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b8a9297d-479a-4e01-8ad3-b07e71b4c06d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  p1PauseWasPressedThisFrame: 0
+  p1PauseWasReleasedThisFrame: 0
+  p1PauseFullyHeldForDuration: 0
+--- !u!114 &1306969259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306969255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 115faeef94c93cd4a9aabfa68abc60b0, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: FightControls
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1523618251
 GameObject:
   m_ObjectHideFlags: 0

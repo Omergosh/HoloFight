@@ -5,13 +5,15 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
+using static HFConstants;
+
 public class GameManagerScript : MonoBehaviour
 {
     public HfGame game;// = new HfGame(2);
     bool isGamePaused = false;
 
-    //public GameObject p1GameObject;
-    //public GameObject p2GameObject;
+    public InputManagerScript inputManager;
+    
     public PlayerAnimationController p1AnimationController;
     public PlayerAnimationController p2AnimationController;
 
@@ -21,9 +23,19 @@ public class GameManagerScript : MonoBehaviour
     public GameObject boundsGameObject;
     public const float pixelsInWorldUnit = 100f;
 
+    // UI-relevant values
+    public bool pauseHeldActivationShowTimer = false;
+    public float pauseHeldActivationTimer = 0f;
+    public float pauseHeldActivationTimerMax;
+
     // Start is called before the first frame update
     void Start()
     {
+        // UI-related set-up and such (not relating directly to game state)
+        pauseHeldActivationTimerMax = inputManager.p1PauseAction.interactions.Length;
+
+
+        // || Game State set-up || //
         // THIS FIGHTING GAME IS A TWO PLAYER GAME (FOR NOW)
         game = new HfGame(2);
         boundsGameObject.transform.position = new Vector3(0f, 0f, 50f);
@@ -50,7 +62,7 @@ public class GameManagerScript : MonoBehaviour
             long[] inputs = new long[game.players.Length];
             for (int i = 0; i < inputs.Length; i++)
             {
-                inputs[i] = game.ReadInputs(i);
+                inputs[i] = ReadGameInputs(i);
             }
             game.AdvanceFrame(inputs);
         }
@@ -59,22 +71,87 @@ public class GameManagerScript : MonoBehaviour
     void Update()
     {
         //// Update visuals to match current game state
-        //if (p1GameObject != null)
-        //{
-        //    //p1GameObject.transform.position = game.players[0].position;
-        //    p1GameObject.transform.position = new Vector3(
-        //        game.players[0].position.x - (HfGame.bounds.width / 2),
-        //        game.players[0].position.y - (HfGame.bounds.height / 2)
-        //        ) / pixelsInWorldUnit;
-        //}
-        //if (p2GameObject != null)
-        //{
-        //    //p2GameObject.transform.position = game.players[1].position;
-        //    p2GameObject.transform.position = new Vector3(
-        //        game.players[1].position.x - (HfGame.bounds.width / 2),
-        //        game.players[1].position.y - (HfGame.bounds.height / 2)
-        //        ) / pixelsInWorldUnit;
-        //}
+        // (nvm lol this happens elsewhere)
+        PauseGameCheck();
+    }
+
+    long ReadGameInputs(int playerID)
+    {
+        long input = 0;
+
+        if (playerID == 0)
+        {
+            if (inputManager.p1UpValue)
+            {
+                input |= INPUT_UP;
+            }
+            if (inputManager.p1LeftValue)
+            {
+                input |= INPUT_LEFT;
+            }
+            if (inputManager.p1DownValue)
+            {
+                input |= INPUT_DOWN;
+            }
+            if (inputManager.p1RightValue)
+            {
+                input |= INPUT_RIGHT;
+            }
+            if (inputManager.p1AttackAValue)
+            {
+                input |= INPUT_ATTACK_A;
+            }
+            if (inputManager.p1AttackBValue)
+            {
+                input |= INPUT_ATTACK_B;
+            }
+            if (inputManager.p1AttackCValue)
+            {
+                input |= INPUT_ATTACK_C;
+            }
+            if (inputManager.p1AssistDValue)
+            {
+                input |= INPUT_DEFEND_D;
+            }
+        }
+
+        return input;
+    }
+
+    void PauseGameCheck()
+    {
+        // Same function is used for both pausing and unpausing the game.
+        // (subject to change if it proves necessary to separate them)
+        if (!isGamePaused)
+        {
+            // Pause
+            if (inputManager.p1PauseWasPressedThisFrame)
+            {
+                // If pause button was just pressed this frame, activate some UI
+                Debug.Log("show pause timer");
+            }
+            else if(inputManager.p1PauseWasReleasedThisFrame)
+            {
+                // If pause button UI was shown, remove it because we're not pausing now after all!
+                Debug.Log("hide pause timer");
+            }
+            else if(inputManager.p1PauseFullyHeldForDuration)
+            {
+                // If pause button was held for long enough, actually pause the game
+                Debug.Log("GAME PAUSED");
+                isGamePaused = true;
+            }
+        }
+        else
+        {
+            // Unpause
+            if (inputManager.p1PauseWasPressedThisFrame)
+            {
+                // Unlike pausing, unpausing occurs instantly upon pressing the pause button.
+                Debug.Log("GAME UNPAUSED");
+                isGamePaused = false;
+            }
+        }
     }
 
     public void LoadFrameDataForPlayer(int playerNumber)
