@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 using static HFConstants;
 
@@ -12,10 +13,14 @@ public class GameManagerScript : MonoBehaviour
     public HfGame game;// = new HfGame(2);
     bool isGamePaused = false;
 
-    public InputManagerScript inputManager;
-    
-    public PlayerAnimationController p1AnimationController;
-    public PlayerAnimationController p2AnimationController;
+    public GameObject prefabPlayerIna;
+
+    public GameObject[] playerGameObjects;
+
+    public PlayerInput[] playerInputs;
+    public PlayerInputScript[] playerInputScripts;
+
+    public PlayerAnimationController[] playerAnimationControllers;
 
     public CharacterGameDataSetScriptableObject CharacterGameDataIna;
 
@@ -31,9 +36,24 @@ public class GameManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // UI-related set-up and such (not relating directly to game state)
-        pauseHeldActivationTimerMax = inputManager.p1PauseAction.interactions.Length;
 
+        // Input Setup
+        // Set-up references for other player-related components
+        playerInputs = new PlayerInput[2];
+        playerGameObjects = new GameObject[2];
+        playerInputScripts = new PlayerInputScript[2];
+        playerAnimationControllers = new PlayerAnimationController[2];
+        playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: "KeyboardP1Scheme", pairWithDevice: Keyboard.current);
+        playerInputs[1] = PlayerInput.Instantiate(prefabPlayerIna, 1, controlScheme: "KeyboardP2Scheme", pairWithDevice: Keyboard.current);
+        playerGameObjects[0] = playerInputs[0].gameObject;
+        playerGameObjects[1] = playerInputs[1].gameObject;
+        playerInputScripts[0] = playerGameObjects[0].GetComponent<PlayerInputScript>();
+        playerInputScripts[1] = playerGameObjects[1].GetComponent<PlayerInputScript>();
+        playerAnimationControllers[0] = playerGameObjects[0].GetComponent<PlayerAnimationController>();
+        playerAnimationControllers[1] = playerGameObjects[1].GetComponent<PlayerAnimationController>();
+
+        // UI-related set-up and such (not relating directly to game state)
+        pauseHeldActivationTimerMax = playerInputScripts[0].p1PauseAction.interactions.Length;
 
         // || Game State set-up || //
         // THIS FIGHTING GAME IS A TWO PLAYER GAME (FOR NOW)
@@ -42,13 +62,13 @@ public class GameManagerScript : MonoBehaviour
         boundsGameObject.transform.localScale = new Vector3(
             HfGame.bounds.width / pixelsInWorldUnit,
             HfGame.bounds.height / pixelsInWorldUnit);
-        if(p1AnimationController != null)
+        if(playerAnimationControllers[0] != null)
         {
-            p1AnimationController.SetPlayer(ref game.players[0]);
+            playerAnimationControllers[0].SetPlayer(ref game.players[0]);
         }
-        if(p2AnimationController != null)
+        if(playerAnimationControllers[1] != null)
         {
-            p2AnimationController.SetPlayer(ref game.players[1]);
+            playerAnimationControllers[1].SetPlayer(ref game.players[1]);
         }
 
         LoadFrameDataForPlayer(0);
@@ -79,40 +99,37 @@ public class GameManagerScript : MonoBehaviour
     {
         long input = 0;
 
-        if (playerID == 0)
+        if (playerInputScripts[playerID].p1UpValue)
         {
-            if (inputManager.p1UpValue)
-            {
-                input |= INPUT_UP;
-            }
-            if (inputManager.p1LeftValue)
-            {
-                input |= INPUT_LEFT;
-            }
-            if (inputManager.p1DownValue)
-            {
-                input |= INPUT_DOWN;
-            }
-            if (inputManager.p1RightValue)
-            {
-                input |= INPUT_RIGHT;
-            }
-            if (inputManager.p1AttackAValue)
-            {
-                input |= INPUT_ATTACK_A;
-            }
-            if (inputManager.p1AttackBValue)
-            {
-                input |= INPUT_ATTACK_B;
-            }
-            if (inputManager.p1AttackCValue)
-            {
-                input |= INPUT_ATTACK_C;
-            }
-            if (inputManager.p1AssistDValue)
-            {
-                input |= INPUT_DEFEND_D;
-            }
+            input |= INPUT_UP;
+        }
+        if (playerInputScripts[playerID].p1LeftValue)
+        {
+            input |= INPUT_LEFT;
+        }
+        if (playerInputScripts[playerID].p1DownValue)
+        {
+            input |= INPUT_DOWN;
+        }
+        if (playerInputScripts[playerID].p1RightValue)
+        {
+            input |= INPUT_RIGHT;
+        }
+        if (playerInputScripts[playerID].p1AttackAValue)
+        {
+            input |= INPUT_ATTACK_A;
+        }
+        if (playerInputScripts[playerID].p1AttackBValue)
+        {
+            input |= INPUT_ATTACK_B;
+        }
+        if (playerInputScripts[playerID].p1AttackCValue)
+        {
+            input |= INPUT_ATTACK_C;
+        }
+        if (playerInputScripts[playerID].p1AssistDValue)
+        {
+            input |= INPUT_DEFEND_D;
         }
 
         return input;
@@ -125,17 +142,17 @@ public class GameManagerScript : MonoBehaviour
         if (!isGamePaused)
         {
             // Pause
-            if (inputManager.p1PauseWasPressedThisFrame)
+            if (playerInputScripts[0].p1PauseWasPressedThisFrame)
             {
                 // If pause button was just pressed this frame, activate some UI
                 Debug.Log("show pause timer");
             }
-            else if(inputManager.p1PauseWasReleasedThisFrame)
+            else if(playerInputScripts[0].p1PauseWasReleasedThisFrame)
             {
                 // If pause button UI was shown, remove it because we're not pausing now after all!
                 Debug.Log("hide pause timer");
             }
-            else if(inputManager.p1PauseFullyHeldForDuration)
+            else if(playerInputScripts[0].p1PauseFullyHeldForDuration)
             {
                 // If pause button was held for long enough, actually pause the game
                 Debug.Log("GAME PAUSED");
@@ -145,7 +162,7 @@ public class GameManagerScript : MonoBehaviour
         else
         {
             // Unpause
-            if (inputManager.p1PauseWasPressedThisFrame)
+            if (playerInputScripts[0].p1PauseWasPressedThisFrame)
             {
                 // Unlike pausing, unpausing occurs instantly upon pressing the pause button.
                 Debug.Log("GAME UNPAUSED");

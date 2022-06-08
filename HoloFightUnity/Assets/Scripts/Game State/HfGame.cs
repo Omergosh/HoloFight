@@ -100,8 +100,8 @@ public struct HfGame
 
         players[0].position = new Vector2(bounds.width * 0.5f / players.Length, 0f);
         players[1].position = new Vector2(bounds.width * (1 - (0.5f / players.Length)), 0f);
-        players[0].velocity = new Vector2(-200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
-        players[1].velocity = new Vector2(500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        //players[0].velocity = new Vector2(-200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
+        //players[1].velocity = new Vector2(500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
         players[0].characterName = "Ina";
         players[1].characterName = "Ina";
 

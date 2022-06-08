@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class InputManagerScript : MonoBehaviour
+public class PlayerInputScript : MonoBehaviour
 {
-    PlayerInput playerInput;
+    public PlayerInput playerInput;
 
     InputAction p1UpAction;
     InputAction p1LeftAction;
@@ -33,7 +33,7 @@ public class InputManagerScript : MonoBehaviour
 
     void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
+        //playerInput = GetComponent<PlayerInput>();
         p1UpAction = playerInput.actions["Up"];
         p1LeftAction = playerInput.actions["Left"];
         p1DownAction = playerInput.actions["Down"];
