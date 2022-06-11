@@ -62,15 +62,29 @@ public struct HfGame
     public int checksum => GetHashCode();
 
     public InputData[] inputData;
-    
+
     public Player[] players;
 
     public static Rect bounds = new Rect(0, 0, 1280, 720);
 
+    //public bool gameStarted;
+    //public bool gameEnded;
+    //public bool roundStarted;
+    //public bool roundEnded;
+
+    public const int targetFrameRate = 60;
+    public const int roundTimerMax = 60;
+    public int roundTimerCurrentInFrames;
+    public int RoundTimerCurrent => (int)Math.Ceiling(
+        ((decimal)roundTimerMax) - 
+        ((decimal)roundTimerCurrentInFrames / (decimal)targetFrameRate)
+        );
+
     public HfGame(int numberOfPlayers)
     {
         frameNumber = 0;
-        
+        roundTimerCurrentInFrames = 0;
+
         players = new Player[numberOfPlayers];
 
         inputData = new InputData[numberOfPlayers];
@@ -102,8 +116,8 @@ public struct HfGame
         players[1].position = new Vector2(bounds.width * (1 - (0.5f / players.Length)), 0f);
         //players[0].velocity = new Vector2(-200f, 750f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
         //players[1].velocity = new Vector2(500f, 1500f) * FRAME_RATE_SPEED_SCALE_MULTIPLIER;
-        players[0].characterName = "Ina";
-        players[1].characterName = "Ina";
+        //players[0].characterName = "Ina";
+        //players[1].characterName = "Ina";
 
         players[1].facingRight = false;
 
@@ -127,6 +141,9 @@ public struct HfGame
 
         // 1. Increment frame number
         frameNumber++;
+        // (if the timer is not paused for round intros, hitstop, cinematic supers, or anything else...
+        // ...then increment the round timer too.)
+        roundTimerCurrentInFrames++;
         //Debug.Log($"Frame: {frameNumber}");
 
         // 2. Input processing

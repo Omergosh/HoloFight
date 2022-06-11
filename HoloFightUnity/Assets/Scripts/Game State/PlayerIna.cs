@@ -5,6 +5,13 @@ using static HFConstants;
 
 public class PlayerIna : Player
 {
+    public PlayerIna()
+    {
+        // Assign Ina-specific character data!
+        characterName = "Ina";
+        characterFullName = "Ninomae Ina'nis";
+    }
+
     public override void ProcessAnimationStateLogic(InputData inputData)
     {
         // If a hitstun/blockstun state, decrement the appropriate value, and exit to another state where applicable

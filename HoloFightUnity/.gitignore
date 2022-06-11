@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Any assets I use but don't want to accidentally redistribute
+/[Aa]ssets/NotSharedToRepo*
+
+

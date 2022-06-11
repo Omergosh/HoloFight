@@ -61,7 +61,8 @@ public class GameManagerScript : MonoBehaviour
         boundsGameObject.transform.position = new Vector3(0f, 0f, 50f);
         boundsGameObject.transform.localScale = new Vector3(
             HfGame.bounds.width / pixelsInWorldUnit,
-            HfGame.bounds.height / pixelsInWorldUnit);
+            HfGame.bounds.height / pixelsInWorldUnit,
+            1f);
         if(playerAnimationControllers[0] != null)
         {
             playerAnimationControllers[0].SetPlayer(ref game.players[0]);

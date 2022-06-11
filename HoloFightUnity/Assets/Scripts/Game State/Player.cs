@@ -15,6 +15,7 @@ public class Player
     public bool isOnGround = true;
     public float bounceOffEnergy = 0;
     public int health = 100;
+    public int healthMax = 100;
     public int hitstun = 0;
     public int currentAttackId = 0;
     public bool facingRight = true;
@@ -30,6 +31,7 @@ public class Player
     public int teamId; // If one-on-one/FFA, equal to playerId
     public Vector2 collisionBoxSize;
     public string characterName;
+    public string characterFullName;
     public float jumpPower = 25f;
     public float maxSpeed = 26.0f;
     public float acceleration = 2.0f;
