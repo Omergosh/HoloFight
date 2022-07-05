@@ -33,6 +33,8 @@ public class GameManagerScript : MonoBehaviour
     public float pauseHeldActivationTimer = 0f;
     public float pauseHeldActivationTimerMax;
 
+    public BattleSceneUIScript battleUIScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -140,6 +142,7 @@ public class GameManagerScript : MonoBehaviour
     {
         // Same function is used for both pausing and unpausing the game.
         // (subject to change if it proves necessary to separate them)
+        battleUIScript.UpdatePauseUI(playerInputScripts[0].p1PauseAction, isGamePaused);
         if (!isGamePaused)
         {
             // Pause
@@ -158,6 +161,7 @@ public class GameManagerScript : MonoBehaviour
                 // If pause button was held for long enough, actually pause the game
                 Debug.Log("GAME PAUSED");
                 isGamePaused = true;
+                //battleUIScript.Pause();
             }
         }
         else
@@ -168,6 +172,7 @@ public class GameManagerScript : MonoBehaviour
                 // Unlike pausing, unpausing occurs instantly upon pressing the pause button.
                 Debug.Log("GAME UNPAUSED");
                 isGamePaused = false;
+                //battleUIScript.Unpause();
             }
         }
     }
