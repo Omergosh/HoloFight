@@ -186,12 +186,13 @@ public class GameManagerScript : MonoBehaviour
         //Debug.Log(CharacterGameDataIna.GetType().GetFields()[0].Name);
         //Debug.Log(CharacterGameDataIna.GetType().GetFields()[1].Name);
         //Debug.Log(CharacterGameDataIna.GetType().GetFields()[2].Name);
-        Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[0].GetValue(CharacterGameDataIna));
-        Debug.Log((TextAsset)CharacterGameDataIna.GetType().GetFields()[8].GetValue(CharacterGameDataIna));
-        Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[8].GetValue(CharacterGameDataIna).ToString());
-        Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[0].GetValue(CharacterGameDataIna).ToString());
-        Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[1].GetValue(CharacterGameDataIna));
-        Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[2].GetValue(CharacterGameDataIna));
+
+        //Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[0].GetValue(CharacterGameDataIna));
+        //Debug.Log((TextAsset)CharacterGameDataIna.GetType().GetFields()[8].GetValue(CharacterGameDataIna));
+        //Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[8].GetValue(CharacterGameDataIna).ToString());
+        //Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[0].GetValue(CharacterGameDataIna).ToString());
+        //Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[1].GetValue(CharacterGameDataIna));
+        //Debug.Log((string)CharacterGameDataIna.GetType().GetFields()[2].GetValue(CharacterGameDataIna));
 
         List<AnimationStateData> allCharacterFrameData = new List<AnimationStateData>();
 
@@ -204,11 +205,11 @@ public class GameManagerScript : MonoBehaviour
 
         foreach (FieldInfo fieldInfo in CharacterGameDataIna.GetType().GetFields())
         {
-            Debug.Log(fieldInfo.FieldType.FullName);
-            Debug.Log(fieldInfo.FieldType.FullName == "UnityEngine.TextAsset");
+            //Debug.Log(fieldInfo.FieldType.FullName);
+            //Debug.Log(fieldInfo.FieldType.FullName == "UnityEngine.TextAsset");
             if (fieldInfo.FieldType.FullName == "UnityEngine.TextAsset")
             {
-                Debug.Log(fieldInfo.Name);
+                //Debug.Log(fieldInfo.Name);
                 frameDataString = fieldInfo.GetValue(CharacterGameDataIna).ToString();
                 var loadedFrameData = JsonConvert.DeserializeObject<AnimationStateData>(frameDataString, serializerSettings);
                 allCharacterFrameData.Add(loadedFrameData);
@@ -220,8 +221,8 @@ public class GameManagerScript : MonoBehaviour
         foreach (AnimationStateData animationFrameData in allCharacterFrameData)
         {
             string animationName = animationFrameData.animationName;
-            Debug.Log(animationFrameData);
-            Debug.Log(animationName);
+            //Debug.Log(animationFrameData);
+            //Debug.Log(animationName);
 
             game.players[playerNumber].animationsAllData.Add(animationName, animationFrameData);
         }

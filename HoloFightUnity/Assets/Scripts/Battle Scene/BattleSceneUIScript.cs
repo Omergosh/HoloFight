@@ -59,7 +59,7 @@ public class BattleSceneUIScript : MonoBehaviour
     public void UpdatePauseUI(InputAction pauseInputAction, bool currentlyPaused)
     {
         pauseUIScript.UpdateUI(pauseInputAction, currentlyPaused);
-        Debug.Log("Update pause UI");
+        //Debug.Log("Update pause UI");
     }
 
     //public void Pause()

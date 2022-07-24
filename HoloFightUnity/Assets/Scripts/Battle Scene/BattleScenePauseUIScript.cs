@@ -7,7 +7,13 @@ using UnityEngine.UI;
 public class BattleScenePauseUIScript : MonoBehaviour
 {
     public Image fullscreenOverlay;
+    public Color fullscreenOverlayColor;
     public GameObject pauseMenuPanel;
+
+    public void Start()
+    {
+        fullscreenOverlayColor = fullscreenOverlay.color;
+    }
 
     public void UpdateUI(InputAction pauseInputAction, bool currentlyPaused)
     {
@@ -50,6 +56,12 @@ public class BattleScenePauseUIScript : MonoBehaviour
     {
         // Currently holding down the pause button,
         // but has not yet held it down long enough to fully pause the game.
+        fullscreenOverlay.color = new Color(
+                fullscreenOverlayColor.r,
+                fullscreenOverlayColor.g,
+                fullscreenOverlayColor.b,
+                fullscreenOverlayColor.a * 0.5f
+            );
         fullscreenOverlay.gameObject.SetActive(true);
     }
 
@@ -61,6 +73,7 @@ public class BattleScenePauseUIScript : MonoBehaviour
 
     public void Pause()
     {
+        fullscreenOverlay.color = fullscreenOverlayColor;
         fullscreenOverlay.gameObject.SetActive(true);
         pauseMenuPanel.gameObject.SetActive(true);
     }
