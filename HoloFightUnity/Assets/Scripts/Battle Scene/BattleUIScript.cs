@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class BattleSceneUIScript : MonoBehaviour
+public class BattleUIScript : MonoBehaviour
 {
     // UI references
     public TMP_Text roundTimerText;
@@ -19,7 +19,7 @@ public class BattleSceneUIScript : MonoBehaviour
     public Slider p2HealthBarSlider;
 
     // Canvas references
-    public BattleScenePauseUIScript pauseUIScript;
+    public BattlePauseUIScript pauseUIScript;
 
     // Information needed to update UI
     public HfGame gameState;
@@ -67,8 +67,8 @@ public class BattleSceneUIScript : MonoBehaviour
     //    pauseUIScript.gameObject.SetActive(true);
     //}
 
-    //public void Unpause()
-    //{
-    //    pauseUIScript.gameObject.SetActive(false);
-    //}
+    public void Unpause()
+    {
+        pauseUIScript.Unpause();
+    }
 }

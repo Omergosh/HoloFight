@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 
-public class BattleScenePauseUIScript : MonoBehaviour
+public class BattlePauseUIScript : MonoBehaviour
 {
     public Image fullscreenOverlay;
     public Color fullscreenOverlayColor;

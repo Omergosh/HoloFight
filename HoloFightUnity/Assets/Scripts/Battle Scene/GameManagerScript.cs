@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.SceneManagement;
 using static HFConstants;
 
 public class GameManagerScript : MonoBehaviour
@@ -33,7 +33,7 @@ public class GameManagerScript : MonoBehaviour
     public float pauseHeldActivationTimer = 0f;
     public float pauseHeldActivationTimerMax;
 
-    public BattleSceneUIScript battleUIScript;
+    public BattleUIScript battleUIScript;
 
     // Start is called before the first frame update
     void Start()
@@ -176,6 +176,23 @@ public class GameManagerScript : MonoBehaviour
             }
         }
     }
+
+
+    public void UnpauseGameFromUI()
+    {
+        isGamePaused = false;
+        battleUIScript.Unpause();
+    }
+
+    public void RematchFromUI()
+    {
+        Debug.Log("Rematch!");
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
+    }
+    public void CharSelectFromUI() => Debug.Log("Return to Character Select!");
+
+    public void MainMenuFromUI() => Debug.Log("Return to Main Menu!");
 
     public void LoadFrameDataForPlayer(int playerNumber)
     {
