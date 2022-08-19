@@ -2,11 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class BattleUIScript : MonoBehaviour
 {
+    // Countdown UI + Canvas references
+    public GameObject preroundCanvasObject;
+    public Image preroundFullscreenOverlay;
+    public TMP_Text waitingText;
+    public TMP_Text countdownText;
+    int roundStartLastNumberShown = 0;
+
     // UI references
     public TMP_Text roundTimerText;
 
@@ -18,8 +26,11 @@ public class BattleUIScript : MonoBehaviour
     public TMP_Text p2HealthText;
     public Slider p2HealthBarSlider;
 
-    // Canvas references
+    // Canvas references (for in-battle UI)
     public BattlePauseUIScript pauseUIScript;
+    public BattleEndUIScript matchEndUIScript;
+    public EventSystem eventSystem;
+    public BaseInputModule inputModule;
 
     // Information needed to update UI
     public HfGame gameState;
@@ -33,6 +44,11 @@ public class BattleUIScript : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        UpdateBattleUI();
+    }
+
+    public void UpdateBattleUI()
     {
         // Update stored game state to reference for UI stuff
         gameState = gameManagerScript.game;
@@ -70,5 +86,65 @@ public class BattleUIScript : MonoBehaviour
     public void Unpause()
     {
         pauseUIScript.Unpause();
+    }
+
+    public void ShowMatchEndScreen()
+    {
+        matchEndUIScript.ShowMenu(eventSystem);
+    }
+
+    // The three methods below and the method above (for interfaces appearing before/between/after rounds)
+    // should probably be moved into another class later down the line.
+    // For the sake of best practices (i.e. single responsibility) and all that.
+
+    public void ShowWaitingScreen()
+    {
+        preroundCanvasObject.SetActive(true);
+        //preroundFullscreenOverlay.SetActive(true);
+        waitingText.gameObject.SetActive(true);
+        countdownText.gameObject.SetActive(false);
+    }
+
+    public void ShowCountdown(float countdownTime)
+    {
+        if (roundStartLastNumberShown == 0 && countdownTime > 0f)
+        {
+            preroundCanvasObject.SetActive(true);
+            //preroundFullscreenOverlay.SetActive(true);
+            waitingText.gameObject.SetActive(false);
+            countdownText.gameObject.SetActive(true);
+
+            countdownText.text = 3.ToString();
+            roundStartLastNumberShown = 3;
+        }
+
+        if (roundStartLastNumberShown == 3
+            && countdownTime < 2f)
+        {
+            countdownText.text = 2.ToString();
+            roundStartLastNumberShown = 2;
+        }
+        else if (roundStartLastNumberShown == 2
+           && countdownTime < 1f)
+        {
+            countdownText.text = 1.ToString();
+            roundStartLastNumberShown = 1;
+        }
+        else if (roundStartLastNumberShown == 1
+            && countdownTime <= 0f)
+        {
+            EndCountdown();
+        }
+    }
+
+    public void EndCountdown()
+    {
+        preroundCanvasObject.SetActive(false);
+        //preroundFullscreenOverlay
+        waitingText.gameObject.SetActive(false);
+        countdownText.gameObject.SetActive(false);
+
+        // Reset for next time a countdown occurs
+        roundStartLastNumberShown = 0;
     }
 }

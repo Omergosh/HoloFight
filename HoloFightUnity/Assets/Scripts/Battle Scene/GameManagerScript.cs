@@ -11,7 +11,9 @@ using static HFConstants;
 public class GameManagerScript : MonoBehaviour
 {
     public HfGame game;// = new HfGame(2);
+
     bool isGamePaused = false;
+    bool matchEndScreenUp = false;
 
     public GameObject prefabPlayerIna;
 
@@ -28,12 +30,22 @@ public class GameManagerScript : MonoBehaviour
     public GameObject boundsGameObject;
     public const float pixelsInWorldUnit = 100f;
 
+    // Round start countdown
+    float roundStartTimer = 3.0f;
+    bool roundStartCountdownEnded = false;
+
     // UI-relevant values
     public bool pauseHeldActivationShowTimer = false;
     public float pauseHeldActivationTimer = 0f;
     public float pauseHeldActivationTimerMax;
 
     public BattleUIScript battleUIScript;
+
+    // Input device configuration variables
+    // (TODO: have these variables passed in from character select screen, where players decide on the input devices to be used)
+    // (Schemes for reference: KeyboardP1Scheme, KeyboardP2Scheme, GamepadScheme)
+    public string controlSchemeP1 = "KeyboardP1Scheme";
+    public string controlSchemeP2 = "KeyboardP2Scheme";
 
     // Start is called before the first frame update
     void Start()
@@ -45,8 +57,9 @@ public class GameManagerScript : MonoBehaviour
         playerGameObjects = new GameObject[2];
         playerInputScripts = new PlayerInputScript[2];
         playerAnimationControllers = new PlayerAnimationController[2];
-        playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: "KeyboardP1Scheme", pairWithDevice: Keyboard.current);
-        playerInputs[1] = PlayerInput.Instantiate(prefabPlayerIna, 1, controlScheme: "KeyboardP2Scheme", pairWithDevice: Keyboard.current);
+        //playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: controlSchemeP1, pairWithDevice: Gamepad.current);
+        playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: controlSchemeP1, pairWithDevice: Keyboard.current);
+        playerInputs[1] = PlayerInput.Instantiate(prefabPlayerIna, 1, controlScheme: controlSchemeP2, pairWithDevice: Keyboard.current);
         playerGameObjects[0] = playerInputs[0].gameObject;
         playerGameObjects[1] = playerInputs[1].gameObject;
         playerInputScripts[0] = playerGameObjects[0].GetComponent<PlayerInputScript>();
@@ -80,22 +93,91 @@ public class GameManagerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isGamePaused)
+        switch (game.currentBattleProgress)
         {
-            long[] inputs = new long[game.players.Length];
-            for (int i = 0; i < inputs.Length; i++)
-            {
-                inputs[i] = ReadGameInputs(i);
-            }
-            game.AdvanceFrame(inputs);
+            case CurrentBattleProgress.WAITING_FOR_FIRST_ROUND:
+                Debug.Log("Waiting for round to start...");
+                break;
+
+            case CurrentBattleProgress.ROUND_COUNTDOWN:
+                Debug.Log("Countdown.");
+                Debug.Log(3);
+                Debug.Log(2);
+                Debug.Log(1);
+                Debug.Log("GO!");
+                //game.currentBattleProgress = CurrentBattleProgress.ROUND_IN_PROGRESS;
+                break;
+
+            case CurrentBattleProgress.ROUND_IN_PROGRESS:
+                if (!isGamePaused)
+                {
+                    long[] inputs = new long[game.players.Length];
+                    for (int i = 0; i < inputs.Length; i++)
+                    {
+                        inputs[i] = ReadGameInputs(i);
+                    }
+                    game.AdvanceFrame(inputs);
+                }
+                break;
+
+            case CurrentBattleProgress.ROUND_OVER:
+                Debug.Log("Round over.");
+                break;
+
+            case CurrentBattleProgress.GAME_OVER:
+                Debug.Log("Game over.");
+                break;
+            
+            default:
+                Debug.Log("Unexpected game battle progression state.");
+                break;
         }
     }
 
     void Update()
     {
+        if (game.currentBattleProgress == CurrentBattleProgress.WAITING_FOR_FIRST_ROUND)
+        {
+            battleUIScript.ShowWaitingScreen();
+            roundStartCountdownEnded = false;
+
+            // If a button we care about is pressed, start the countdown for the first/next round.
+            if (playerInputScripts[0].p1AttackAValue
+                || playerInputScripts[0].p1AttackBValue
+                || playerInputScripts[0].p1AttackCValue
+                )
+            {
+                game.currentBattleProgress = CurrentBattleProgress.ROUND_COUNTDOWN;
+            }
+        }
+
+        if (game.currentBattleProgress == CurrentBattleProgress.ROUND_COUNTDOWN)
+        {
+            roundStartTimer -= Time.deltaTime;
+            if (roundStartTimer <= 0)
+            {
+                game.currentBattleProgress = CurrentBattleProgress.ROUND_IN_PROGRESS;
+                roundStartCountdownEnded = true;
+            }
+
+            battleUIScript.ShowCountdown(roundStartTimer);
+        }
+
+        if (game.currentBattleProgress == CurrentBattleProgress.ROUND_OVER
+            || game.currentBattleProgress == CurrentBattleProgress.GAME_OVER)
+        {
+            roundStartCountdownEnded = false;
+        }
+
         //// Update visuals to match current game state
         // (nvm lol this happens elsewhere)
         PauseGameCheck();
+
+        if (game.currentBattleProgress == CurrentBattleProgress.GAME_OVER && !matchEndScreenUp)
+        {
+            battleUIScript.ShowMatchEndScreen();
+            matchEndScreenUp = true;
+        }
     }
 
     long ReadGameInputs(int playerID)
@@ -143,7 +225,7 @@ public class GameManagerScript : MonoBehaviour
         // Same function is used for both pausing and unpausing the game.
         // (subject to change if it proves necessary to separate them)
         battleUIScript.UpdatePauseUI(playerInputScripts[0].p1PauseAction, isGamePaused);
-        if (!isGamePaused)
+        if (!isGamePaused && game.currentBattleProgress == CurrentBattleProgress.ROUND_IN_PROGRESS)
         {
             // Pause
             if (playerInputScripts[0].p1PauseWasPressedThisFrame)
@@ -177,7 +259,6 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-
     public void UnpauseGameFromUI()
     {
         isGamePaused = false;
@@ -190,6 +271,7 @@ public class GameManagerScript : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.name);
     }
+
     public void CharSelectFromUI() => Debug.Log("Return to Character Select!");
 
     public void MainMenuFromUI() => Debug.Log("Return to Main Menu!");

@@ -54,6 +54,21 @@ public enum PlayerState
     WALLSPLAT
 }
 
+public enum CurrentBattleProgress
+{
+    // Before the first round starts. Character intros and such roll out, BGM starts, assets load in (if not already) loaded, etc.
+    WAITING_FOR_FIRST_ROUND,
+    // Counting down to the start of the current round.
+    ROUND_COUNTDOWN,
+    // Players are playing the game. Fighting is happening. Combat in progress.
+    //  (Here, the game can be paused.)
+    ROUND_IN_PROGRESS,
+    // Current round just ended due to scores, health, time, or whatever the condition is. Transitions to countdown for the next round.
+    ROUND_OVER,
+    // Final round of combat has ended. Match end UI menu appears on screen.
+    GAME_OVER
+}
+
 
 [Serializable]
 public struct HfGame
@@ -67,6 +82,8 @@ public struct HfGame
 
     public static Rect bounds = new Rect(0, 0, 1280, 720);
 
+    public CurrentBattleProgress currentBattleProgress;
+    public int roundsPlayed;
     //public bool gameStarted;
     //public bool gameEnded;
     //public bool roundStarted;
@@ -84,6 +101,9 @@ public struct HfGame
     {
         frameNumber = 0;
         roundTimerCurrentInFrames = 0;
+
+        roundsPlayed = 0;
+        currentBattleProgress = CurrentBattleProgress.WAITING_FOR_FIRST_ROUND;
 
         players = new Player[numberOfPlayers];
 
@@ -137,6 +157,8 @@ public struct HfGame
         // 5. Process projectile/object movement and creation
         // 6. Check for hits/blocks
         // 7. Finally, trigger a call to update visuals (if necessary)
+        // *------------------------------------------*
+        // 8. Check match end conditions
         // *---------------------------------------------------------------------------------------*
 
         // 1. Increment frame number
@@ -192,13 +214,13 @@ public struct HfGame
             HitboxData[] currentHitboxes = players[p].GetHitboxes();
             if (currentHitboxes.Length > 0)
             {
-                Debug.Log(currentHitboxes[0].hitboxRect);
+                //Debug.Log(currentHitboxes[0].hitboxRect);
                 for (int q = 0; q < players.Length; q++)
                 {
                     if (players[p].teamId != players[q].teamId)
                     {
                         Rect hurtboxToCheck = players[q].GetHurtbox();
-                        Debug.Log(hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect));
+                        //Debug.Log(hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect));
                         if (hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect))
                         {
                             players[q].InflictDamageAndHitstunAndKnockback(currentHitboxes[0], players[p].facingRight);
@@ -209,6 +231,25 @@ public struct HfGame
             }
         }
 
+        // 8. Check match end conditions
+        bool p1Dead = false;
+        bool p2Dead = false;
+        for (int p = 0; p < players.Length; p++)
+        {
+            if (players[p].health <= 0)
+            {
+                if (p == 0)
+                {
+                    p1Dead = true;
+                }
+                else
+                {
+                    p2Dead = true;
+                }
+            }
+        }
+        if (p1Dead || p2Dead) { currentBattleProgress = CurrentBattleProgress.GAME_OVER; }
+        if (roundTimerCurrentInFrames >= roundTimerMax * targetFrameRate) { currentBattleProgress = CurrentBattleProgress.GAME_OVER; }
 
         // Debug info
         //Debug.Log($"Checksum: {checksum}");
