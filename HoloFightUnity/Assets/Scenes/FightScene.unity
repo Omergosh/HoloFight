@@ -755,6 +755,7 @@ MonoBehaviour:
     players: []
     currentBattleProgress: 0
     roundsPlayed: 0
+    winnerPlayerIndex: 0
     roundTimerCurrentInFrames: 0
   gameManagerScript: {fileID: 1306969257}
 --- !u!1 &170998918
@@ -1118,6 +1119,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullscreenOverlay: {fileID: 259405374}
   defaultMenuItem: {fileID: 567522905}
+  winnerPlayerNumText: {fileID: 447490393}
+  winnerCharacterNameText: {fileID: 460895013}
 --- !u!1 &252684855
 GameObject:
   m_ObjectHideFlags: 0
@@ -3983,6 +3986,7 @@ MonoBehaviour:
     players: []
     currentBattleProgress: 0
     roundsPlayed: 0
+    winnerPlayerIndex: 0
     roundTimerCurrentInFrames: 0
   prefabPlayerIna: {fileID: 1394051665769070631, guid: ee2834fee7249c2448d351b855ba0805, type: 3}
   playerGameObjects: []

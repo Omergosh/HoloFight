@@ -88,9 +88,9 @@ public class BattleUIScript : MonoBehaviour
         pauseUIScript.Unpause();
     }
 
-    public void ShowMatchEndScreen()
+    public void ShowMatchEndScreen(int winnerPlayerIndex, string winnerCharacterName)
     {
-        matchEndUIScript.ShowMenu(eventSystem);
+        matchEndUIScript.ShowMenu(eventSystem, winnerPlayerIndex, winnerCharacterName);
     }
 
     // The three methods below and the method above (for interfaces appearing before/between/after rounds)

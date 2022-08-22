@@ -34,6 +34,10 @@ public class GameManagerScript : MonoBehaviour
     float roundStartTimer = 3.0f;
     bool roundStartCountdownEnded = false;
 
+    // Match end results
+    int winnerPlayerIndex = -1;
+    string winnerCharacterName = "";
+
     // UI-relevant values
     public bool pauseHeldActivationShowTimer = false;
     public float pauseHeldActivationTimer = 0f;
@@ -175,7 +179,16 @@ public class GameManagerScript : MonoBehaviour
 
         if (game.currentBattleProgress == CurrentBattleProgress.GAME_OVER && !matchEndScreenUp)
         {
-            battleUIScript.ShowMatchEndScreen();
+            winnerPlayerIndex = game.winnerPlayerIndex;
+            if (winnerPlayerIndex >= 0) // If there was a winner
+            {
+                winnerCharacterName = game.players[winnerPlayerIndex].characterFullName;
+            }
+            else // If there was a tie
+            {
+                // For now, we don't need to do anything else in this case.
+            }
+            battleUIScript.ShowMatchEndScreen(winnerPlayerIndex, winnerCharacterName);
             matchEndScreenUp = true;
         }
     }

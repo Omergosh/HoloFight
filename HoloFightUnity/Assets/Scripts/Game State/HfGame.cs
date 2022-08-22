@@ -89,6 +89,9 @@ public struct HfGame
     //public bool roundStarted;
     //public bool roundEnded;
 
+    // Match end results
+    public int winnerPlayerIndex;
+
     public const int targetFrameRate = 60;
     public const int roundTimerMax = 60;
     public int roundTimerCurrentInFrames;
@@ -112,6 +115,7 @@ public struct HfGame
         {
             inputData[p].Init();
         }
+        winnerPlayerIndex = -1;
         Init();
         Debug.Log("Game initialized");
     }
@@ -232,6 +236,14 @@ public struct HfGame
         }
 
         // 8. Check match end conditions
+        CheckMatchEndConditions();
+
+        // Debug info
+        //Debug.Log($"Checksum: {checksum}");
+    }
+
+    public int CheckMatchEndConditions()
+    {
         bool p1Dead = false;
         bool p2Dead = false;
         for (int p = 0; p < players.Length; p++)
@@ -248,11 +260,39 @@ public struct HfGame
                 }
             }
         }
-        if (p1Dead || p2Dead) { currentBattleProgress = CurrentBattleProgress.GAME_OVER; }
-        if (roundTimerCurrentInFrames >= roundTimerMax * targetFrameRate) { currentBattleProgress = CurrentBattleProgress.GAME_OVER; }
-
-        // Debug info
-        //Debug.Log($"Checksum: {checksum}");
+        if (p1Dead || p2Dead)
+        {
+            currentBattleProgress = CurrentBattleProgress.GAME_OVER;
+            if (!p1Dead)
+            {
+                winnerPlayerIndex = 0;
+            }
+            else if (!p2Dead)
+            {
+                winnerPlayerIndex = 1;
+            }
+            else
+            {
+                winnerPlayerIndex = -1;
+            }
+        }
+        if (roundTimerCurrentInFrames >= roundTimerMax * targetFrameRate)
+        {
+            currentBattleProgress = CurrentBattleProgress.GAME_OVER;
+            if (players[0].health > players[1].health)
+            {
+                winnerPlayerIndex = 0;
+            }
+            else if (players[1].health > players[0].health)
+            {
+                winnerPlayerIndex = 1;
+            }
+            else
+            {
+                winnerPlayerIndex = -1;
+            }
+        }
+        return winnerPlayerIndex;
     }
 
     public static bool ParseOnePlayerInput(long inputs, int playerID, int inputConstant)
