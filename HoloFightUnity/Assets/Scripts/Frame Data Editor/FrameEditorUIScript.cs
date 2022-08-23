@@ -11,6 +11,7 @@ public class FrameEditorUIScript : MonoBehaviour
     // Text/Integer Field references (to retrieve values from / set values)
     public TMP_InputField currentCharacterInputField;
     public TMP_InputField currentAnimationInputField;
+    public TMP_Text currentFrameNumberTextDisplay;
     public TMP_InputField currentFrameTotalCountInputField;
 
     // Dropdown references
@@ -51,15 +52,17 @@ public class FrameEditorUIScript : MonoBehaviour
         // Current Frame slider
         currentFrameSlider.minValue = currentAnimation.frames.Count > 0 ? 1 : 0;
         currentFrameSlider.maxValue = currentAnimation.frames.Count;
-        currentFrameSlider.value = currentAnimation.currentFrameNumber + 1;
+        currentFrameSlider.SetValueWithoutNotify(currentAnimation.currentFrameNumber + 1);
+
+        currentFrameNumberTextDisplay.text = (currentAnimation.currentFrameNumber + 1).ToString();
 
         // Hitbox Position + Size sliders
         if (currentFrame.hitboxes.Count > 0)
         {
-            hitboxPositionXSlider.value = currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.position.x;
-            hitboxPositionYSlider.value = currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.position.y;
-            hitboxSizeXSlider.value = currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.size.x;
-            hitboxSizeYSlider.value = currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.size.y;
+            hitboxPositionXSlider.SetValueWithoutNotify(currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.position.x);
+            hitboxPositionYSlider.SetValueWithoutNotify(currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.position.y);
+            hitboxSizeXSlider.SetValueWithoutNotify(currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.size.x);
+            hitboxSizeYSlider.SetValueWithoutNotify(currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.size.y);
         }
     }
 
@@ -90,23 +93,47 @@ public class FrameEditorUIScript : MonoBehaviour
     //}
 
     //// Two commented out functions that actually just broke things instead of adding functionality.
-    ////public void OnCurrentFrameSliderValueChange()
-    ////{
-    ////    frameDataInfoSource.GoToFrame((int)currentFrameSlider.value - 1);
-    ////}
+    public void OnCurrentFrameSliderValueChange()
+    {
+        Debug.Log("current frame slider change");
+        Debug.Log(currentFrameSlider.value);
+        frameDataInfoSource.GoToFrame((int)currentFrameSlider.value - 1);
+    }
 
-    ////public void OnHitboxSliderValueChange()
-    ////{
-    ////    //hitboxRect.Set(hitboxPositionXSlider.value,
-    ////    //    hitboxPositionYSlider.value,
-    ////    //    hitboxSizeXSlider.value,
-    ////    //    hitboxSizeYSlider.value);
-    ////}
+    public void OnHitboxSliderValueChange()
+    {
+        Debug.Log("hitbox value slider change");
+        UpdateFrameDataUsingUIValues();
+        AnimationStateData currentAnimation = frameDataInfoSource.animationFrameData;
+        FrameData currentFrame = currentAnimation.CurrentFrame;
+        currentFrame.hitboxes[currentHitboxToEdit].hitboxRect.Set(
+            hitboxPositionXSlider.value,
+            hitboxPositionYSlider.value,
+            hitboxSizeXSlider.value,
+            hitboxSizeYSlider.value);
+        //hitboxRect.Set(hitboxPositionXSlider.value,
+        //    hitboxPositionYSlider.value,
+        //    hitboxSizeXSlider.value,
+        //    hitboxSizeYSlider.value);
+    }
+
+    public void OnAddHitboxButton()
+    {
+        Debug.Log("add new hitbox to current frame");
+        AnimationStateData currentAnimation = frameDataInfoSource.animationFrameData;
+        FrameData currentFrame = currentAnimation.CurrentFrame;
+    }
+
+    public void OnRemoveHitboxButton()
+    {
+        Debug.Log("remove currently selected hitbox");
+        AnimationStateData currentAnimation = frameDataInfoSource.animationFrameData;
+        FrameData currentFrame = currentAnimation.CurrentFrame;
+    }
 
     public void UpdateFrameDataUsingUIValues()
     {
         AnimationStateData currentAnimation = frameDataInfoSource.animationFrameData;
-        
         FrameData currentFrame = currentAnimation.CurrentFrame;
 
         // Only one hitbox is selected to edit its traits (via the sliders, etc.) at a time

@@ -29,6 +29,10 @@ public class PlayerIna : Player
                 {
                     ChangeAnimationState("attackB1");
                 }
+                else if (inputData.GetInputDown(INPUT_ATTACK_A))
+                {
+                    ChangeAnimationState("attackA1");
+                }
                 else if ((inputData.GetInputDown(INPUT_LEFT) && !inputData.GetInputDown(INPUT_RIGHT)) ||
                     (!inputData.GetInputDown(INPUT_LEFT) && inputData.GetInputDown(INPUT_RIGHT)))
                 {
@@ -46,6 +50,10 @@ public class PlayerIna : Player
                 {
                     ChangeAnimationState("attackB1");
                 }
+                else if (inputData.GetInputDown(INPUT_ATTACK_A))
+                {
+                    ChangeAnimationState("attackA1");
+                }
                 else if (!inputData.GetInputDown(INPUT_LEFT) && !inputData.GetInputDown(INPUT_RIGHT))
                 {
                     ChangeAnimationState("idle");
@@ -57,7 +65,11 @@ public class PlayerIna : Player
                 break;
 
             case PlayerState.JUMPING:
-                if (velocity.y < 0f)
+                if (inputData.GetInputDown(INPUT_ATTACK_A))
+                {
+                    ChangeAnimationState("airAttackA1");
+                }
+                else if (velocity.y < 0f)
                 {
                     ChangeAnimationState("fall");
                 }
@@ -68,7 +80,14 @@ public class PlayerIna : Player
                 break;
 
             case PlayerState.FALLING:
-                currentAnimationState.AdvanceFrame();
+                if (inputData.GetInputDown(INPUT_ATTACK_A))
+                {
+                    ChangeAnimationState("airAttackA1");
+                }
+                else
+                {
+                    currentAnimationState.AdvanceFrame();
+                }
                 break;
 
             case PlayerState.ATTACKING:

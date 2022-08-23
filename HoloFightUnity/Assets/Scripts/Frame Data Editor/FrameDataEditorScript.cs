@@ -9,6 +9,10 @@ public class FrameDataEditorScript : MonoBehaviour
     // Editor information (e.g. current animation)
     public float pixelsInUnityGridUnit;
 
+    bool isPlaying = false;
+    float isPlayingAnimationTimer = 0f;
+    float isPlayingAnimationInterval = 1/60f;
+
     // Events / UI stuff
     public FrameEditorUIScript frameEditorUIValues;
     //public UnityEvent OnFrameAdvanceByOne;
@@ -32,6 +36,20 @@ public class FrameDataEditorScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isPlaying)
+        {
+            isPlayingAnimationTimer += Time.deltaTime;
+
+            if(isPlayingAnimationTimer >= isPlayingAnimationInterval)
+            {
+                AdvanceFrame();
+                isPlayingAnimationTimer = 0f;
+            }
+
+            //Debug.Log(isPlayingAnimationTimer);
+            //Debug.Log(isPlayingAnimationInterval);
+        }
+
         UpdateVisuals();
     }
 
@@ -184,7 +202,18 @@ public class FrameDataEditorScript : MonoBehaviour
 
     public void OnPlayPauseAnimation()
     {
-
+        if (isPlaying)
+        {
+            isPlaying = false;
+            isPlayingAnimationTimer = 0f;
+        }
+        else
+        {
+            if(animationFrameData.frames.Count > 0)
+            {
+                isPlaying = true;
+            }
+        }
     }
 
     // Frame Manipulation

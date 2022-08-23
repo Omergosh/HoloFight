@@ -14,4 +14,7 @@ public class CharacterAnimationSetScriptableObject : ScriptableObject
     public AnimationClip attackA1;
     public AnimationClip attackB1;
     public AnimationClip attackC1;
+    public AnimationClip airAttackA1;
+    public AnimationClip airAttackB1;
+    public AnimationClip airAttackC1;
 }

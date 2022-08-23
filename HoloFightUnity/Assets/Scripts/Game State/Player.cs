@@ -476,6 +476,9 @@ public class Player
             case "attackA1":
             case "attackB1":
             case "attackC1":
+            case "airAttackA1":
+            case "airAttackB1":
+            case "airAttackC1":
                 playerState = PlayerState.ATTACKING;
                 break;
             case "hitstun":

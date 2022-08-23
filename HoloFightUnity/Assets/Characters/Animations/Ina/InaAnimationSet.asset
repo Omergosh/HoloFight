@@ -17,6 +17,9 @@ MonoBehaviour:
   jump: {fileID: 7400000, guid: c3e4211f0dd382247a919c22fbbe3fcb, type: 2}
   fall: {fileID: 7400000, guid: 7d23b43180e9d9141b60ad3e0c606737, type: 2}
   hitstun: {fileID: 7400000, guid: 986891b11872c7c4da14a92d236cbf21, type: 2}
-  attackA1: {fileID: 0}
+  attackA1: {fileID: 7400000, guid: 09b9d3449d1f9df46b81a5e0c3f773cb, type: 2}
   attackB1: {fileID: 7400000, guid: f38cab0f55e739d448782c87f476b863, type: 2}
   attackC1: {fileID: 0}
+  airAttackA1: {fileID: 7400000, guid: f0ed3cf0c826ca640bb0ca31a8cda08c, type: 2}
+  airAttackB1: {fileID: 0}
+  airAttackC1: {fileID: 0}

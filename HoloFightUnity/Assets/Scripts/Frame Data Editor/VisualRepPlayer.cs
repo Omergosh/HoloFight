@@ -75,14 +75,14 @@ public class VisualRepPlayer : MonoBehaviour
 
             //Debug.Log(animator.GetCurrentAnimatorClipInfo(0)[0]);
             //Debug.Log(animator.GetCurrentAnimatorClipInfo(0)[0].clip);
-            Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
-            Debug.Log(animator.GetCurrentAnimatorStateInfo(0).speed);
-            Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName(characterName.ToLower() + "_" + animationName));
+            //Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
+            //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).speed);
+            //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName(characterName.ToLower() + "_" + animationName));
 
             string stateName = characterName.ToLower() + "_" + animationName;
-            Debug.Log(currentFrame);
-            Debug.Log(totalFrames);
-            Debug.Log((float)currentFrame / (float)totalFrames);
+            //Debug.Log(currentFrame);
+            //Debug.Log(totalFrames);
+            //Debug.Log((float)currentFrame / (float)totalFrames);
             animator.Play(stateName, -1, ((float)currentFrame / (float)totalFrames));
             //animator.PlayInFixedTime(stateName, -1, ((float)currentFrame / (float)totalFrames) * totalAnimationTime);
         }

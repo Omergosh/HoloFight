@@ -11,13 +11,17 @@ public class CharacterGameDataSetScriptableObject : ScriptableObject
     public string runFrameDataFilename;
     public string jumpFrameDataFilename;
     public string fallFrameDataFilename;
+    public string attackA1FrameDataFilename;
     public string attackB1FrameDataFilename;
+    public string airAttackA1FrameDataFilename;
     public string hitstunFrameDataFilename;
 
     public TextAsset idleFrameDataJSON;
     public TextAsset runFrameDataJSOn;
     public TextAsset jumpFrameDataJSON;
     public TextAsset fallFrameDataJSON;
+    public TextAsset attackA1FrameDataJSON;
     public TextAsset attackB1FrameDataJSON;
+    public TextAsset airAttackA1FrameDataJSON;
     public TextAsset hitstunFrameDataJSON;
 }
