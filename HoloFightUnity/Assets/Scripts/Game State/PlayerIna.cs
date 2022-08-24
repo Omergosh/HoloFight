@@ -116,6 +116,13 @@ public class PlayerIna : Player
                 Debug.Log("unknown/undefined player state");
                 break;
         }
+
+
+        if (currentAnimationState.CurrentFrame.newHitStartsThisFrame)
+        {
+            currentAttackId = HfGame.GetNewAttackId;
+            //Debug.Log("New Attack: " + currentAttackId.ToString());
+        }
     }
 
     private void ReturnToNeutralState(InputData inputData)

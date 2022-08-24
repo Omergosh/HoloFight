@@ -11,6 +11,8 @@ public static class HFConstants
     public const float FRAME_RATE_SPEED_SCALE_MULTIPLIER = 1f / 60f;
     public const int MAX_PLAYERS = 2;
 
+    public const int HITSTOP_FRAMES_UNIVERSAL = 2;
+    public const int ALREADY_HIT_ATTACKID_MAX_BUFFER = 10;
 
     public const int INPUT_BUFFER_WINDOW = 5;
     public const int INPUT_PREVIOUS_STORED_MAX = 30;
@@ -82,6 +84,17 @@ public struct HfGame
 
     public static Rect bounds = new Rect(0, 0, 1280, 720);
 
+    public int hitstopFramesRemaining;
+    public static int lastAttackId = 1;
+    public static int GetNewAttackId
+    {
+        get
+        {
+            lastAttackId++;
+            return lastAttackId;
+        }
+    }
+
     public CurrentBattleProgress currentBattleProgress;
     public int roundsPlayed;
     //public bool gameStarted;
@@ -104,9 +117,11 @@ public struct HfGame
     {
         frameNumber = 0;
         roundTimerCurrentInFrames = 0;
-
         roundsPlayed = 0;
         currentBattleProgress = CurrentBattleProgress.WAITING_FOR_FIRST_ROUND;
+
+        hitstopFramesRemaining = 0;
+        //lastAttackId = 1;
 
         players = new Player[numberOfPlayers];
 
@@ -116,11 +131,11 @@ public struct HfGame
             inputData[p].Init();
         }
         winnerPlayerIndex = -1;
-        Init();
+        InitPlayers();
         Debug.Log("Game initialized");
     }
 
-    void Init()
+    void InitPlayers()
     {
         for (int p = 0; p < players.Length; p++)
         {
@@ -150,93 +165,108 @@ public struct HfGame
 
     public void AdvanceFrame(long[] inputs)
     {
-        // *---------------------------------------------------------------------------------------*
-        // 1. Increment frame number
-        // 2. Input processing
-        //         Execute any relevant input processing that extends beyond the current frame's inputs
-        //         (e.g. double taps, holding buttons, buffering inputs...)
-        // 3. Progress character animations/states.
-        //         Increment/decrement state variables such as hitstun, blockstun, shield health, etc.
-        // 4. Process character movement
-        // 5. Process projectile/object movement and creation
-        // 6. Check for hits/blocks
-        // 7. Finally, trigger a call to update visuals (if necessary)
-        // *------------------------------------------*
-        // 8. Check match end conditions
-        // *---------------------------------------------------------------------------------------*
-
-        // 1. Increment frame number
-        frameNumber++;
-        // (if the timer is not paused for round intros, hitstop, cinematic supers, or anything else...
-        // ...then increment the round timer too.)
-        roundTimerCurrentInFrames++;
-        //Debug.Log($"Frame: {frameNumber}");
-
-        // 2. Input processing
-        for (int p = 0; p < players.Length; p++)
+        if (hitstopFramesRemaining > 0)
         {
-            inputData[p].AddCurrentInputs(inputs[p]);
+            hitstopFramesRemaining--;
         }
-
-        // 3. Process character animation states
-        for (int p = 0; p < players.Length; p++)
+        else
         {
-            players[p].ProcessAnimationStateLogic(inputData[p]);
-        }
+            // *---------------------------------------------------------------------------------------*
+            // 1. Increment frame number
+            // 2. Input processing
+            //         Execute any relevant input processing that extends beyond the current frame's inputs
+            //         (e.g. double taps, holding buttons, buffering inputs...)
+            // 3. Progress character animations/states.
+            //         Increment/decrement state variables such as hitstun, blockstun, shield health, etc.
+            // 4. Process character movement
+            // 5. Process projectile/object movement and creation
+            // 6. Check for hits/blocks
+            // 7. Finally, trigger a call to update visuals (if necessary)
+            // *------------------------------------------*
+            // 8. Check match end conditions
+            // *---------------------------------------------------------------------------------------*
 
-        // 4. Process character movement
-        for (int p = 0; p < players.Length; p++)
-        {
-            players[p].ProcessAllMovement(inputData[p]);
-            //Vector2 newPosition = new Vector2(players[p].position.x, players[p].position.y);
+            // 1. Increment frame number
+            frameNumber++;
+            // (if the timer is not paused for round intros, hitstop, cinematic supers, or anything else...
+            // ...then increment the round timer too.)
+            roundTimerCurrentInFrames++;
+            //Debug.Log($"Frame: {frameNumber}");
 
-            // Apply each player's movement logic (dependent on their animationstate / player state)
-            //newPosition = players[p].ProcessMovementBeforeCollisions(inputData[p]);
-
-            // Process collisions between all players (and between players and objects/obstacles/walls)
-            // Add check either in here or player function for valid wallhugging/walljumping state
-
-            // Apply forces such as gravity/friction to velocities (but do not change positions here)
-
-            // Final positions/velocities determined and assigned
-
-            // Debug info
-            //Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
-        }
-
-        // 5. Projectile logic (DON'T IMPLEMENT YET)
-        //      a. projectile movement
-        //      b. projectile creation
-        //         (processed after movement so that new ones stay in their initial positions on the frame they're created)
-
-        // 6. Check for hits/blocks
-        //      a. check for hitbox/hurtbox overlaps all at once
-        //      b. THEN apply interaction logic all at once, to allow for things such as attacks trading (simultaneous hits), etc.
-        //         on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
-        for (int p = 0; p < players.Length; p++)
-        {
-            HitboxData[] currentHitboxes = players[p].GetHitboxes();
-            if (currentHitboxes.Length > 0)
+            // 2. Input processing
+            for (int p = 0; p < players.Length; p++)
             {
-                //Debug.Log(currentHitboxes[0].hitboxRect);
-                for (int q = 0; q < players.Length; q++)
+                inputData[p].AddCurrentInputs(inputs[p]);
+            }
+
+            // 3. Process character animation states
+            for (int p = 0; p < players.Length; p++)
+            {
+                players[p].ProcessAnimationStateLogic(inputData[p]);
+            }
+
+            // 4. Process character movement
+            for (int p = 0; p < players.Length; p++)
+            {
+                players[p].ProcessAllMovement(inputData[p]);
+                //Vector2 newPosition = new Vector2(players[p].position.x, players[p].position.y);
+
+                // Apply each player's movement logic (dependent on their animationstate / player state)
+                //newPosition = players[p].ProcessMovementBeforeCollisions(inputData[p]);
+
+                // Process collisions between all players (and between players and objects/obstacles/walls)
+                // Add check either in here or player function for valid wallhugging/walljumping state
+
+                // Apply forces such as gravity/friction to velocities (but do not change positions here)
+
+                // Final positions/velocities determined and assigned
+
+                // Debug info
+                //Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
+            }
+
+            // 5. Projectile logic (DON'T IMPLEMENT YET)
+            //      a. projectile movement
+            //      b. projectile creation
+            //         (processed after movement so that new ones stay in their initial positions on the frame they're created)
+
+            // 6. Check for hits/blocks
+            //      a. check for hitbox/hurtbox overlaps all at once
+            //      b. THEN apply interaction logic all at once, to allow for things such as attacks trading (simultaneous hits), etc.
+            //         on contact: (send players into hitstun states, apply hitstun/blockstun, etc.)
+            for (int p = 0; p < players.Length; p++)
+            {
+                HitboxData[] currentHitboxes = players[p].GetHitboxes();
+                if (currentHitboxes.Length > 0)
                 {
-                    if (players[p].teamId != players[q].teamId)
+                    //Debug.Log(currentHitboxes[0].hitboxRect);
+                    for (int q = 0; q < players.Length; q++)
                     {
-                        Rect hurtboxToCheck = players[q].GetHurtbox();
-                        //Debug.Log(hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect));
-                        if (hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect))
+                        if (players[p].teamId != players[q].teamId)
                         {
-                            players[q].InflictDamageAndHitstunAndKnockback(currentHitboxes[0], players[p].facingRight);
-                            players[q].facingRight = !players[p].facingRight;
+                            Rect hurtboxToCheck = players[q].GetHurtbox();
+                            //Debug.Log(hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect));
+                            if (hurtboxToCheck.Overlaps(currentHitboxes[0].hitboxRect))
+                            {
+                                if (!players[q].alreadyHitAttackIds.Contains(players[p].currentAttackId)) // Check if player has been hit by the same hitbox
+                                {
+                                    players[q].InflictDamageAndHitstunAndKnockback(currentHitboxes[0], players[p].facingRight, players[p].velocity);
+                                    players[q].facingRight = !players[p].facingRight;
+                                    players[q].alreadyHitAttackIds.Add(players[p].currentAttackId);
+
+                                    players[p].currentAttackLandedHit = true;
+
+                                    hitstopFramesRemaining = HITSTOP_FRAMES_UNIVERSAL;
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // 8. Check match end conditions
-        CheckMatchEndConditions();
+            // 8. Check match end conditions
+            CheckMatchEndConditions();
+        }
 
         // Debug info
         //Debug.Log($"Checksum: {checksum}");

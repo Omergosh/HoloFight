@@ -16,9 +16,12 @@ public class Player
     public float bounceOffEnergy = 0;
     public int health = 100;
     public int healthMax = 100;
-    public int hitstun = 0;
-    public int currentAttackId = 0;
     public bool facingRight = true;
+
+    public int hitstun = 0;
+    public List<int> alreadyHitAttackIds = new List<int>();
+    public int currentAttackId = 0;
+    public bool currentAttackLandedHit = false;
 
     // idk how often this'll change so it goes into its own category
     public Vector2 hurtboxSize = new Vector2(70f, 140f);
@@ -456,6 +459,14 @@ public class Player
 
     protected void ChangeAnimationState(string newAnimationState)
     {
+        //if (IsInHitstun && newAnimationState != "hitstun")
+        if (alreadyHitAttackIds.Count > ALREADY_HIT_ATTACKID_MAX_BUFFER && newAnimationState != "hitstun")
+        {
+            alreadyHitAttackIds.Clear();
+            Debug.Log("Cleared AttackId Stack!");
+        }
+
+        currentAttackLandedHit = false;
         currentAnimationState = animationsAllData[newAnimationState];
         currentAnimationState.currentFrameNumber = 0;
 
@@ -487,7 +498,7 @@ public class Player
         }
     }
 
-    public void InflictDamageAndHitstunAndKnockback(HitboxData hitboxData, bool isAttackerFacingRight)
+    public void InflictDamageAndHitstunAndKnockback(HitboxData hitboxData, bool isAttackerFacingRight, Vector2 attackerVelocity)
     {
         ChangeAnimationState("hitstun");
 
@@ -519,6 +530,11 @@ public class Player
                 addToVelocity *= -1;
             }
             velocity += addToVelocity;
+        }
+
+        if (hitboxData.knockbackRelativeToAttackerVelocity)
+        {
+            velocity += attackerVelocity;
         }
     }
 

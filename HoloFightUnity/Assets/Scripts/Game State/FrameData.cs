@@ -13,6 +13,7 @@ public struct HitboxData
     public int hitstunInflicted;
     public Vector2 knockbackInflicted;
     public bool knockbackReplacesInsteadOfAdds;
+    public bool knockbackRelativeToAttackerVelocity; // Enables moves that 'drag' targets with you for additional hits/follow-ups/combos
     public int shieldDamage;
 
     public bool clashes;
@@ -35,6 +36,7 @@ public struct FrameData
     public bool canCancelIntoAttackB;
     public bool canCancelIntoAttackC;
     public bool canCancelIntoDefend;
+    public bool newHitStartsThisFrame;
 }
 
 [Serializable]
