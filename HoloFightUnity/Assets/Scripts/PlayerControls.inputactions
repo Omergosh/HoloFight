@@ -464,19 +464,19 @@
                 },
                 {
                     "name": "MousePosition",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "0aa6b8a8-8bd9-4ee4-8f26-40540b95a00b",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
                     "name": "",
-                    "id": "8eb5e59c-57a1-4719-958a-43eb5635a39a",
-                    "path": "<Keyboard>/x",
+                    "id": "b2ccfa5b-f0c2-44a5-bc12-f12a7c09d4d4",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardP1Scheme",
@@ -488,7 +488,7 @@
                     "name": "",
                     "id": "a8bcbde1-cb06-463b-afa9-c386e9072f2f",
                     "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "GamepadScheme",
                     "action": "Confirm",
@@ -508,19 +508,8 @@
                 },
                 {
                     "name": "",
-                    "id": "373ffaf5-3f27-4d26-b4c4-aae6d2caa3fb",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardP1Scheme;GamepadScheme",
-                    "action": "Confirm",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b2ccfa5b-f0c2-44a5-bc12-f12a7c09d4d4",
-                    "path": "<Keyboard>/z",
+                    "id": "8eb5e59c-57a1-4719-958a-43eb5635a39a",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardP1Scheme",
@@ -532,7 +521,7 @@
                     "name": "",
                     "id": "6ee4f26e-9365-486c-b12e-b8e9a5b9e26a",
                     "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "GamepadScheme",
                     "action": "Back",
@@ -688,7 +677,7 @@
                     "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardP1Scheme;GamepadScheme",
+                    "groups": "KeyboardP1Scheme",
                     "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false

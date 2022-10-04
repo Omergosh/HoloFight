@@ -60,7 +60,7 @@ public class PlayerAnimationController : MonoBehaviour
             this.gameObject.transform.position = new Vector3(
                     player.position.x - (HfGame.bounds.width / 2),
                     player.position.y - (HfGame.bounds.height / 2)
-                    ) / GameManagerScript.pixelsInWorldUnit;
+                    ) / BattleManagerScript.pixelsInWorldUnit;
 
             //if (spriteRenderer != null)
             //{

@@ -305,6 +305,9 @@ public struct HfGame
             {
                 winnerPlayerIndex = -1;
             }
+
+            // Battle end hitstop to emphasize final, game-ending hit
+            hitstopFramesRemaining = HITSTOP_FRAMES_UNIVERSAL + 30;
         }
         if (roundTimerCurrentInFrames >= roundTimerMax * targetFrameRate)
         {

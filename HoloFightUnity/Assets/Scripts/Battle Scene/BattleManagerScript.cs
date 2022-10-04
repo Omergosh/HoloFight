@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static HFConstants;
 
-public class GameManagerScript : MonoBehaviour
+public class BattleManagerScript : MonoBehaviour
 {
     public HfGame game;// = new HfGame(2);
 
@@ -46,7 +46,8 @@ public class GameManagerScript : MonoBehaviour
     public BattleUIScript battleUIScript;
 
     // Input device configuration variables
-    // (TODO: have these variables passed in from character select screen, where players decide on the input devices to be used)
+    // (TODO: have these variables passed in from character select screen,
+    //  where players decide on the input devices to be used)
     // (Schemes for reference: KeyboardP1Scheme, KeyboardP2Scheme, GamepadScheme)
     public string controlSchemeP1 = "KeyboardP1Scheme";
     public string controlSchemeP2 = "KeyboardP2Scheme";

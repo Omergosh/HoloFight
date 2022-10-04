@@ -34,7 +34,7 @@ public class BattleUIScript : MonoBehaviour
 
     // Information needed to update UI
     public HfGame gameState;
-    public GameManagerScript gameManagerScript;
+    public BattleManagerScript battleManagerScript;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +51,7 @@ public class BattleUIScript : MonoBehaviour
     public void UpdateBattleUI()
     {
         // Update stored game state to reference for UI stuff
-        gameState = gameManagerScript.game;
+        gameState = battleManagerScript.game;
 
         // Current/temp: all UI references must be set/assigned before UI will update
         if (roundTimerText != null)

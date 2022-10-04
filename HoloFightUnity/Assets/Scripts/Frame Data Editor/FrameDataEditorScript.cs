@@ -30,7 +30,7 @@ public class FrameDataEditorScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pixelsInUnityGridUnit = GameManagerScript.pixelsInWorldUnit;
+        pixelsInUnityGridUnit = BattleManagerScript.pixelsInWorldUnit;
     }
 
     // Update is called once per frame
