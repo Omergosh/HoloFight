@@ -14,6 +14,7 @@ public class MenuOption : MonoBehaviour
     public UnityEvent menuOptionSelectedEvent;
 
     public int optionIndex;
+    public string optionName;
 
     void Awake()
     {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInput))]
 public class PlayerInputScript : MonoBehaviour
 {
     public PlayerInput playerInput;
@@ -31,9 +30,8 @@ public class PlayerInputScript : MonoBehaviour
     public bool p1PauseWasReleasedThisFrame = false;
     public bool p1PauseFullyHeldForDuration = false;
 
-    void Awake()
-    {
-        //playerInput = GetComponent<PlayerInput>();
+    void Start()
+    {   
         p1UpAction = playerInput.actions["Up"];
         p1LeftAction = playerInput.actions["Left"];
         p1DownAction = playerInput.actions["Down"];

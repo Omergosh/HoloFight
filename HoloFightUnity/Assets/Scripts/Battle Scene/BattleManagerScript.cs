@@ -49,8 +49,7 @@ public class BattleManagerScript : MonoBehaviour
     // (TODO: have these variables passed in from character select screen,
     //  where players decide on the input devices to be used)
     // (Schemes for reference: KeyboardP1Scheme, KeyboardP2Scheme, GamepadScheme)
-    public string controlSchemeP1 = "KeyboardP1Scheme";
-    public string controlSchemeP2 = "KeyboardP2Scheme";
+    public List<PlayerConfiguration> pConfigs = new List<PlayerConfiguration>();
 
     // Start is called before the first frame update
     void Start()
@@ -62,15 +61,29 @@ public class BattleManagerScript : MonoBehaviour
         playerGameObjects = new GameObject[2];
         playerInputScripts = new PlayerInputScript[2];
         playerAnimationControllers = new PlayerAnimationController[2];
+
+        for (int i = 0; i < 2; i++)
+        {
+            pConfigs.Add(PlayerConfigurationManager.instance.GetPlayerByTeam(i));
+            playerInputs[i] = PlayerConfigurationManager.instance.GetPlayerByTeam(i).Input;
+            //playerInputs[i].currentActionMap = playerInputs[i].actions.FindActionMap("FightControls");
+            playerInputs[i].SwitchCurrentActionMap("FightControls");
+
+            playerGameObjects[i] = Instantiate(prefabPlayerIna);
+            playerAnimationControllers[i] = playerGameObjects[i].GetComponent<PlayerAnimationController>();
+            playerInputScripts[i] = playerGameObjects[i].GetComponent<PlayerInputScript>();
+            playerInputScripts[i].playerInput = playerInputs[i];
+        }
+
         //playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: controlSchemeP1, pairWithDevice: Gamepad.current);
-        playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: controlSchemeP1, pairWithDevice: Keyboard.current);
-        playerInputs[1] = PlayerInput.Instantiate(prefabPlayerIna, 1, controlScheme: controlSchemeP2, pairWithDevice: Keyboard.current);
-        playerGameObjects[0] = playerInputs[0].gameObject;
-        playerGameObjects[1] = playerInputs[1].gameObject;
-        playerInputScripts[0] = playerGameObjects[0].GetComponent<PlayerInputScript>();
-        playerInputScripts[1] = playerGameObjects[1].GetComponent<PlayerInputScript>();
-        playerAnimationControllers[0] = playerGameObjects[0].GetComponent<PlayerAnimationController>();
-        playerAnimationControllers[1] = playerGameObjects[1].GetComponent<PlayerAnimationController>();
+        //playerInputs[0] = PlayerInput.Instantiate(prefabPlayerIna, 0, controlScheme: controlSchemeP1, pairWithDevice: Keyboard.current);
+        //playerInputs[1] = PlayerInput.Instantiate(prefabPlayerIna, 1, controlScheme: controlSchemeP2, pairWithDevice: Keyboard.current);
+        //playerGameObjects[0] = playerInputs[0].gameObject;
+        //playerGameObjects[1] = playerInputs[1].gameObject;
+        //playerInputScripts[0] = playerGameObjects[0].GetComponent<PlayerInputScript>();
+        //playerInputScripts[1] = playerGameObjects[1].GetComponent<PlayerInputScript>();
+        //playerAnimationControllers[0] = playerGameObjects[0].GetComponent<PlayerAnimationController>();
+        //playerAnimationControllers[1] = playerGameObjects[1].GetComponent<PlayerAnimationController>();
 
         // UI-related set-up and such (not relating directly to game state)
         pauseHeldActivationTimerMax = playerInputScripts[0].p1PauseAction.interactions.Length;

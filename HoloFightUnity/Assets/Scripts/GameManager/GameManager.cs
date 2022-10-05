@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour
         animator.Play("ScreenFadeOut");
         animator.speed = 1;
         acceptingMenuInputs = false;
+        inTransitionAnimation = true;
         //Debug.Log("fade start");
     }
     void SceneTransitionMiddle()
@@ -140,6 +141,7 @@ public class GameManager : MonoBehaviour
         animator.Play("ScreenFadeNone");
         animator.speed = 0;
         acceptingMenuInputs = true;
+        inTransitionAnimation = false;
         //Debug.Log("fade end");
     }
     #endregion

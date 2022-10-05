@@ -216,6 +216,13 @@ public class PlayerConfigurationManager : MonoBehaviour
         return true;
     }
 
+    public PlayerConfiguration GetPlayerByTeam(int teamId)
+    {
+        PlayerConfiguration returnPlayerConfig;
+        returnPlayerConfig = playerConfigs.Find(p => p.TeamIndex == teamId);
+        return returnPlayerConfig;
+    }
+
     public void SetPlayerCharacter(int index, CharacterChoice character)
     {
         playerConfigs[index].PlayerCharacter = character;
@@ -227,8 +234,6 @@ public class PlayerConfigurationManager : MonoBehaviour
         if (playerConfigs.Count == maxPlayers && playerConfigs.All(p => p.IsReady == true))
         {
             Debug.Log("Everyone is ready");
-            //SceneManager.LoadScene("FightScene");
-            //SceneManager.LoadScene("CharacterSelectScene");
         }
     }
 
@@ -249,6 +254,7 @@ public class PlayerConfiguration
     public PlayerConfiguration(PlayerInput pi)
     {
         PlayerIndex = pi.playerIndex;
+        TeamIndex = PlayerIndex;
         Input = pi;
 
         // Default harcoded values for initial incomplete implementation

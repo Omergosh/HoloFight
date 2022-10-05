@@ -29,31 +29,39 @@ public class PlayerMenuInput : MonoBehaviour
     public void InitializeWithPrimaryPlayer(PlayerInput primaryPlayerInput)
     {
         playerInputs = new List<PlayerInput>();
-        AddPlayerMenuInput(0, primaryPlayerInput);
+        menuInputValues = new List<PlayerMenuInputValues>();
+        playerInputs.Add(primaryPlayerInput);
+        menuInputValues.Add(new PlayerMenuInputValues());
+        AssignPlayerMenuInput(0, primaryPlayerInput);
     }
 
     public void InitializeWithAllPlayers()
     {
         playerInputs = new List<PlayerInput>();
-        foreach (PlayerConfiguration playerConfig in PlayerConfigurationManager.instance.playerConfigs)
+        menuInputValues = new List<PlayerMenuInputValues>();
+        for (int i = 0; i < PlayerConfigurationManager.instance.playerConfigs.Count; i++)
         {
-            AddPlayerMenuInput(playerConfig.TeamIndex, playerConfig.Input);
+            playerInputs.Add(PlayerConfigurationManager.instance.GetPlayerByTeam(i).Input);
+            menuInputValues.Add(new PlayerMenuInputValues());
+            AssignPlayerMenuInput(i, playerInputs[i]);
         }
+        //foreach (PlayerConfiguration playerConfig in PlayerConfigurationManager.instance.playerConfigs)
+        //{
+        //    playerInputs.Add(playerConfig.Input);
+        //    menuInputValues.Add(new PlayerMenuInputValues());
+        //}
+        //foreach (PlayerConfiguration playerConfig in PlayerConfigurationManager.instance.playerConfigs)
+        //{
+        //    AssignPlayerMenuInput(playerConfig.TeamIndex, playerConfig.Input);
+        //}
     }
 
-    void AddPlayerMenuInput(int index, PlayerInput pInput)
+    void AssignPlayerMenuInput(int index, PlayerInput pInput)
     {
-        if (index + 1 > playerInputs.Count)
-        {
-            playerInputs.Add(pInput);
-            menuInputValues.Add(new PlayerMenuInputValues());
-        }
-
         Debug.Log(playerInputs.Count);
         Debug.Log(index);
         Debug.Log(pInput.playerIndex);
         Debug.Log(PlayerConfigurationManager.instance.playerConfigs.Count);
-        playerInputs[index] = PlayerConfigurationManager.instance.playerConfigs[index].Input;
         menuInputValues[index].pConfirmAction = playerInputs[index].actions["Confirm"];
         menuInputValues[index].pBackAction = playerInputs[index].actions["Back"];
         menuInputValues[index].pMoveInMenuAction = playerInputs[index].actions["MoveInMenu"];
@@ -77,7 +85,9 @@ public class PlayerMenuInput : MonoBehaviour
             //foreach (PlayerConfiguration playerConfig in PlayerConfigurationManager.instance.playerConfigs)
             for (int i = playerInputs.Count; i < PlayerConfigurationManager.instance.playerConfigs.Count; i++)
             {
-                AddPlayerMenuInput(i, PlayerConfigurationManager.instance.playerConfigs[i].Input);
+                playerInputs.Add(PlayerConfigurationManager.instance.playerConfigs[i].Input);
+                menuInputValues.Add(new PlayerMenuInputValues());
+                AssignPlayerMenuInput(i, PlayerConfigurationManager.instance.playerConfigs[i].Input);
             }
         }
 

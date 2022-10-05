@@ -4003,8 +4003,6 @@ MonoBehaviour:
   pauseHeldActivationTimer: 0
   pauseHeldActivationTimerMax: 0
   battleUIScript: {fileID: 125602791}
-  controlSchemeP1: KeyboardP1Scheme
-  controlSchemeP2: KeyboardP2Scheme
 --- !u!114 &1306969258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4165,7 +4163,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1383572010
 MonoBehaviour:

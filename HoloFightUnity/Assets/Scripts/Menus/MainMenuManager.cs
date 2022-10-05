@@ -32,7 +32,9 @@ public class MainMenuManager : MonoBehaviour
     {
         foreach(PlayerConfiguration playerConfig in PlayerConfigurationManager.instance.playerConfigs)
         {
-            playerConfig.Input.currentActionMap = playerConfig.Input.actions.FindActionMap("MenuControls");
+            //playerConfig.Input.currentActionMap = playerConfig.Input.actions.FindActionMap("MenuActions");
+            playerConfig.Input.SwitchCurrentActionMap("MenuActions");
+            //playerConfig.Input.SwitchCurrentActionMap("MenuControls");
         }
         primaryPlayerInput = PlayerConfigurationManager.instance.playerConfigs[0].Input;
         menuInput.InitializeWithPrimaryPlayer(primaryPlayerInput);

@@ -34,6 +34,7 @@ public class CharSelectManager : MonoBehaviour
                 {
                     // Characcter choices already recorded(?) - just go to the fight.
                     GameManager.instance.CharSelectToVersus();
+                    charSelectState = CharSelectScreenState.INACTIVE;
                 }
                 else
                 {

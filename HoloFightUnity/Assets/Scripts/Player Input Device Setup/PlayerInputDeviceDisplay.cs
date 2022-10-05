@@ -22,7 +22,7 @@ public class PlayerInputDeviceDisplay : MonoBehaviour
     public bool isReady = false;
     public int playerIndex = -1;
 
-    private float ignoreReadyTime = 0.5f;
+    private float ignoreReadyTime = 0.01f;
     private bool readyEnabled = false;
 
     private void Start()
