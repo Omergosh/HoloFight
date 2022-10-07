@@ -100,6 +100,17 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Battle
+    public void BattleToCharSelect()
+    {
+        // Back out back to Main Menu
+        SceneTransitionStart("CharacterSelectScene");
+    }
+
+    public void BattleToMainMenu()
+    {
+        // To the scene of battle! Fight time.
+        SceneTransitionStart("MainMenuScene");
+    }
     #endregion
 
     #region Scene transitions

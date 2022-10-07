@@ -303,9 +303,9 @@ public class BattleManagerScript : MonoBehaviour
         SceneManager.LoadScene(currentScene.name);
     }
 
-    public void CharSelectFromUI() => Debug.Log("Return to Character Select!");
+    public void CharSelectFromUI() => GameManager.instance.BattleToCharSelect();
 
-    public void MainMenuFromUI() => Debug.Log("Return to Main Menu!");
+    public void MainMenuFromUI() => GameManager.instance.BattleToMainMenu();
 
     public void LoadFrameDataForPlayer(int playerNumber)
     {

@@ -251,12 +251,20 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     public void EnableMenuInputs()
     {
-        GetPlayerByTeam(0).Input.SwitchCurrentActionMap("MenuActions");
+        //GetPlayerByTeam(0).Input.SwitchCurrentActionMap("MenuActions");
+        foreach (PlayerConfiguration pConfig in PlayerConfigurationManager.instance.playerConfigs)
+        {
+            pConfig.Input.SwitchCurrentActionMap("MenuActions");
+        }
     }
 
     public void DisableMenuInputs()
     {
-        GetPlayerByTeam(0).Input.SwitchCurrentActionMap("FightControls");
+        //GetPlayerByTeam(0).Input.SwitchCurrentActionMap("FightControls");
+        foreach (PlayerConfiguration pConfig in PlayerConfigurationManager.instance.playerConfigs)
+        {
+            pConfig.Input.SwitchCurrentActionMap("FightControls");
+        }
     }
 }
 public class PlayerConfiguration
