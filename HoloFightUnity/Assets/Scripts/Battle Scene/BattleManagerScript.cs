@@ -181,15 +181,18 @@ public class BattleManagerScript : MonoBehaviour
             battleUIScript.ShowCountdown(roundStartTimer);
         }
 
+        //// Update visuals to match current game state
+        // (nvm lol this happens elsewhere)
+        if (game.currentBattleProgress == CurrentBattleProgress.ROUND_IN_PROGRESS)
+        {
+            PauseGameCheck();
+        }
+
         if (game.currentBattleProgress == CurrentBattleProgress.ROUND_OVER
             || game.currentBattleProgress == CurrentBattleProgress.GAME_OVER)
         {
             roundStartCountdownEnded = false;
         }
-
-        //// Update visuals to match current game state
-        // (nvm lol this happens elsewhere)
-        PauseGameCheck();
 
         if (game.currentBattleProgress == CurrentBattleProgress.GAME_OVER && !matchEndScreenUp)
         {
@@ -270,6 +273,7 @@ public class BattleManagerScript : MonoBehaviour
                 // If pause button was held for long enough, actually pause the game
                 Debug.Log("GAME PAUSED");
                 isGamePaused = true;
+                PlayerConfigurationManager.instance.EnableMenuInputs();
                 //battleUIScript.Pause();
             }
         }

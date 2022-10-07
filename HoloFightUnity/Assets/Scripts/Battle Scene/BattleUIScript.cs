@@ -86,11 +86,13 @@ public class BattleUIScript : MonoBehaviour
     public void Unpause()
     {
         pauseUIScript.Unpause();
+        PlayerConfigurationManager.instance.DisableMenuInputs();
     }
 
     public void ShowMatchEndScreen(int winnerPlayerIndex, string winnerCharacterName)
     {
         matchEndUIScript.ShowMenu(eventSystem, winnerPlayerIndex, winnerCharacterName);
+        PlayerConfigurationManager.instance.EnableMenuInputs();
     }
 
     // The three methods below and the method above (for interfaces appearing before/between/after rounds)

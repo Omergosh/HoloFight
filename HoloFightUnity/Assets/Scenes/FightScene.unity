@@ -2761,6 +2761,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e7e9178039fc15949a1c3de38e150799, type: 3}
   - {fileID: 8300000, guid: c28de801c1a2d8545ad02f6ba9d139a7, type: 3}
   currentSelectedSong: -1
+  songEndBuffer: 0.05
 --- !u!1 &847436992
 GameObject:
   m_ObjectHideFlags: 0
@@ -3945,7 +3946,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1306969256}
   - component: {fileID: 1306969257}
-  - component: {fileID: 1306969258}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: Untagged
@@ -4003,50 +4003,6 @@ MonoBehaviour:
   pauseHeldActivationTimer: 0
   pauseHeldActivationTimerMax: 0
   battleUIScript: {fileID: 125602791}
---- !u!114 &1306969258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1306969255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NotificationBehavior: 0
-  m_MaxPlayerCount: 2
-  m_AllowJoining: 0
-  m_JoinBehavior: 2
-  m_PlayerJoinedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_PlayerLeftEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_JoinAction:
-    m_UseReference: 0
-    m_Action:
-      m_Name: 
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 0}
-  m_SplitScreen: 0
-  m_MaintainAspectRatioInSplitScreen: 0
-  m_FixedNumberOfSplitScreens: -1
-  m_SplitScreenRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!1 &1363764893
 GameObject:
   m_ObjectHideFlags: 0
@@ -5913,7 +5869,7 @@ MonoBehaviour:
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: 115faeef94c93cd4a9aabfa68abc60b0, type: 3}
-  m_PointAction: {fileID: -5808439608737001725, guid: 115faeef94c93cd4a9aabfa68abc60b0, type: 3}
+  m_PointAction: {fileID: 0}
   m_MoveAction: {fileID: -8579495033382969484, guid: 115faeef94c93cd4a9aabfa68abc60b0, type: 3}
   m_SubmitAction: {fileID: -3373473298013386220, guid: 115faeef94c93cd4a9aabfa68abc60b0, type: 3}
   m_CancelAction: {fileID: 4506927602561768057, guid: 115faeef94c93cd4a9aabfa68abc60b0, type: 3}

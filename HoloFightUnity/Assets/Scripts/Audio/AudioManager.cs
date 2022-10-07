@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class AudioManager : MonoBehaviour
 {
     // Class to manage + persist audio levels across scenes.
     // (attached to the GameManager object)
+
+    [SerializeReference]
+    MusicManager musicManager;
 
     // Start is called before the first frame update
     void Start()
@@ -17,5 +21,27 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    internal void SceneTransitionStart(string newSceneName)
+    {
+        // Start fading out music
+        musicManager.StopTheMusic();
+        musicManager.ChangePlaylist(newSceneName);
+    }
+
+    internal void SceneTransitionMiddle(string newSceneName)
+    {
+        // Queue up next track or w/e based on available data
+        //musicManager.ChangePlaylist(newSceneName);
+
+        // actually, just start playing the music now.
+        musicManager.PlayRandomSong();
+    }
+
+    internal void SceneTransitionEnd(string nextScene)
+    {
+        // Start playing new music
+        musicManager.PlayRandomSong();
     }
 }

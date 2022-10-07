@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
 
     // References to manage persistent aspects
     // such as Input Devices, Player Profiles, Save Data, etc.
-    PlayerConfigurationManager playerConfigurationManager;
-    AudioManager audioManager;
+    //PlayerConfigurationManager playerConfigurationManager;
+    public AudioManager audioManager;
 
     // State
     public bool inTransitionAnimation = false;
@@ -112,12 +112,14 @@ public class GameManager : MonoBehaviour
         acceptingMenuInputs = false;
         inTransitionAnimation = true;
         //Debug.Log("fade start");
+        audioManager.SceneTransitionStart(newSceneName);
     }
     void SceneTransitionMiddle()
     {
         StartCoroutine(LoadNextAsyncScene());
         //Debug.Log("fade middle");
         animator.speed = 0;
+        audioManager.SceneTransitionMiddle(nextScene);
     }
 
     IEnumerator LoadNextAsyncScene()
@@ -143,6 +145,7 @@ public class GameManager : MonoBehaviour
         acceptingMenuInputs = true;
         inTransitionAnimation = false;
         //Debug.Log("fade end");
+        audioManager.SceneTransitionEnd(nextScene);
     }
     #endregion
 }

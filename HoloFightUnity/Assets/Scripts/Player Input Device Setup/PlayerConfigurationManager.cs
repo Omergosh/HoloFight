@@ -248,6 +248,16 @@ public class PlayerConfigurationManager : MonoBehaviour
             Debug.Log(playerConfigs.Count);
         }
     }
+
+    public void EnableMenuInputs()
+    {
+        GetPlayerByTeam(0).Input.SwitchCurrentActionMap("MenuActions");
+    }
+
+    public void DisableMenuInputs()
+    {
+        GetPlayerByTeam(0).Input.SwitchCurrentActionMap("FightControls");
+    }
 }
 public class PlayerConfiguration
 {

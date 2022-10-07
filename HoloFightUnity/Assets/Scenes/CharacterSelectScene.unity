@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b1e03f3204b8bf4eaa7da45d2c3a702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorOffset: {x: 0, y: -110, z: 0}
+  cursorOffset: {x: 0, y: -100, z: 0}
   imagesToColorChange:
   - {fileID: 1160008155}
 --- !u!222 &463934651
@@ -667,7 +667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b1e03f3204b8bf4eaa7da45d2c3a702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorOffset: {x: 0, y: 60, z: 0}
+  cursorOffset: {x: 0, y: 100, z: 0}
   imagesToColorChange:
   - {fileID: 344022570}
 --- !u!222 &582654166

@@ -10,6 +10,9 @@ public class BattleMusicScript : MonoBehaviour
     public int currentSelectedSong = -1; // -1 means no song is selected.
                                          // Otherwise, value is index of selected song in playlist.
 
+    [SerializeField]
+    float songEndBuffer = 0.05f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,9 +36,13 @@ public class BattleMusicScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!audioSource.isPlaying)
+        if (!audioSource.loop)
         {
-            PlayRandomSong();
+            //if(!audioSource.isPlaying)
+            if (audioSource.time + songEndBuffer >= battleMusicPlaylist[currentSelectedSong].length)
+            {
+                PlayRandomSong();
+            }
         }
     }
 }
