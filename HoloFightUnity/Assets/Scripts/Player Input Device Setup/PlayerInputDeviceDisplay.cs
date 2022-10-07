@@ -25,10 +25,14 @@ public class PlayerInputDeviceDisplay : MonoBehaviour
     private float ignoreReadyTime = 0.01f;
     private bool readyEnabled = false;
 
-    private void Start()
-    {
-        ResetReadyTimer();
-    }
+    // For SOME reason, having this code in the Start function causes the timer to constantly reset
+    // all the time and last way longer than it should.
+    // For some reason.
+    // Leaving this comment here until I figure out why, even though I DID fix the bug by commenting it out.
+    //private void Start()
+    //{
+    //    ResetReadyTimer();
+    //}
 
     private void Update()
     {
