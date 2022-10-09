@@ -36,6 +36,7 @@ public class MainMenuManager : MonoBehaviour
             playerConfig.Input.SwitchCurrentActionMap("MenuActions");
             //playerConfig.Input.SwitchCurrentActionMap("MenuControls");
         }
+        PlayerConfigurationManager.instance.RemoveNonPrimaryPlayers();
         primaryPlayerInput = PlayerConfigurationManager.instance.playerConfigs[0].Input;
         menuInput.InitializeWithPrimaryPlayer(primaryPlayerInput);
     }
@@ -57,6 +58,7 @@ public class MainMenuManager : MonoBehaviour
                     // All player devices are selected and ready!
                     deviceSelectController.AssignPlayerTeamsToConfigs();
                     mainMenuState = MainMenuState.INACTIVE;
+                    PlayerConfigurationManager.instance.StopConfiguringPlayerDevices();
                     GameManager.instance.MainMenuToVersusCharSelect();
                 }
                 break;
@@ -83,12 +85,23 @@ public class MainMenuManager : MonoBehaviour
         deviceSelectController.gameObject.SetActive(true);
         PlayerConfigurationManager.instance.StartConfiguringPlayerDevices();
     }
+    public void CloseVersusControllerSetup()
+    {
+        mainMenuState = MainMenuState.AT_ROOT;
+        deviceSelectController.gameObject.SetActive(false);
+        PlayerConfigurationManager.instance.StopConfiguringPlayerDevices();
+        PlayerConfigurationManager.instance.RemoveNonPrimaryPlayers();
+    }
     #endregion
 
     #region Settings
+    public void OpenButtonRebindMenu() { }
+    public void CloseButtonRebindMenu() { }
     #endregion
 
     #region Credits
+    public void OpenCreditsView() { }
+    public void CloseCreditsView() { }
     #endregion
 
     public void InvalidOptionSelected()

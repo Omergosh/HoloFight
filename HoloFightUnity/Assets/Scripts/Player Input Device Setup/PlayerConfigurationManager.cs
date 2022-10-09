@@ -135,10 +135,32 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     }
 
+    public void RemoveNonPrimaryPlayers()
+    {
+        if (playerConfigs.Count > 1)
+        {
+            for (int i = 1; i < playerConfigs.Count; i++)
+            {
+                Destroy(playerConfigs[i].Input.gameObject, 0.01f);
+            }
+            playerConfigs.RemoveRange(1, playerConfigs.Count - 1);
+            Debug.Log("Removed non-primary players.");
+
+            // Reset control-scheme-specific variables on this manager object.
+            if (playerConfigs[0].Input.currentControlScheme != "KeyboardP1Scheme") { firstKeyboardPlayerJoined = false; }
+            if (playerConfigs[0].Input.currentControlScheme != "KeyboardP2Scheme") { secondKeyboardPlayerJoined = false; }
+        }
+    }
+
     public void StartConfiguringPlayerDevices()
     {
         configuringPlayerDevices = true;
         ignoreJoinTime = Time.time + ignoreJoinTime;
+    }
+
+    public void StopConfiguringPlayerDevices()
+    {
+        configuringPlayerDevices = false;
     }
 
     void PlayerJoinCheckUpdate()
@@ -155,7 +177,7 @@ public class PlayerConfigurationManager : MonoBehaviour
             {
                 if (Keyboard.current.zKey.isPressed)
                 {
-                    PlayerInput newPI = PlayerInput.Instantiate(playerConfigPrefab, 0, controlScheme: "KeyboardP1Scheme", pairWithDevice: Keyboard.current);
+                    PlayerInput newPI = PlayerInput.Instantiate(playerConfigPrefab,/* 0,*/ controlScheme: "KeyboardP1Scheme", pairWithDevice: Keyboard.current);
                     //GetComponent<PlayerInputManager>().JoinPlayer(controlScheme: "KeyboardP1Scheme", pairWithDevice: Keyboard.current);
                     firstKeyboardPlayerJoined = true;
                     HandlePlayerJoin(newPI);

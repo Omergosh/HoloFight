@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
     public void TitleScreenAdvance(/* input device to assign to player one? */)
     {
         SceneTransitionStart("MainMenuScene");
+        PlayerConfigurationManager.instance.onTitleScreen = false;
     }
     public void TitleScreenQuit()
     {

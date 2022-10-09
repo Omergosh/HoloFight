@@ -58,6 +58,13 @@ public class CharListController : MonoBehaviour
             if (menuInput.menuInputValues[0].pBackValue)
             {
                 Debug.Log("1 Back out of menu.");
+                GameManager.instance.CharSelectExit();
+
+                // These next lines are to ensure there aren't any unforeseen issues from
+                // lingering variable assignments caused by this Chararacter Select Scene.
+                p1Config.IsReady = false;
+                p2Config.IsReady = false;
+                return;
             }
         }
         else
@@ -98,6 +105,13 @@ public class CharListController : MonoBehaviour
             if (menuInput.menuInputValues[1].pBackValue)
             {
                 Debug.Log("2 Back out of menu.");
+                GameManager.instance.CharSelectExit();
+
+                // These next lines are to ensure there aren't any unforeseen issues from
+                // lingering variable assignments caused by this Chararacter Select Scene.
+                p1Config.IsReady = false;
+                p2Config.IsReady = false;
+                return;
             }
         }
         else

@@ -430,6 +430,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   optionIndex: 0
+  optionName: 
 --- !u!1 &128943046
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,6 +931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deviceDisplayContainer: {fileID: 128943046}
   deviceDisplayPrefab: {fileID: 6037238552614327798, guid: 3fab991ff9034be4dbb63fec8659e33a, type: 3}
+  mainMenuManager: {fileID: 15865229}
 --- !u!1 &714078031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1473,6 +1475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   screenCoverFade: {fileID: 1130995708}
+  audioManager: {fileID: 0}
   inTransitionAnimation: 0
   acceptingMenuInputs: 1
 --- !u!95 &1133776223
@@ -1747,6 +1750,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   optionIndex: 3
+  optionName: 
 --- !u!1 &1492448164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,6 +1921,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   optionIndex: 4
+  optionName: 
 --- !u!1 &1567643366
 GameObject:
   m_ObjectHideFlags: 0
@@ -2397,6 +2402,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   optionIndex: 2
+  optionName: 
 --- !u!1 &1873403497
 GameObject:
   m_ObjectHideFlags: 0
@@ -2448,6 +2454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorOffset: {x: 0, y: 0, z: 0}
+  imagesToColorChange: []
 --- !u!1 &2051582741
 GameObject:
   m_ObjectHideFlags: 0
@@ -2692,3 +2699,4 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   optionIndex: 1
+  optionName: 

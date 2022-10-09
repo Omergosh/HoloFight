@@ -11,6 +11,9 @@ public class DeviceSelectController : MonoBehaviour
     [SerializeField]
     GameObject deviceDisplayPrefab;
 
+    [SerializeField]
+    MainMenuManager mainMenuManager;
+
     private void Update()
     {
         Debug.Log("player config count: " + PlayerConfigurationManager.instance.playerConfigs.Count.ToString());
@@ -67,10 +70,6 @@ public class DeviceSelectController : MonoBehaviour
                     {
                         deviceDisplays[i].isReady = true;
                     }
-                    if (menuInput.menuInputValues[i].pBackValue)
-                    {
-                        deviceDisplays[i].isReady = false;
-                    }
                 }
                 if (!deviceDisplays[i].isReady)
                 {
@@ -84,7 +83,29 @@ public class DeviceSelectController : MonoBehaviour
                         deviceDisplays[i].MoveRight();
                     }
                 }
+                if (menuInput.menuInputValues[i].pBackValue)
+                {
+                    if (deviceDisplays[i].isReady)
+                    {
+                        deviceDisplays[i].isReady = false;
+                    }
+                    else
+                    {
+                        Reset();
+                        mainMenuManager.CloseVersusControllerSetup();
+                        return;
+                    }
+                }
             }
         }
+    }
+
+    public void Reset()
+    {
+        foreach(PlayerInputDeviceDisplay deviceDisplay in deviceDisplays)
+        {
+            Destroy(deviceDisplay.gameObject, 0.01f);
+        }
+        deviceDisplays = new List<PlayerInputDeviceDisplay>();
     }
 }
