@@ -58,6 +58,23 @@ public class DeviceSelectController : MonoBehaviour
         }
     }
 
+    public bool AreOtherDevicesOnSameSide(int indexOfDeviceDisplayToCompare)
+    {
+        bool onSameSide = false;
+        for(int j = 0; j < deviceDisplays.Count; j++)
+        {
+            if(j != indexOfDeviceDisplayToCompare)
+            {
+                if(deviceDisplays[j].sideSelection == deviceDisplays[indexOfDeviceDisplayToCompare].sideSelection
+                    && deviceDisplays[j].isReady)
+                {
+                    onSameSide = true;
+                }
+            }
+        }
+        return onSameSide;
+    }
+
     public void ProcessInput(PlayerMenuInput menuInput)
     {
         if (deviceDisplays.Count > 0)
@@ -66,7 +83,11 @@ public class DeviceSelectController : MonoBehaviour
             {
                 if (deviceDisplays[i].CheckReadyTimer())
                 {
-                    if (menuInput.menuInputValues[i].pConfirmValue && deviceDisplays[i].sideSelection != PlayerDeviceSideSelection.NEUTRAL)
+                    if (menuInput.menuInputValues[i].pConfirmValue
+                        && deviceDisplays[i].sideSelection != PlayerDeviceSideSelection.NEUTRAL
+                        && !deviceDisplays[i].isReady
+                        && !AreOtherDevicesOnSameSide(i)
+                        )
                     {
                         deviceDisplays[i].isReady = true;
                     }
