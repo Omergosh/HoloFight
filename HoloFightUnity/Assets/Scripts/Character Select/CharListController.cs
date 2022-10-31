@@ -35,11 +35,13 @@ public class CharListController : MonoBehaviour
             if (menuInput.menuInputValues[0].pMoveInMenuValue.x < 0)
             {
                 Debug.Log("1 Move left");
+                GameManager.instance.audioManager.PlaySFX("menuMove");
                 p1CurrentlySelectedOptionIndex = GetIndex(p1CurrentlySelectedMenuOption.optionOneLeft);
             }
             else if (menuInput.menuInputValues[0].pMoveInMenuValue.x > 0)
             {
                 Debug.Log("1 Move right");
+                GameManager.instance.audioManager.PlaySFX("menuMove");
                 p1CurrentlySelectedOptionIndex = GetIndex(p1CurrentlySelectedMenuOption.optionOneRight);
             }
             if (menuInput.menuInputValues[0].pConfirmValue)
@@ -49,15 +51,18 @@ public class CharListController : MonoBehaviour
                 {
                     p1Config.IsReady = true;
                     // trigger event for good button noise
+                    GameManager.instance.audioManager.PlaySFX("charSelectReady");
                 }
                 else
                 {
-                    // trigger event for bad weapon noise
+                    // trigger event for bad button noise
+                    GameManager.instance.audioManager.PlaySFX("menuInvalid");
                 }
             }
             if (menuInput.menuInputValues[0].pBackValue)
             {
                 Debug.Log("1 Back out of menu.");
+                GameManager.instance.audioManager.PlaySFX("menuBack");
                 GameManager.instance.CharSelectExit();
 
                 // These next lines are to ensure there aren't any unforeseen issues from
@@ -72,6 +77,7 @@ public class CharListController : MonoBehaviour
             if (menuInput.menuInputValues[0].pBackValue)
             {
                 Debug.Log("1 Unready.");
+                GameManager.instance.audioManager.PlaySFX("charSelectUnready");
                 p1Config.IsReady = false;
             }
         }
@@ -82,11 +88,13 @@ public class CharListController : MonoBehaviour
             if (menuInput.menuInputValues[1].pMoveInMenuValue.x < 0)
             {
                 Debug.Log("2 Move left");
+                GameManager.instance.audioManager.PlaySFX("menuMove");
                 p2CurrentlySelectedOptionIndex = GetIndex(p2CurrentlySelectedMenuOption.optionOneLeft);
             }
             else if (menuInput.menuInputValues[1].pMoveInMenuValue.x > 0)
             {
                 Debug.Log("2 Move right");
+                GameManager.instance.audioManager.PlaySFX("menuMove");
                 p2CurrentlySelectedOptionIndex = GetIndex(p2CurrentlySelectedMenuOption.optionOneRight);
             }
             if (menuInput.menuInputValues[1].pConfirmValue)
@@ -96,15 +104,18 @@ public class CharListController : MonoBehaviour
                 {
                     p2Config.IsReady = true;
                     // trigger event for good button noise
+                    GameManager.instance.audioManager.PlaySFX("charSelectReady");
                 }
                 else
                 {
-                    // trigger event for bad weapon noise
+                    // trigger event for bad button noise
+                    GameManager.instance.audioManager.PlaySFX("menuInvalid");
                 }
             }
             if (menuInput.menuInputValues[1].pBackValue)
             {
                 Debug.Log("2 Back out of menu.");
+                GameManager.instance.audioManager.PlaySFX("menuBack");
                 GameManager.instance.CharSelectExit();
 
                 // These next lines are to ensure there aren't any unforeseen issues from
@@ -119,6 +130,7 @@ public class CharListController : MonoBehaviour
             if (menuInput.menuInputValues[1].pBackValue)
             {
                 Debug.Log("2 Unready.");
+                GameManager.instance.audioManager.PlaySFX("charSelectUnready");
                 p2Config.IsReady = false;
             }
         }

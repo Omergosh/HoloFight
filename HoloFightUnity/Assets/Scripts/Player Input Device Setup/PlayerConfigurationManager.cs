@@ -262,6 +262,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     public void HandlePlayerJoin(PlayerInput pi)
     {
         Debug.Log("Player joined: " + pi.playerIndex.ToString());
+        GameManager.instance.audioManager.PlaySFX("deviceSetupJoin");
 
         if (!playerConfigs.Any(p => p.PlayerIndex == pi.playerIndex))
         {

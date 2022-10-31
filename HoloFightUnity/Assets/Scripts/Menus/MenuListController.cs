@@ -26,25 +26,29 @@ public class MenuListController : MonoBehaviour
 
     internal void ProcessInput(PlayerMenuInput menuInput)
     {
-        Debug.Log("Process menu input");
+        //Debug.Log("Process menu input");
         if (menuInput.menuInputValues[0].pMoveInMenuValue.y > 0)
         {
             Debug.Log("Move up");
+            GameManager.instance.audioManager.PlaySFX("menuMove");
             currentlySelectedOptionIndex = GetIndex(currentlySelectedMenuOption.optionOneUp);
         }
         else if (menuInput.menuInputValues[0].pMoveInMenuValue.y < 0)
         {
             Debug.Log("Move down");
+            GameManager.instance.audioManager.PlaySFX("menuMove");
             currentlySelectedOptionIndex = GetIndex(currentlySelectedMenuOption.optionOneDown);
         }
         if (menuInput.menuInputValues[0].pConfirmValue)
         {
             Debug.Log("Confirm");
+            GameManager.instance.audioManager.PlaySFX("menuConfirm");
             currentlySelectedMenuOption.menuOptionSelectedEvent.Invoke();
         }
         if (menuInput.menuInputValues[0].pBackValue)
         {
             Debug.Log("Back out of menu.");
+            GameManager.instance.audioManager.PlaySFX("menuBack");
             backOutOfMenuListEvent.Invoke();
         }
     }

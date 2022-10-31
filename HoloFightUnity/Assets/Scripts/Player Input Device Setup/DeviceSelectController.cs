@@ -90,6 +90,7 @@ public class DeviceSelectController : MonoBehaviour
                         )
                     {
                         deviceDisplays[i].isReady = true;
+                        GameManager.instance.audioManager.PlaySFX("deviceSetupJoin");
                     }
                 }
                 if (!deviceDisplays[i].isReady)
@@ -98,10 +99,12 @@ public class DeviceSelectController : MonoBehaviour
                     if (inputX < 0)
                     {
                         deviceDisplays[i].MoveLeft();
+                        GameManager.instance.audioManager.PlaySFX("menuMove");
                     }
                     else if (inputX > 0)
                     {
                         deviceDisplays[i].MoveRight();
+                        GameManager.instance.audioManager.PlaySFX("menuMove");
                     }
                 }
                 if (menuInput.menuInputValues[i].pBackValue)
@@ -109,6 +112,7 @@ public class DeviceSelectController : MonoBehaviour
                     if (deviceDisplays[i].isReady)
                     {
                         deviceDisplays[i].isReady = false;
+                        GameManager.instance.audioManager.PlaySFX("deviceSetupCancel");
                     }
                     else
                     {

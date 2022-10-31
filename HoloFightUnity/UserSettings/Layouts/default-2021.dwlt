@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 780.8
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 371}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 34
+  controlID: 56
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 315.2
     height: 496.8
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ConsoleWindow
+  m_Name: ProjectBrowser
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -120,15 +120,15 @@ MonoBehaviour:
     y: 496.8
     width: 1117.6
     height: 234
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 19}
+  m_MinSize: {x: 231, y: 271}
+  m_MaxSize: {x: 10001, y: 10021}
+  m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
   - {fileID: 19}
   - {fileID: 13}
-  m_Selected: 1
-  m_LastSelected: 0
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 35
+  controlID: 114
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 36
+  controlID: 30
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GameView
+  m_Name: SceneView
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -269,15 +269,15 @@ MonoBehaviour:
     y: 0
     width: 802.39996
     height: 496.8
-  m_MinSize: {x: 102, y: 121}
+  m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 14}
+  m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
   - {fileID: 14}
   - {fileID: 12}
-  m_Selected: 1
-  m_LastSelected: 0
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -389,7 +389,7 @@ MonoBehaviour:
     m_SaveData: []
   m_MixersTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 0a5b0000
+    m_SelectedIDs: 
     m_LastClickedID: 23306
     m_ExpandedIDs: 12eb343c
     m_RenameOverlay:
@@ -596,7 +596,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -604,11 +604,11 @@ MonoBehaviour:
     m_DrawArea:
       serializedVersion: 2
       x: 0
-      y: 21
+      y: 0
       width: 800.39996
-      height: 454.8
+      height: 475.8
     m_Scale: {x: 0.7816406, y: 0.7816406}
-    m_Translation: {x: 400.19998, y: 227.4}
+    m_Translation: {x: 400.19998, y: 237.9}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
@@ -616,9 +616,9 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
       x: -512
-      y: -290.92654
+      y: -304.35983
       width: 1024
-      height: 581.8531
+      height: 608.71967
     m_MinimalGUI: 1
   m_defaultScale: 0.7816406
   m_LastWindowPixelSize: {x: 1000.49994, y: 594.75}
@@ -668,21 +668,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Character Select
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/Character Select
+  - Assets/Scenes
   m_LastFoldersGridSize: 16
   m_LastProjectPath: D:\GameDevRepos\HoloFight\HoloFightUnity
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 394.2}
-    m_SelectedIDs: 5a5b0000
-    m_LastClickedID: 23386
+    m_SelectedIDs: 545b0000
+    m_LastClickedID: 23380
     m_ExpandedIDs: 000000001a5b00001c5b00001e5b0000205b0000225b0000245b0000265b0000285b00002a5b00002c5b000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -736,9 +736,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: fa860000
-    m_LastClickedInstanceID: 34554
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000000000000e780000ac5c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -839,9 +839,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: fa860000
-      m_LastClickedID: 34554
-      m_ExpandedIDs: b4e6ffff84e7ffff14e9ffff94f5ffff7af8ffff24fbfffff4ffffffb4590000dc590000187a0000307a0000527a00001c7f0000228400005c840000fc840000fa860000
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 24fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

@@ -73,6 +73,7 @@ public class MainMenuManager : MonoBehaviour
     #region Root
     public void ExitToTitleScreen()
     {
+        GameManager.instance.audioManager.PlaySFX("menuBack");
         GameManager.instance.MainMenuExit();
         PlayerConfigurationManager.instance.onTitleScreen = true;
     }
@@ -81,12 +82,14 @@ public class MainMenuManager : MonoBehaviour
     #region VersusControllerSetup
     public void StartVersusControllerSetup()
     {
+        //GameManager.instance.audioManager.PlaySFX("deviceSetupJoin");
         mainMenuState = MainMenuState.VERSUS_CONTROLLER_SETUP;
         deviceSelectController.gameObject.SetActive(true);
         PlayerConfigurationManager.instance.StartConfiguringPlayerDevices();
     }
     public void CloseVersusControllerSetup()
     {
+        //GameManager.instance.audioManager.PlaySFX("deviceSetupCancel");
         mainMenuState = MainMenuState.AT_ROOT;
         deviceSelectController.gameObject.SetActive(false);
         PlayerConfigurationManager.instance.StopConfiguringPlayerDevices();
@@ -107,6 +110,7 @@ public class MainMenuManager : MonoBehaviour
     public void InvalidOptionSelected()
     {
         // Play a sound effect to let the user know they've selected a very invalid option. Feel bad.
+        GameManager.instance.audioManager.PlaySFX("menuInvalid");
         Debug.Log("Option has not been implemented yet.");
     }
 }

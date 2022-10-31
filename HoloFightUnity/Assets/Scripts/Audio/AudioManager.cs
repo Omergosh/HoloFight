@@ -10,6 +10,8 @@ public class AudioManager : MonoBehaviour
 
     [SerializeReference]
     MusicManager musicManager;
+    [SerializeReference]
+    SFXManager sfxManager;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +23,11 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void PlaySFX(string soundTag)
+    {
+        sfxManager.PlaySound(soundTag);
     }
 
     internal void SceneTransitionStart(string newSceneName)

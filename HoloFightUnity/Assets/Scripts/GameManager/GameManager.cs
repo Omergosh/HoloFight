@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
     #region Title screen
     public void TitleScreenAdvance(/* input device to assign to player one? */)
     {
+        //audioManager.PlaySFX("menuConfirm");
         SceneTransitionStart("MainMenuScene");
         PlayerConfigurationManager.instance.onTitleScreen = false;
     }
