@@ -49,6 +49,6 @@ public class AudioManager : MonoBehaviour
     internal void SceneTransitionEnd(string nextScene)
     {
         // Start playing new music
-        musicManager.PlayRandomSong();
+        //musicManager.PlayRandomSong();
     }
 }

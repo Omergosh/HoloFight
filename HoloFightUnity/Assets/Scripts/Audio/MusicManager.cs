@@ -84,6 +84,7 @@ public class MusicManager : MonoBehaviour
             int newSongIndex = Random.Range(0, currentPlaylist.Length);
 
             audioSource.clip = currentPlaylist[newSongIndex];
+            audioSource.time = 1f;
             audioSource.Play();
             currentSongIndex = newSongIndex;
         }
