@@ -389,7 +389,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.9
+  m_fontSize: 49.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1455,6 +1455,25 @@ MonoBehaviour:
   deviceSetupCancelSound: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
   charSelectReadySound: {fileID: 8300000, guid: 0c008ee3ee72a4362a35be25fa5de043, type: 3}
   charSelectUnreadySound: {fileID: 8300000, guid: 724131bc8a7f34041bb9f1701f0cb58d, type: 3}
+  hitJuicySound: {fileID: 8300000, guid: 80450f13f12b2054d923d0b14db73c25, type: 3}
+  hitCrowbarSound: {fileID: 8300000, guid: 5d0bd93d7b4beed459aae10f3c29ef58, type: 3}
+  hitHeavySound: {fileID: 8300000, guid: 60543332229dc6348b0bfead1c372352, type: 3}
+  hitVeryHeavySound: {fileID: 8300000, guid: ecb824f34da116849a0079fab8def627, type: 3}
+  whooshQuickSound: {fileID: 8300000, guid: 4117e798c45b1f04fb861ac61ca9398a, type: 3}
+  whooshSlowSound: {fileID: 8300000, guid: 7fe06a9d6837ef84f9605bd0cd0cdd06, type: 3}
+  whooshHeavySound: {fileID: 8300000, guid: ba1acaed58ae03045b35e5c002fd0f99, type: 3}
+  surfaceTapSound: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
+  whooshSharpSound: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+  whooshBluntSound: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
+  bounceSound: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
+  fireCrossbowThwackSound: {fileID: 8300000, guid: 3becec1909f194046945d85ac1077772, type: 3}
+  sparkleSound: {fileID: 8300000, guid: 881e3f52c86c94f26a60718d35627cd8, type: 3}
+  popSound: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  flashSparkleSound: {fileID: 8300000, guid: 35fbad8cdde724f11ba6481f1e64af71, type: 3}
+  warpWeirdSound: {fileID: 8300000, guid: 80e397195ea2940b69ee7bdbded856a5, type: 3}
+  tickTockSound: {fileID: 8300000, guid: c5e2a73ad4706440f93bf05df0b465fe, type: 3}
+  boomThinSound: {fileID: 8300000, guid: b99da9a57308d4ba1bee1cf1d9038376, type: 3}
+  boomDeepSound: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
 --- !u!82 &1407703111
 AudioSource:
   m_ObjectHideFlags: 0
