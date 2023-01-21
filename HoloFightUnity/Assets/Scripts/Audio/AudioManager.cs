@@ -30,6 +30,12 @@ public class AudioManager : MonoBehaviour
         sfxManager.PlaySound(soundTag);
     }
 
+    public void PlayTitleScreenMusic()
+    {
+        musicManager.ChangePlaylist("TitleScene");
+        musicManager.PlayRandomSong();
+    }
+
     internal void SceneTransitionStart(string newSceneName)
     {
         // Start fading out music

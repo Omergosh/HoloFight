@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,12 @@ public class BattleManagerScript : MonoBehaviour
     // Testing-relevant GameObjects, Components, Scripts, constants, etc.
     public GameObject boundsGameObject;
     public const float pixelsInWorldUnit = 100f;
+
+    // Stage boundary visuals
+    public GameObject boundsLeft;
+    public GameObject boundsRight;
+    public GameObject boundsTop;
+    public GameObject boundsBottom;
 
     // Round start countdown
     float roundStartTimer = 3.0f;
@@ -91,11 +98,11 @@ public class BattleManagerScript : MonoBehaviour
         // || Game State set-up || //
         // THIS FIGHTING GAME IS A TWO PLAYER GAME (FOR NOW)
         game = new HfGame(2);
-        boundsGameObject.transform.position = new Vector3(0f, 0f, 50f);
-        boundsGameObject.transform.localScale = new Vector3(
-            HfGame.bounds.width / pixelsInWorldUnit,
-            HfGame.bounds.height / pixelsInWorldUnit,
-            1f);
+
+
+        InitializeStageBoundaryVisuals();
+        
+        
         if(playerAnimationControllers[0] != null)
         {
             playerAnimationControllers[0].SetPlayer(ref game.players[0]);
@@ -107,6 +114,20 @@ public class BattleManagerScript : MonoBehaviour
 
         LoadFrameDataForPlayer(0);
         LoadFrameDataForPlayer(1);
+    }
+
+    private void InitializeStageBoundaryVisuals()
+    {
+        //boundsGameObject.transform.position = new Vector3(0f, 0f, 50f);
+        boundsGameObject.transform.position = new Vector3(0f, 0f, 0f);
+        boundsGameObject.transform.localScale = new Vector3(
+            HfGame.bounds.width / pixelsInWorldUnit,
+            HfGame.bounds.height / pixelsInWorldUnit,
+            1f);
+        boundsTop.transform.position = new Vector3(0f, (HfGame.bounds.height / pixelsInWorldUnit / 2) + (boundsTop.transform.localScale.y / 2));
+        boundsBottom.transform.position = new Vector3(0f, -(HfGame.bounds.height / pixelsInWorldUnit / 2) - (boundsTop.transform.localScale.y / 2));
+        boundsLeft.transform.position = new Vector3(-(HfGame.bounds.width / pixelsInWorldUnit / 2) - (boundsLeft.transform.localScale.x / 2), 0f);
+        boundsRight.transform.position = new Vector3((HfGame.bounds.width / pixelsInWorldUnit / 2) + (boundsRight.transform.localScale.x / 2), 0f);
     }
 
     void FixedUpdate()
