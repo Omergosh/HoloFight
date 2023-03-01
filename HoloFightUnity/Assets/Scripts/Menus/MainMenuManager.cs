@@ -94,6 +94,7 @@ public class MainMenuManager : MonoBehaviour
         deviceSelectController.gameObject.SetActive(false);
         PlayerConfigurationManager.instance.StopConfiguringPlayerDevices();
         PlayerConfigurationManager.instance.RemoveNonPrimaryPlayers();
+        menuInput.RemoveNonPrimaryPlayers();
     }
     #endregion
 

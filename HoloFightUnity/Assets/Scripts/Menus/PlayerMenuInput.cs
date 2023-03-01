@@ -70,6 +70,15 @@ public class PlayerMenuInput : MonoBehaviour
         menuInputValues[index].pMoveInMenuAction.Enable();
     }
 
+    public void RemoveNonPrimaryPlayers()
+    {
+        if (playerInputs.Count > 1)
+        {
+            playerInputs.RemoveRange(1, playerInputs.Count - 1);
+            Debug.Log("Menu Inputs: Removed non-primary player inputs.");
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
