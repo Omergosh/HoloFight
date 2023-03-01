@@ -51,6 +51,7 @@ public class BattleManagerScript : MonoBehaviour
     public float pauseHeldActivationTimerMax;
 
     public BattleUIScript battleUIScript;
+    public BattleEventResponder eventResponder;
 
     // Input device configuration variables
     // (TODO: have these variables passed in from character select screen,
@@ -61,7 +62,6 @@ public class BattleManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         // Input Setup
         // Set-up references for other player-related components
         playerInputs = new PlayerInput[2];
@@ -99,9 +99,7 @@ public class BattleManagerScript : MonoBehaviour
         // THIS FIGHTING GAME IS A TWO PLAYER GAME (FOR NOW)
         game = new HfGame(2);
 
-
         InitializeStageBoundaryVisuals();
-        
         
         if(playerAnimationControllers[0] != null)
         {
@@ -156,6 +154,7 @@ public class BattleManagerScript : MonoBehaviour
                         inputs[i] = ReadGameInputs(i);
                     }
                     game.AdvanceFrame(inputs);
+                    eventResponder.CheckEvents(game);
                 }
                 break;
 

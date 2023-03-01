@@ -84,15 +84,14 @@ public struct HfGame
 
     public static Rect bounds = new Rect(0, 0, 1280, 720);
 
+    public static BattleEventTracker eventTracker = new BattleEventTracker();
+
     public int hitstopFramesRemaining;
     public static int lastAttackId = 1;
-    public static int GetNewAttackId
+    public static int GetNewAttackId()
     {
-        get
-        {
-            lastAttackId++;
-            return lastAttackId;
-        }
+        lastAttackId++;
+        return lastAttackId;
     }
 
     public CurrentBattleProgress currentBattleProgress;
@@ -119,6 +118,8 @@ public struct HfGame
         roundTimerCurrentInFrames = 0;
         roundsPlayed = 0;
         currentBattleProgress = CurrentBattleProgress.WAITING_FOR_FIRST_ROUND;
+        //eventTracker = new BattleEventTracker();
+        eventTracker.battleEventsByFrame = new Dictionary<int, List<IBattleEventInteraction>>();
 
         hitstopFramesRemaining = 0;
         //lastAttackId = 1;
@@ -257,6 +258,10 @@ public struct HfGame
                                     players[p].currentAttackLandedHit = true;
 
                                     hitstopFramesRemaining = HITSTOP_FRAMES_UNIVERSAL;
+                                    BattleEventAttackHit hitEvent = new BattleEventAttackHit();
+                                    hitEvent.hitboxRect = currentHitboxes[0].hitboxRect;
+                                    hitEvent.hurtboxRect = hurtboxToCheck;
+                                    eventTracker.AddEvent(frameNumber, hitEvent);
                                 }
                             }
                         }

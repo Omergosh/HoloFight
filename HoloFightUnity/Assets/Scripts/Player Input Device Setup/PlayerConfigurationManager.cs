@@ -152,6 +152,11 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 
+    static void DebugRemoveNonPrimaryPlayers()
+    {
+        instance.RemoveNonPrimaryPlayers();
+    }
+
     public void StartConfiguringPlayerDevices()
     {
         configuringPlayerDevices = true;
@@ -290,6 +295,8 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 }
+
+
 public class PlayerConfiguration
 {
     public PlayerConfiguration(PlayerInput pi)

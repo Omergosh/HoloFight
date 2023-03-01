@@ -120,7 +120,7 @@ public class PlayerIna : Player
 
         if (currentAnimationState.CurrentFrame.newHitStartsThisFrame)
         {
-            currentAttackId = HfGame.GetNewAttackId;
+            currentAttackId = HfGame.GetNewAttackId();
             //Debug.Log("New Attack: " + currentAttackId.ToString());
         }
     }

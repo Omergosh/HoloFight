@@ -1,18 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class BattleEventResponse : MonoBehaviour
+[Serializable]
+public class BattleEventResponse// : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    //public Type eventToRespondTo;
+    public string eventType;
+    public UnityEvent action;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //public BattleEventResponse(Type newEventType, UnityEvent newAction)
+    //{
+    //    eventToRespondTo = newEventType;
+    //    action = newAction;
+    //}
+
+    //public BattleEventResponse(Type newEventType)
+    //{
+    //    eventToRespondTo = newEventType;
+    //}
 }
