@@ -61,4 +61,6 @@ crashlytics-build.properties
 # Any assets I use but don't want to accidentally redistribute
 /[Aa]ssets/NotSharedToRepo*
 
+# Odin inspector is a paid asset but I want to keep this project's repo publicly accessible, so I have to exclude Odin files too
+/[Aa]ssets/Plugins/Sirenix
 
