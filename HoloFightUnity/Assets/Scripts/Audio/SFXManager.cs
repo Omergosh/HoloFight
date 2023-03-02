@@ -104,6 +104,11 @@ public class SFXManager : MonoBehaviour
                 Debug.Log("Invalid sound effect attempted to be played.");
                 break;
         }
+
+        // WARNING: Although it helps compensate for sounds playing late,
+        // this line may cause issues with sound clips that are incredibly short.
+        // Consider investigating the issue with sounds playing late and finding an alternative, less risky solution.
+        audioSource.time = 0.1f;
     }
     #endregion
 

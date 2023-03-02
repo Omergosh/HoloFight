@@ -17,6 +17,8 @@ public class PlayerAnimationController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Animator animator;
 
+    public BattleManagerScript battleManager;
+
     // Collision box / hurtbox / hitbox visual representation references
     //public Transform collisionBoxRepresentation;
     public Transform hurtboxRepresentation;
@@ -29,6 +31,10 @@ public class PlayerAnimationController : MonoBehaviour
 
     // Constants
     public const float pixelsInWorldUnit = 100f;
+    public float hitstopShakeOffsetMax = 0.05f;
+
+    // Visual representation values
+    public Vector3 currentShakeOffset = new Vector3();
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +42,11 @@ public class PlayerAnimationController : MonoBehaviour
         if (animator != null)
         {
             animator.speed = 0;
+        }
+
+        if(battleManager == null)
+        {
+            battleManager = (BattleManagerScript)FindObjectOfType(typeof(BattleManagerScript));
         }
     }
 
@@ -61,6 +72,32 @@ public class PlayerAnimationController : MonoBehaviour
                     player.position.x - (HfGame.bounds.width / 2),
                     player.position.y - (HfGame.bounds.height / 2)
                     ) / BattleManagerScript.pixelsInWorldUnit;
+
+            // Adjusts player position during hitstop, if they're in hitstun.
+            // (assumption: the hitstop is for what put them in hitstun)
+            // (will later need to account for multiple players being in hitstun due to projectiles, traps, more than two players, etc.)
+            int hitstopFrames = battleManager.game.hitstopFramesRemaining;
+            if (hitstopFrames > 0 && player.hitstun > 0)
+            {
+                currentShakeOffset.x = Random.Range(-hitstopShakeOffsetMax, hitstopShakeOffsetMax);
+                currentShakeOffset.y = Random.Range(-hitstopShakeOffsetMax, hitstopShakeOffsetMax);
+
+                // Reduce shakiness/magnitude of offset as hitstop approaches zero
+                if(hitstopFrames < HFConstants.HITSTOP_FRAMES_UNIVERSAL)
+                {
+                    float offsetStep = 1f / HFConstants.HITSTOP_FRAMES_UNIVERSAL;
+                    float offsetCounter = (float)HFConstants.HITSTOP_FRAMES_UNIVERSAL - (float)hitstopFrames;
+                    float offsetMultiplier = 1f - (offsetStep * offsetCounter);
+                    currentShakeOffset *= offsetMultiplier;
+                }
+
+                //Debug.Log("x: " + currentShakeOffset.x.ToString()  + " y: " + currentShakeOffset.y.ToString());
+            }
+            else
+            {
+                currentShakeOffset = Vector3.zero;
+            }
+            gameObject.transform.position += currentShakeOffset;
 
             //if (spriteRenderer != null)
             //{

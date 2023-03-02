@@ -102,7 +102,9 @@ public class PlayerMenuInput : MonoBehaviour
 
         for (int i = 0; i < menuInputValues.Count; i++)
         {
-            menuInputValues[i].pConfirmValue = menuInputValues[i].pConfirmAction.WasPressedThisFrame();
+            // TODO: Fix this error.
+            // Apparently generating NullReferenceException errors after backing out of device select with two selected devices.
+            menuInputValues[i].pConfirmValue = menuInputValues[i].pConfirmAction.WasPressedThisFrame(); 
             menuInputValues[i].pBackValue = menuInputValues[i].pBackAction.WasPressedThisFrame();
             if (menuInputValues[i].pMoveInMenuAction.WasPressedThisFrame())
             {

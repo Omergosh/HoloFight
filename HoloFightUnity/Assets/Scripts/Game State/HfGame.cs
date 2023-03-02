@@ -11,7 +11,7 @@ public static class HFConstants
     public const float FRAME_RATE_SPEED_SCALE_MULTIPLIER = 1f / 60f;
     public const int MAX_PLAYERS = 2;
 
-    public const int HITSTOP_FRAMES_UNIVERSAL = 2;
+    public const int HITSTOP_FRAMES_UNIVERSAL = 3;
     public const int ALREADY_HIT_ATTACKID_MAX_BUFFER = 10;
 
     public const int INPUT_BUFFER_WINDOW = 5;

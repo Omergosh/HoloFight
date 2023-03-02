@@ -339,6 +339,7 @@ MonoBehaviour:
   characterAnimations: {fileID: 11400000, guid: b963021ac9d296149affe667e4fc3255, type: 2}
   spriteRenderer: {fileID: 1394051666446249663}
   animator: {fileID: 1394051666446249662}
+  battleManager: {fileID: 0}
   hurtboxRepresentation: {fileID: 1394051665443364276}
   hitboxRepresentations:
   - {fileID: 1394051665849437296}
@@ -350,6 +351,8 @@ MonoBehaviour:
   displayCollisionBoxes: 0
   displayHurtboxes: 0
   displayHitboxes: 0
+  hitstopShakeOffsetMax: 0.15
+  currentShakeOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &1394051665769071067
 MonoBehaviour:
   m_ObjectHideFlags: 0

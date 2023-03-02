@@ -35,17 +35,11 @@ public struct BattleEventTracker
             battleEventsByFrame[currentFrame].Add(newEvent);
         }
 
-        // Debug
-        Debug.Log("Added Battle Event to Tracker!");
-        //Debug.Log(battleEventsByFrame.ToString());
-        //Debug.Log(battleEventsByFrame);
-        //Debug.Log(battleEventsByFrame.Keys);
-        //Debug.Log(battleEventsByFrame.Values.ToString());
-        Debug.Log(battleEventsByFrame.Count);
-        //Debug.Log(battleEventsByFrame[currentFrame]);
-        //Debug.Log(battleEventsByFrame[currentFrame].Count);
+        // Debug calls
+        //Debug.Log("Added Battle Event to Tracker!");
+        //Debug.Log("Battle events: " + battleEventsByFrame.Count.ToString());
+        //Debug.Log("Battle events this frame: " + battleEventsByFrame[currentFrame].Count);
         //Debug.Log(battleEventsByFrame[currentFrame][0].GetType());
-        //Debug.Log(battleEventsByFrame[currentFrame].ToArray());
     }
 
     public void PurgeTimedOutEvents(int currentFrame)
