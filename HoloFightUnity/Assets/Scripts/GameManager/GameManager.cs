@@ -54,7 +54,10 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this);
 
-            audioManager.PlayTitleScreenMusic();
+            if (SceneManager.GetActiveScene().name == "TitleScene")
+            {
+                audioManager.PlayTitleScreenMusic();
+            }
         }
     }
 

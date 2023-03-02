@@ -19,7 +19,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     public bool primaryPlayerChosen = false;
     public bool configuringPlayerDevices = false;
 
-    private float ignoreJoinTime = 1.5f;
+    private float ignoreJoinTime = 0.5f;
     private bool joinEnabled = false;
 
     // Special case for allowing a second player to join on keyboard
@@ -27,6 +27,12 @@ public class PlayerConfigurationManager : MonoBehaviour
     public bool secondKeyboardPlayerJoined = false;
 
     public static PlayerConfigurationManager instance { get; private set; }
+
+
+#if UNITY_EDITOR
+    // DEBUG values to use for testing purposes in the Unity editor.
+    public bool DEBUG_PlayerTwoUsesAController = false;
+#endif
 
     private void Awake()
     {
@@ -39,8 +45,17 @@ public class PlayerConfigurationManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(instance);
-            playerConfigs = new List<PlayerConfiguration>();
-            ignoreJoinTime = Time.time + ignoreJoinTime;
+
+            if (SceneManager.GetActiveScene().name == "TitleScene")
+            {
+                playerConfigs = new List<PlayerConfiguration>();
+                ignoreJoinTime = Time.time + ignoreJoinTime;
+            }
+            else if (SceneManager.GetActiveScene().name == "FightScene")
+            {
+                playerConfigs = new List<PlayerConfiguration>();
+                DebugInitializeInFightScene(DEBUG_PlayerTwoUsesAController);
+            }
         }
     }
 
@@ -72,6 +87,27 @@ public class PlayerConfigurationManager : MonoBehaviour
         secondKeyboardPlayerJoined = false;
         primaryPlayerChosen = false;
         onTitleScreen = true;
+    }
+
+    public void DebugInitializeInFightScene(bool isPlayerTwoUsingAController = false)
+    {
+        PlayerInput newp1PI = PlayerInput.Instantiate(playerConfigPrefab, 0, controlScheme: "KeyboardP1Scheme", pairWithDevice: Keyboard.current);
+        PlayerInput newp2PI;
+        if (isPlayerTwoUsingAController)
+        {
+            newp2PI = PlayerInput.Instantiate(playerConfigPrefab, 1, controlScheme: "GamepadScheme", pairWithDevice: Gamepad.current);
+
+            // I don't know the difference between these two approaches and it turns out I've used both throughout the project.
+            // Something to look into later? Could be a potential source of bugs. Otherwise, a harmless but unnecessary inconsistency.
+            //newp2PI = GetComponent<PlayerInputManager>().JoinPlayer(controlScheme: "GamepadScheme", pairWithDevice: Gamepad.current);
+        }
+        else
+        {
+            newp2PI = PlayerInput.Instantiate(playerConfigPrefab, 1, controlScheme: "KeyboardP2Scheme", pairWithDevice: Keyboard.current);
+        }
+        primaryPlayerChosen = true;
+        DebugAwakeHandlePlayerJoin(newp1PI);
+        DebugAwakeHandlePlayerJoin(newp2PI);
     }
 
     void TitleScreenUpdate()
@@ -261,6 +297,18 @@ public class PlayerConfigurationManager : MonoBehaviour
         if (playerConfigs.Count == maxPlayers && playerConfigs.All(p => p.IsReady == true))
         {
             Debug.Log("Everyone is ready");
+        }
+    }
+
+    public void DebugAwakeHandlePlayerJoin(PlayerInput pi)
+    {
+        Debug.Log("Player joined: " + pi.playerIndex.ToString());
+
+        if (!playerConfigs.Any(p => p.PlayerIndex == pi.playerIndex))
+        {
+            pi.transform.SetParent(transform);
+            playerConfigs.Add(new PlayerConfiguration(pi));
+            Debug.Log(playerConfigs.Count);
         }
     }
 
