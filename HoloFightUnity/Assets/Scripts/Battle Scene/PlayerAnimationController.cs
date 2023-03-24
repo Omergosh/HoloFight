@@ -77,7 +77,7 @@ public class PlayerAnimationController : MonoBehaviour
             // (assumption: the hitstop is for what put them in hitstun)
             // (will later need to account for multiple players being in hitstun due to projectiles, traps, more than two players, etc.)
             int hitstopFrames = battleManager.game.hitstopFramesRemaining;
-            if (hitstopFrames > 0 && player.hitstun > 0)
+            if (hitstopFrames > 0 && player.hitstun > 0 && battleManager.game.currentBattleProgress != CurrentBattleProgress.GAME_OVER)
             {
                 currentShakeOffset.x = Random.Range(-hitstopShakeOffsetMax, hitstopShakeOffsetMax);
                 currentShakeOffset.y = Random.Range(-hitstopShakeOffsetMax, hitstopShakeOffsetMax);
