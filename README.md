@@ -12,6 +12,8 @@ If you have any questions, feel free to message me!
 
 Credits:
 - Newtonsoft's Json.NET (https://www.newtonsoft.com/json): I used this package to read/write frame data to and from JSON files! Super helpful for making the Frame Data Editor functional.
+- s-m-k's Unity Editor extension (https://github.com/s-m-k/Unity-Animation-Hierarchy-Editor), which is basically just the one .cs file from their public repo. Saved me at least an hour or two of refactoring animations by turning the process into a few button presses.
+- Noiseless World (https://noiselessworld.net/en). Instrumental music, free to use. New song every month! They're up on SoundCloud, and even up on Spotify!
 
 Inspirations:
 - https://github.com/nykwil/UnityGGPO (initial code direction)
