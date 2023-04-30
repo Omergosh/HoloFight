@@ -14,6 +14,7 @@ public class CharacterGameDataSetScriptableObject : ScriptableObject
     public string attackA1FrameDataFilename;
     public string attackB1FrameDataFilename;
     public string airAttackA1FrameDataFilename;
+    public string airAttackA2FrameDataFilename;
     public string hitstunFrameDataFilename;
 
     public TextAsset idleFrameDataJSON;
@@ -23,5 +24,6 @@ public class CharacterGameDataSetScriptableObject : ScriptableObject
     public TextAsset attackA1FrameDataJSON;
     public TextAsset attackB1FrameDataJSON;
     public TextAsset airAttackA1FrameDataJSON;
+    public TextAsset airAttackA2FrameDataJSON;
     public TextAsset hitstunFrameDataJSON;
 }

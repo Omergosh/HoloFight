@@ -65,7 +65,11 @@ public class PlayerIna : Player
                 break;
 
             case PlayerState.JUMPING:
-                if (inputData.GetInputDown(INPUT_ATTACK_A))
+                if (inputData.GetInputDown(INPUT_ATTACK_B))
+                {
+                    ChangeAnimationState("airAttackB1");
+                }
+                else if (inputData.GetInputDown(INPUT_ATTACK_A))
                 {
                     ChangeAnimationState("airAttackA1");
                 }
@@ -80,7 +84,11 @@ public class PlayerIna : Player
                 break;
 
             case PlayerState.FALLING:
-                if (inputData.GetInputDown(INPUT_ATTACK_A))
+                if (inputData.GetInputDown(INPUT_ATTACK_B))
+                {
+                    ChangeAnimationState("airAttackB1");
+                }
+                else if (inputData.GetInputDown(INPUT_ATTACK_A))
                 {
                     ChangeAnimationState("airAttackA1");
                 }

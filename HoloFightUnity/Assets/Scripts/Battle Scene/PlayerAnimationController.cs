@@ -14,7 +14,7 @@ public class PlayerAnimationController : MonoBehaviour
     public CharacterAnimationSetScriptableObject characterAnimations;
 
     // References
-    public SpriteRenderer spriteRenderer;
+    //public SpriteRenderer spriteRenderer;
     public Animator animator;
 
     public BattleManagerScript battleManager;

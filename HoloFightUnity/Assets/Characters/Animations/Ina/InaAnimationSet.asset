@@ -21,5 +21,5 @@ MonoBehaviour:
   attackB1: {fileID: 7400000, guid: f38cab0f55e739d448782c87f476b863, type: 2}
   attackC1: {fileID: 0}
   airAttackA1: {fileID: 7400000, guid: f0ed3cf0c826ca640bb0ca31a8cda08c, type: 2}
-  airAttackB1: {fileID: 0}
+  airAttackB1: {fileID: 7400000, guid: f84bcfef1482b8a41b00b7906eaffeb9, type: 2}
   airAttackC1: {fileID: 0}

@@ -21,7 +21,7 @@ public class BattleManagerScript : MonoBehaviour
     public GameObject[] playerGameObjects;
 
     public PlayerInput[] playerInputs;
-    public PlayerInputScript[] playerInputScripts;
+    public PlayerBattleInput[] playerInputScripts;
 
     public PlayerAnimationController[] playerAnimationControllers;
 
@@ -66,7 +66,7 @@ public class BattleManagerScript : MonoBehaviour
         // Set-up references for other player-related components
         playerInputs = new PlayerInput[2];
         playerGameObjects = new GameObject[2];
-        playerInputScripts = new PlayerInputScript[2];
+        playerInputScripts = new PlayerBattleInput[2];
         playerAnimationControllers = new PlayerAnimationController[2];
 
         for (int i = 0; i < 2; i++)
@@ -78,7 +78,7 @@ public class BattleManagerScript : MonoBehaviour
 
             playerGameObjects[i] = Instantiate(prefabPlayerIna);
             playerAnimationControllers[i] = playerGameObjects[i].GetComponent<PlayerAnimationController>();
-            playerInputScripts[i] = playerGameObjects[i].GetComponent<PlayerInputScript>();
+            playerInputScripts[i] = playerGameObjects[i].GetComponent<PlayerBattleInput>();
             playerInputScripts[i].playerInput = playerInputs[i];
         }
 

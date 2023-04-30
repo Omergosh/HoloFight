@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputScript : MonoBehaviour
+public class PlayerBattleInput : MonoBehaviour
 {
     public PlayerInput playerInput;
 
@@ -30,6 +30,9 @@ public class PlayerInputScript : MonoBehaviour
     public bool p1PauseWasReleasedThisFrame = false;
     public bool p1PauseFullyHeldForDuration = false;
 
+    // If the 'A' button was just used to unpause, don't register its inputs until after it's released.
+    public bool p1PausePressLockoutAttackA = false;
+    
     void Start()
     {   
         p1UpAction = playerInput.actions["Up"];
