@@ -72,6 +72,7 @@ public class PlayerIna : Player
                 else if (inputData.GetInputDown(INPUT_ATTACK_A))
                 {
                     ChangeAnimationState("airAttackA1");
+                    buffAirMoveMultiplier = 2.5f;
                 }
                 else if (velocity.y < 0f)
                 {
@@ -91,6 +92,7 @@ public class PlayerIna : Player
                 else if (inputData.GetInputDown(INPUT_ATTACK_A))
                 {
                     ChangeAnimationState("airAttackA1");
+                    buffAirMoveMultiplier = 2.5f;
                 }
                 else
                 {

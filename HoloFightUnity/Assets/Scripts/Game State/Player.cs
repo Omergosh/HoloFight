@@ -29,6 +29,9 @@ public class Player
     // Variables that change less often
     public bool bouncy = false;
 
+    // Temporary buffs (usually as a result of current move/state, or item/EX/super use)
+    public float buffAirMoveMultiplier = 1.0f;
+
     // Data unlikely to change mid-match
     public int playerId;
     public int teamId; // If one-on-one/FFA, equal to playerId
@@ -192,16 +195,16 @@ public class Player
         // then handle that here// Parse inputs
         if (!IsInHitstun)
         {
-            this.ProcessHorizontalMovement(
+            ProcessHorizontalMovement(
                 inputData.GetInputDown(INPUT_LEFT),
                 inputData.GetInputDown(INPUT_RIGHT)
                 );
         }
 
-        Vector2 newPosition = new Vector2(this.position.x, this.position.y);
+        Vector2 newPosition = new Vector2(position.x, position.y);
 
         // Apply change in position from velocity
-        newPosition += this.velocity;
+        newPosition += velocity;
 
         // Return new position after initial movement processing
         return newPosition;
@@ -209,22 +212,31 @@ public class Player
 
     public void ProcessHorizontalMovement(bool leftButtonDown, bool rightButtonDown)
     {
+        float effectiveAcceleration = acceleration;
+        float effectiveMaxSpeed = maxSpeed;
+
+        if (!isOnGround)
+        {
+            effectiveAcceleration *= buffAirMoveMultiplier;
+            effectiveMaxSpeed *= 1 + ((buffAirMoveMultiplier - 1) / 4);
+        }
+
         //if (IsInActionableState)
         //{
             if (leftButtonDown)
             {
-                //this.velocity.x--;
-                this.velocity.x = Mathf.Max(
-                    this.velocity.x - this.acceleration,
-                    this.maxSpeed * -1
+                //velocity.x--;
+                velocity.x = Mathf.Max(
+                    velocity.x - effectiveAcceleration,
+                    effectiveMaxSpeed * -1
                     );
             }
             if (rightButtonDown)
             {
-                //this.velocity.x++;
-                this.velocity.x = Mathf.Min(
-                    this.velocity.x + this.acceleration,
-                    this.maxSpeed
+                //velocity.x++;
+                velocity.x = Mathf.Min(
+                    velocity.x + effectiveAcceleration,
+                    effectiveMaxSpeed
                     );
             }
         //}
@@ -464,6 +476,12 @@ public class Player
         {
             alreadyHitAttackIds.Clear();
             Debug.Log("Cleared AttackId Stack!");
+        }
+        
+        // Clear current-animation-related buffs/debuffs
+        if(buffAirMoveMultiplier != 1f)
+        {
+            buffAirMoveMultiplier = 1f;
         }
 
         currentAttackLandedHit = false;

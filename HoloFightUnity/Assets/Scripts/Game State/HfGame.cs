@@ -225,6 +225,8 @@ public struct HfGame
 
                 // Debug info
                 //Debug.Log($"Player {p + 1} velocity: {players[p].velocity.x}, {players[p].velocity.y}");
+                //Debug.Log($"Player {p + 1} air acceleration buff: {players[p].buffAirMoveMultiplier}");
+                //Debug.Log($"Player {p + 1} air maxspeed buff: {1 + ((players[p].buffAirMoveMultiplier - 1f) / 2f)}");
             }
 
             // 5. Projectile logic (DON'T IMPLEMENT YET)

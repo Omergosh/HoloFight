@@ -133,15 +133,15 @@ public class BattleManagerScript : MonoBehaviour
         switch (game.currentBattleProgress)
         {
             case CurrentBattleProgress.WAITING_FOR_FIRST_ROUND:
-                Debug.Log("Waiting for round to start...");
+                //Debug.Log("Waiting for round to start...");
                 break;
 
             case CurrentBattleProgress.ROUND_COUNTDOWN:
-                Debug.Log("Countdown.");
-                Debug.Log(3);
-                Debug.Log(2);
-                Debug.Log(1);
-                Debug.Log("GO!");
+                //Debug.Log("Countdown.");
+                //Debug.Log(3);
+                //Debug.Log(2);
+                //Debug.Log(1);
+                //Debug.Log("GO!");
                 //game.currentBattleProgress = CurrentBattleProgress.ROUND_IN_PROGRESS;
                 break;
 
@@ -159,11 +159,11 @@ public class BattleManagerScript : MonoBehaviour
                 break;
 
             case CurrentBattleProgress.ROUND_OVER:
-                Debug.Log("Round over.");
+                //Debug.Log("Round over.");
                 break;
 
             case CurrentBattleProgress.GAME_OVER:
-                Debug.Log("Game over.");
+                //Debug.Log("Game over.");
                 break;
             
             default:
