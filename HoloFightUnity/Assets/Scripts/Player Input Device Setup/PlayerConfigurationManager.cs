@@ -36,7 +36,7 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null)
+        if (instance != null)
         {
             Debug.Log("Error, SINGLETON - Trying to create another instance of a singleton!");
             Destroy(this.gameObject); // Someday, this will cause a bug, I'm sure.
@@ -54,7 +54,9 @@ public class PlayerConfigurationManager : MonoBehaviour
             else if (SceneManager.GetActiveScene().name == "FightScene")
             {
                 playerConfigs = new List<PlayerConfiguration>();
+#if UNITY_EDITOR
                 DebugInitializeInFightScene(DEBUG_PlayerTwoUsesAController);
+#endif
             }
         }
     }

@@ -72,9 +72,11 @@ public class BattleUIScript : MonoBehaviour
         }
     }
 
-    public void UpdatePauseUI(InputAction pauseInputAction, bool currentlyPaused)
+    //public void UpdatePauseUI(InputAction pauseInputAction, bool currentlyPaused)
+    public void UpdatePauseUI(PlayerBattleInput[] playerBattleInputs, bool currentlyPaused)
     {
-        pauseUIScript.UpdateUI(pauseInputAction, currentlyPaused);
+        //pauseUIScript.UpdateUI(pauseInputAction, currentlyPaused);
+        pauseUIScript.UpdateUI(playerBattleInputs, currentlyPaused);
         //Debug.Log("Update pause UI");
     }
 

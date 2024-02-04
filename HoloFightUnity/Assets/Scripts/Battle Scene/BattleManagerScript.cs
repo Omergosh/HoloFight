@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -180,10 +181,7 @@ public class BattleManagerScript : MonoBehaviour
             roundStartCountdownEnded = false;
 
             // If a button we care about is pressed, start the countdown for the first/next round.
-            if (playerInputScripts[0].p1AttackAValue
-                || playerInputScripts[0].p1AttackBValue
-                || playerInputScripts[0].p1AttackCValue
-                )
+            if (playerInputScripts.Any((playerInputScript) => playerInputScript.AnyAttackButtonPressed()))
             {
                 game.currentBattleProgress = CurrentBattleProgress.ROUND_COUNTDOWN;
             }
@@ -274,21 +272,24 @@ public class BattleManagerScript : MonoBehaviour
     {
         // Same function is used for both pausing and unpausing the game.
         // (subject to change if it proves necessary to separate them)
-        battleUIScript.UpdatePauseUI(playerInputScripts[0].p1PauseAction, isGamePaused);
+        battleUIScript.UpdatePauseUI(playerInputScripts, isGamePaused);
         if (!isGamePaused && game.currentBattleProgress == CurrentBattleProgress.ROUND_IN_PROGRESS)
         {
             // Pause
-            if (playerInputScripts[0].p1PauseWasPressedThisFrame)
+            //if (playerInputScripts[0].p1PauseWasPressedThisFrame)
+            if (playerInputScripts.Any((playerInputScript) => playerInputScript.p1PauseWasPressedThisFrame))
             {
                 // If pause button was just pressed this frame, activate some UI
                 Debug.Log("show pause timer");
             }
-            else if(playerInputScripts[0].p1PauseWasReleasedThisFrame)
+            //else if (playerInputScripts[0].p1PauseWasReleasedThisFrame)
+            else if (playerInputScripts.Any((playerInputScript) => playerInputScript.p1PauseWasReleasedThisFrame))
             {
                 // If pause button UI was shown, remove it because we're not pausing now after all!
                 Debug.Log("hide pause timer");
             }
-            else if(playerInputScripts[0].p1PauseFullyHeldForDuration)
+            //else if (playerInputScripts[0].p1PauseFullyHeldForDuration)
+            else if (playerInputScripts.Any((playerInputScript) => playerInputScript.p1PauseFullyHeldForDuration))
             {
                 // If pause button was held for long enough, actually pause the game
                 Debug.Log("GAME PAUSED");
@@ -300,12 +301,12 @@ public class BattleManagerScript : MonoBehaviour
         else
         {
             // Unpause
-            if (playerInputScripts[0].p1PauseWasPressedThisFrame)
+            if (playerInputScripts.Any((playerInputScript) => playerInputScript.p1EscapeOrUnpausePressed))
             {
                 // Unlike pausing, unpausing occurs instantly upon pressing the pause button.
                 Debug.Log("GAME UNPAUSED");
                 isGamePaused = false;
-                //battleUIScript.Unpause();
+                battleUIScript.Unpause();
             }
         }
     }

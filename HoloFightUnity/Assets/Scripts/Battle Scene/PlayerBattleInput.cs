@@ -30,6 +30,9 @@ public class PlayerBattleInput : MonoBehaviour
     public bool p1PauseWasReleasedThisFrame = false;
     public bool p1PauseFullyHeldForDuration = false;
 
+    public InputAction p1EscapeOrUnpauseAction;
+    public bool p1EscapeOrUnpausePressed = false;
+
     // If the 'A' button was just used to unpause, don't register its inputs until after it's released.
     public bool p1PausePressLockoutAttackA = false;
     
@@ -44,6 +47,7 @@ public class PlayerBattleInput : MonoBehaviour
         p1AttackCAction = playerInput.actions["AttackC"];
         p1AssistDAction = playerInput.actions["AssistD"];
         p1PauseAction = playerInput.actions["Pause"];
+        p1EscapeOrUnpauseAction = playerInput.actions["Escape"];
     }
 
     // Update is called once per frame
@@ -65,5 +69,19 @@ public class PlayerBattleInput : MonoBehaviour
         //Debug.Log("Pause started: " + p1PauseAction.WasReleasedThisFrame());
         //Debug.Log("Pause trigger: " + p1PauseAction.triggered.ToString());
         //Debug.Log("Pause trigger: " + p1PauseValue.ToString());
+
+        p1EscapeOrUnpausePressed = p1EscapeOrUnpauseAction.WasPressedThisFrame();
+
+        if (p1AttackAValue) { p1PausePressLockoutAttackA = false; }
+    }
+
+    public bool AnyAttackButtonPressed()
+    {
+        bool attackPressed = false;
+        if (p1AttackAValue || p1AttackBValue || p1AttackCValue)
+        {
+            attackPressed = true;
+        }
+        return attackPressed;
     }
 }
