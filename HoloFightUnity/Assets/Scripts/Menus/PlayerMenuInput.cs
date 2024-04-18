@@ -79,6 +79,16 @@ public class PlayerMenuInput : MonoBehaviour
         }
     }
 
+    public void ResetMenuInputValues()
+    {
+        foreach(PlayerMenuInputValues playerMenuInputValues in menuInputValues)
+        {
+            playerMenuInputValues.pConfirmValue = false;
+            playerMenuInputValues.pBackValue= false;
+            playerMenuInputValues.pMoveInMenuValue = new Vector2();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -89,6 +99,7 @@ public class PlayerMenuInput : MonoBehaviour
         //Debug.Log("confirm3"
         //    + menuInputValues[0].pConfirmAction.WasPressedThisFrame().ToString());
 
+        // If any active players are not being kept track of yet, start now
         if (playerInputs.Count < PlayerConfigurationManager.instance.playerConfigs.Count)
         {
             //foreach (PlayerConfiguration playerConfig in PlayerConfigurationManager.instance.playerConfigs)
@@ -100,6 +111,7 @@ public class PlayerMenuInput : MonoBehaviour
             }
         }
 
+        // Track values for every currently active player
         for (int i = 0; i < menuInputValues.Count; i++)
         {
             // TODO: Fix this error.

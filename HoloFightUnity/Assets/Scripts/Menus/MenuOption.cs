@@ -16,7 +16,7 @@ public class MenuOption : MonoBehaviour
     public int optionIndex;
     public string optionName;
 
-    void Awake()
+    void Start()
     {
         gmReference = GameManager.instance;
     }

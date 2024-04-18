@@ -14,7 +14,7 @@ public class BattleManagerScript : MonoBehaviour
 {
     public HfGame game;// = new HfGame(2);
 
-    bool isGamePaused = false;
+    public bool isGamePaused = false;
     bool matchEndScreenUp = false;
 
     public GameObject prefabPlayerIna;
@@ -129,6 +129,9 @@ public class BattleManagerScript : MonoBehaviour
         boundsRight.transform.position = new Vector3((HfGame.bounds.width / pixelsInWorldUnit / 2) + (boundsRight.transform.localScale.x / 2), 0f);
     }
 
+    /// <summary>
+    /// Only used when gameplay is in progress (not in countdown, not paused, etc.)
+    /// </summary>
     void FixedUpdate()
     {
         switch (game.currentBattleProgress)
@@ -173,6 +176,9 @@ public class BattleManagerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Basically handles any logic when gameplay is not currently occurring (waiting, countdown, pause, round over)
+    /// </summary>
     void Update()
     {
         if (game.currentBattleProgress == CurrentBattleProgress.WAITING_FOR_FIRST_ROUND)
@@ -250,7 +256,13 @@ public class BattleManagerScript : MonoBehaviour
         }
         if (playerInputScripts[playerID].p1AttackAValue)
         {
-            input |= INPUT_ATTACK_A;
+            // SPECIAL CASE: UNPAUSE
+            // If the AttackA button was used to unpause, don't register its input until it is released and pressed again.
+            // (might need to do this for attack B or C as well, whichever is the button used to 'back out' of menus)
+            if (!playerInputScripts[playerID].p1PausePressLockoutAttackA)
+            {
+                input |= INPUT_ATTACK_A;
+            }
         }
         if (playerInputScripts[playerID].p1AttackBValue)
         {
@@ -293,19 +305,20 @@ public class BattleManagerScript : MonoBehaviour
             {
                 // If pause button was held for long enough, actually pause the game
                 Debug.Log("GAME PAUSED");
-                isGamePaused = true;
-                PlayerConfigurationManager.instance.EnableMenuInputs();
+                //isGamePaused = true;
+                //PlayerConfigurationManager.instance.EnableMenuInputs();
                 //battleUIScript.Pause();
             }
         }
         else
         {
+            // THIS SHOULD BE HANDLED IN ONE OF THE PAUSE UI SCRIPTS!
             // Unpause
             if (playerInputScripts.Any((playerInputScript) => playerInputScript.p1EscapeOrUnpausePressed))
             {
                 // Unlike pausing, unpausing occurs instantly upon pressing the pause button.
                 Debug.Log("GAME UNPAUSED");
-                isGamePaused = false;
+                //isGamePaused = false;
                 battleUIScript.Unpause();
             }
         }
@@ -313,6 +326,10 @@ public class BattleManagerScript : MonoBehaviour
 
     public void UnpauseGameFromUI()
     {
+
+        // TODO: detect control lockout for any buttons used to unpause (attack A, 'back out' of menu button) and set them in PlayerBattleInputs)
+        // e.g. playerInputScripts[i].p1PausePressLockoutAttackA = true;
+
         isGamePaused = false;
         battleUIScript.Unpause();
     }

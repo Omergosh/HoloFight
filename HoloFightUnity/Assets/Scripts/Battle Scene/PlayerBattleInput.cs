@@ -72,7 +72,7 @@ public class PlayerBattleInput : MonoBehaviour
 
         p1EscapeOrUnpausePressed = p1EscapeOrUnpauseAction.WasPressedThisFrame();
 
-        if (p1AttackAValue) { p1PausePressLockoutAttackA = false; }
+        if (!p1AttackAValue) { p1PausePressLockoutAttackA = false; }
     }
 
     public bool AnyAttackButtonPressed()

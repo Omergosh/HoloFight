@@ -16,7 +16,7 @@ public class DeviceSelectController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("player config count: " + PlayerConfigurationManager.instance.playerConfigs.Count.ToString());
+        //Debug.Log("player config count: " + PlayerConfigurationManager.instance.playerConfigs.Count.ToString());
         while (PlayerConfigurationManager.instance.playerConfigs.Count > deviceDisplays.Count)
         {
             // Add a new device display
@@ -30,7 +30,7 @@ public class DeviceSelectController : MonoBehaviour
 
         foreach (PlayerInputDeviceDisplay deviceDisplay in deviceDisplays)
         {
-            Debug.Log("ready timer done: " + deviceDisplay.CheckReadyTimer().ToString());
+            //Debug.Log("ready timer done: " + deviceDisplay.CheckReadyTimer().ToString());
             deviceDisplay.UpdateDisplay();
         }
     }

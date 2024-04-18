@@ -10,18 +10,6 @@ public class MenuCursor : MonoBehaviour
     [SerializeField]
     List<Image> imagesToColorChange;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetCursorPosition(MenuOption target)
     {
         transform.position = target.transform.position + cursorOffset;

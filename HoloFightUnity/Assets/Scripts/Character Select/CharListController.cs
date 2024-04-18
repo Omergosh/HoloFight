@@ -29,7 +29,7 @@ public class CharListController : MonoBehaviour
         PlayerConfiguration p1Config = PlayerConfigurationManager.instance.GetPlayerByTeam(0);
         PlayerConfiguration p2Config = PlayerConfigurationManager.instance.GetPlayerByTeam(1);
 
-        Debug.Log("1 Process menu input");
+        //Debug.Log("1 Process menu input");
         if (!p1Config.IsReady)
         {
             if (menuInput.menuInputValues[0].pMoveInMenuValue.x < 0)

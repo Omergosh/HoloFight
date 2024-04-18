@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 public class BattleUIScript : MonoBehaviour
@@ -76,7 +77,7 @@ public class BattleUIScript : MonoBehaviour
     public void UpdatePauseUI(PlayerBattleInput[] playerBattleInputs, bool currentlyPaused)
     {
         //pauseUIScript.UpdateUI(pauseInputAction, currentlyPaused);
-        pauseUIScript.UpdateUI(playerBattleInputs, currentlyPaused);
+        pauseUIScript.ProcessPauseButtonInputOnly(playerBattleInputs, currentlyPaused);
         //Debug.Log("Update pause UI");
     }
 
@@ -88,7 +89,7 @@ public class BattleUIScript : MonoBehaviour
     public void Unpause()
     {
         pauseUIScript.Unpause();
-        PlayerConfigurationManager.instance.DisableMenuInputs();
+        //PlayerConfigurationManager.instance.DisableMenuInputs();
     }
 
     public void ShowMatchEndScreen(int winnerPlayerIndex, string winnerCharacterName)
