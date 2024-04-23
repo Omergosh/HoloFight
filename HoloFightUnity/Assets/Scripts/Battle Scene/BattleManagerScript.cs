@@ -258,7 +258,6 @@ public class BattleManagerScript : MonoBehaviour
         {
             // SPECIAL CASE: UNPAUSE
             // If the AttackA button was used to unpause, don't register its input until it is released and pressed again.
-            // (might need to do this for attack B or C as well, whichever is the button used to 'back out' of menus)
             if (!playerInputScripts[playerID].p1PausePressLockoutAttackA)
             {
                 input |= INPUT_ATTACK_A;
@@ -266,7 +265,12 @@ public class BattleManagerScript : MonoBehaviour
         }
         if (playerInputScripts[playerID].p1AttackBValue)
         {
-            input |= INPUT_ATTACK_B;
+            // SPECIAL CASE: UNPAUSE
+            // If the AttackB button was used to unpause, don't register its input until it is released and pressed again.
+            if (!playerInputScripts[playerID].p1PausePressLockoutAttackB)
+            {
+                input |= INPUT_ATTACK_B;
+            }
         }
         if (playerInputScripts[playerID].p1AttackCValue)
         {

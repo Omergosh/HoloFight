@@ -33,8 +33,9 @@ public class PlayerBattleInput : MonoBehaviour
     public InputAction p1EscapeOrUnpauseAction;
     public bool p1EscapeOrUnpausePressed = false;
 
-    // If the 'A' button was just used to unpause, don't register its inputs until after it's released.
+    // If the 'A' or 'B' button was just used to unpause, don't register its inputs until after it's released.
     public bool p1PausePressLockoutAttackA = false;
+    public bool p1PausePressLockoutAttackB = false;
     
     void Start()
     {   
@@ -72,7 +73,8 @@ public class PlayerBattleInput : MonoBehaviour
 
         p1EscapeOrUnpausePressed = p1EscapeOrUnpauseAction.WasPressedThisFrame();
 
-        if (!p1AttackAValue) { p1PausePressLockoutAttackA = false; }
+        if (p1AttackAAction.WasReleasedThisFrame()) { p1PausePressLockoutAttackA = false; }
+        if (p1AttackBAction.WasReleasedThisFrame()) { p1PausePressLockoutAttackB = false; }
     }
 
     public bool AnyAttackButtonPressed()

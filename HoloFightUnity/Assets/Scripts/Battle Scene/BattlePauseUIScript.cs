@@ -79,7 +79,7 @@ public class BattlePauseUIScript : MonoBehaviour
                 }
                 break;
             case PauseMenuState.PAUSE_MAIN:
-                pauseMenu.ProcessInput(menuInput);
+                pauseMenu.ProcessInput(menuInput, pausePlayerIndex);
                 menuCursor.SetCursorPosition(pauseMenu.currentlySelectedMenuOption);
                 break;
         }
@@ -217,12 +217,20 @@ public class BattlePauseUIScript : MonoBehaviour
         menuCursor.gameObject.SetActive(false);
         initiatingPause = false;
 
+        // If player used the attack button to unpause, don't make that player attack on this button press
+        if (menuInput.menuInputValues[pausePlayerIndex].pConfirmValue)
+        {
+            pausePlayerBattleInput.p1PausePressLockoutAttackA = true;
+        }
+        if (menuInput.menuInputValues[pausePlayerIndex].pBackValue)
+        {
+            pausePlayerBattleInput.p1PausePressLockoutAttackB = true;
+        }
+
         menuInput.ResetMenuInputValues();
         menuInput.enabled = false;
         state = PauseMenuState.CLOSED;
 
-        // If player used the attack button to unpause, don't make that player attack on this button press
-        if (pausePlayerBattleInput.p1AttackAValue) { pausePlayerBattleInput.p1PausePressLockoutAttackA = true; }
 
         battleManagerScript.isGamePaused = false;
         PlayerConfigurationManager.instance.DisableMenuInputs();
