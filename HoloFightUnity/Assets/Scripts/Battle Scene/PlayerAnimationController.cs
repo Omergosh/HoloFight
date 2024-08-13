@@ -16,8 +16,9 @@ public class PlayerAnimationController : MonoBehaviour
     // References
     //public SpriteRenderer spriteRenderer;
     public Animator animator;
-
     public BattleManagerScript battleManager;
+    public ParticleSystem escapeReadyIndicatorParticles;
+    public ParticleSystem escapeBurstActivationParticles;
 
     // Collision box / hurtbox / hitbox visual representation references
     //public Transform collisionBoxRepresentation;

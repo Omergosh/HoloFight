@@ -28,5 +28,5 @@ MonoBehaviour:
   attackA1FrameDataJSON: {fileID: 4900000, guid: dc66e5d2bf31e9443a181713404133a8, type: 3}
   attackB1FrameDataJSON: {fileID: 4900000, guid: 7ab27888e45b53042befa0d4bfd8716d, type: 3}
   airAttackA1FrameDataJSON: {fileID: 4900000, guid: 5bab4c58a17132142820342a78e42265, type: 3}
-  airAttackA2FrameDataJSON: {fileID: 4900000, guid: f862de9b37a54fa42a70eb04bb677396, type: 3}
+  airAttackA2FrameDataJSON: {fileID: 4900000, guid: c647afccdb1482042a8e898822ab24c1, type: 3}
   hitstunFrameDataJSON: {fileID: 4900000, guid: 6ad6e9b92f4d1ca45b3230d9fda406a3, type: 3}
